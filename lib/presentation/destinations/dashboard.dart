@@ -1,11 +1,19 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:garudaexams_dashboard/domain/databases/user_database.dart';
+
+import '../../domain/databases/exam_database.dart';
+import '../../providers/providers.dart';
 
 class Dashboard extends ConsumerWidget {
   const Dashboard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ExamDatabase examDatabase = ref.watch(examDatabaseProvider);
+
+    UserDatabase userDatabase = ref.watch(userDatabaseProvider);
     return Padding(
       padding: const EdgeInsets.all(28.0),
       child: Column(
@@ -31,14 +39,25 @@ class Dashboard extends ConsumerWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              '20000',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                            StreamBuilder(
+                              builder: (context, AsyncSnapshot snapshot) {
+                                if (!snapshot.hasData) {
+                                  return const Center(
+                                    child: CupertinoActivityIndicator(),
+                                  );
+                                } else {
+                                  return Text(
+                                    snapshot.data.docs.length.toString(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  );
+                                }
+                              },
+                              stream: userDatabase.getUserList(),
                             ),
                             Text(
                               'Total Students',
@@ -61,14 +80,25 @@ class Dashboard extends ConsumerWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              '65',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                            StreamBuilder(
+                              builder: (context, AsyncSnapshot snapshot) {
+                                if (!snapshot.hasData) {
+                                  return const Center(
+                                    child: CupertinoActivityIndicator(),
+                                  );
+                                } else {
+                                  return Text(
+                                    snapshot.data.docs.length.toString(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  );
+                                }
+                              },
+                              stream: examDatabase.getExamList(),
                             ),
                             Text(
                               'No. of Exams',

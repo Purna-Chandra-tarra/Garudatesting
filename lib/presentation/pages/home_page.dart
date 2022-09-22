@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:garudaexams_dashboard/presentation/destinations/dashboard.dart';
+import 'package:garudaexams_dashboard/presentation/destinations/exams.dart';
 import 'package:garudaexams_dashboard/presentation/pages/sign_in_page.dart';
 import 'package:garudaexams_dashboard/providers/providers.dart';
 
@@ -80,7 +81,7 @@ class HomePage extends ConsumerWidget {
               case 1:
                 return Container();
               case 2:
-                return Container();
+                return const Exams();
               default:
                 return Container();
             }

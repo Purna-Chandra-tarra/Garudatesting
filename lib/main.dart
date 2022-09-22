@@ -5,7 +5,6 @@ import 'package:garudaexams_dashboard/presentation/pages/loading_page.dart';
 import 'package:garudaexams_dashboard/providers/providers.dart';
 
 import 'auth/auth_checker.dart';
-import 'presentation/destinations/dashboard.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
