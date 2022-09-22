@@ -24,6 +24,7 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
       title: 'Garuda Exams Dashboard',
       theme: ThemeData(
+        fontFamily: "DMSans",
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xff7c79fc),
@@ -31,6 +32,7 @@ class MyApp extends ConsumerWidget {
         ),
       ),
       darkTheme: ThemeData(
+        fontFamily: "DMSans",
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xff7c79fc),
