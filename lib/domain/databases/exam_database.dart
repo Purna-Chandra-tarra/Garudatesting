@@ -26,6 +26,12 @@ class ExamDatabase {
     return snapshot.docs.length;
   }
 
+  Stream getExam(String examId)  {
+    _examCollection = _firestore.collection('exam');
+    Stream exam = _examCollection.doc(examId).snapshots();
+    return exam;
+  }
+
   Future addExam(Exam exam) async {
     _examCollection = _firestore.collection('exam');
     try {

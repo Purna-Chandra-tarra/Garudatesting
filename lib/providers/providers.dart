@@ -1,3 +1,4 @@
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,11 +10,19 @@ import 'package:garudaexams_dashboard/firebase_options.dart';
 final destinationProvider = StateProvider<int>((ref) {
   return 0;
 });
+final destinationExamProvider = StateProvider<int>((ref) {
+  return 0;
+});
 
 final firebaseinitializerProvider = FutureProvider<FirebaseApp>((ref) async {
-  return await Firebase.initializeApp(
+  FirebaseApp app = await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await FirebaseAppCheck.instance.activate(
+    webRecaptchaSiteKey:
+        '6LfCxiUiAAAAACzcdmzCqTkFJrPhKH52nLl6Ui-f', // If you're building a web app.
+  );
+  return app;
 });
 final authStateProvider = StreamProvider<User?>((ref) {
   return ref.read(authServiceProvider).authStateChange;

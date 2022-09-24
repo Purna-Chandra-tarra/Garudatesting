@@ -16,103 +16,109 @@ class Dashboard extends ConsumerWidget {
     UserDatabase userDatabase = ref.watch(userDatabaseProvider);
     return Padding(
       padding: const EdgeInsets.all(28.0),
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Hello Admin',
-              style: Theme.of(context).textTheme.headline5?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 16),
-            Row(
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width - 320,
+        height: MediaQuery.of(context).size.height,
+        child: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.people),
-                        const SizedBox(width: 8),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                Text(
+                  'Hello Admin',
+                  style: Theme.of(context).textTheme.headline5?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
                           children: [
-                            StreamBuilder(
-                              builder: (context, AsyncSnapshot snapshot) {
-                                if (!snapshot.hasData) {
-                                  return const Center(
-                                    child: CupertinoActivityIndicator(),
-                                  );
-                                } else {
-                                  return Text(
-                                    snapshot.data.docs.length.toString(),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge
-                                        ?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                  );
-                                }
-                              },
-                              stream: userDatabase.getUserList(),
-                            ),
-                            Text(
-                              'Total Students',
-                              style: Theme.of(context).textTheme.bodySmall,
+                            const Icon(Icons.people),
+                            const SizedBox(width: 8),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                StreamBuilder(
+                                  builder: (context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                      return const Center(
+                                        child: CupertinoActivityIndicator(),
+                                      );
+                                    } else {
+                                      return Text(
+                                        snapshot.data.docs.length.toString(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                      );
+                                    }
+                                  },
+                                  stream: userDatabase.getUserList(),
+                                ),
+                                Text(
+                                  'Total Students',
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.notes),
-                        const SizedBox(width: 8),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                    const SizedBox(width: 16),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
                           children: [
-                            StreamBuilder(
-                              builder: (context, AsyncSnapshot snapshot) {
-                                if (!snapshot.hasData) {
-                                  return const Center(
-                                    child: CupertinoActivityIndicator(),
-                                  );
-                                } else {
-                                  return Text(
-                                    snapshot.data.docs.length.toString(),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge
-                                        ?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                  );
-                                }
-                              },
-                              stream: examDatabase.getExamList(),
-                            ),
-                            Text(
-                              'No. of Exams',
-                              style: Theme.of(context).textTheme.bodySmall,
+                            const Icon(Icons.notes),
+                            const SizedBox(width: 8),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                StreamBuilder(
+                                  builder: (context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                      return const Center(
+                                        child: CupertinoActivityIndicator(),
+                                      );
+                                    } else {
+                                      return Text(
+                                        snapshot.data.docs.length.toString(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                      );
+                                    }
+                                  },
+                                  stream: examDatabase.getExamList(),
+                                ),
+                                Text(
+                                  'No. of Exams',
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-              ],
-            )
-          ]),
+                  ],
+                )
+              ]),
+        ),
+      ),
     );
   }
 }
