@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:garudaexams_dashboard/presentation/destinations/dashboard.dart';
 import 'package:garudaexams_dashboard/presentation/destinations/exams.dart';
+import 'package:garudaexams_dashboard/presentation/destinations/students.dart';
 import 'package:garudaexams_dashboard/presentation/pages/sign_in_page.dart';
 import 'package:garudaexams_dashboard/providers/providers.dart';
+
+import 'create_exam_page.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,6 +17,18 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CreateExamPage(),
+            ),
+          );
+        },
+        label: const Text("Create Exam"),
+        icon: const Icon(Icons.add),
+      ),
       appBar: AppBar(
         title: const Text('Garuda Exams'),
         actions: [
@@ -79,7 +94,7 @@ class HomePage extends ConsumerWidget {
               case 0:
                 return const Dashboard();
               case 1:
-                return Container();
+                return const Students();
               case 2:
                 return const Exams();
               default:

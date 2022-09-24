@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:garudaexams_dashboard/data/models/exam_model.dart';
 
 class ExamDatabase {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -23,5 +24,21 @@ class ExamDatabase {
     QuerySnapshot snapshot =
         await _examCollection.doc(examId).collection('questions').get();
     return snapshot.docs.length;
+  }
+
+  Future addExam(Exam exam) async {
+    _examCollection = _firestore.collection('exam');
+    try {
+      await _examCollection.doc(exam.examId.toString()).set({
+        "exam_id": exam.examId,
+        "exam_name": exam.examName,
+        "type": exam.examType,
+        "exam_difficulty": exam.difficulty,
+        "active": exam.active,
+      });
+      return true;
+    } catch (e) {
+      return e.toString();
+    }
   }
 }
