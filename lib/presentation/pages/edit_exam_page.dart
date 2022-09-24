@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:garudaexams_dashboard/presentation/destinations/exam_details.dart';
@@ -5,7 +7,10 @@ import 'package:garudaexams_dashboard/presentation/destinations/question.dart';
 import 'package:garudaexams_dashboard/presentation/destinations/section.dart';
 import 'package:garudaexams_dashboard/presentation/destinations/subject.dart';
 import 'package:garudaexams_dashboard/presentation/destinations/subscription.dart';
+import 'package:garudaexams_dashboard/presentation/widgets/loader_dialog.dart';
 import 'package:garudaexams_dashboard/providers/providers.dart';
+
+import '../../domain/databases/exam_database.dart';
 
 class EditExamPage extends ConsumerWidget {
   const EditExamPage({
@@ -17,14 +22,22 @@ class EditExamPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ExamDatabase examDatabase = ref.watch(examDatabaseProvider);
     return Scaffold(
       floatingActionButton: Builder(builder: (context) {
         switch (ref.watch(destinationExamProvider)) {
           case 0:
             return FloatingActionButton.extended(
-              onPressed: () {},
-              label: const Text("Save"),
-              icon: const Icon(Icons.save),
+              onPressed: () async {
+                showLoaderDialog(context);
+                await examDatabase.deleteExam(examId);
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              backgroundColor: Theme.of(context).colorScheme.error,
+              foregroundColor: Theme.of(context).colorScheme.onError,
+              label: const Text("Delete Exam"),
+              icon: const Icon(Icons.delete),
             );
           case 1:
             return FloatingActionButton.extended(

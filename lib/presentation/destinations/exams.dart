@@ -76,7 +76,9 @@ class Exams extends ConsumerWidget {
                                                 .textTheme
                                                 .bodySmall
                                                 ?.copyWith(
-                                                  color: Colors.white,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onPrimary,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                           ),

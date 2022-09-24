@@ -13,7 +13,6 @@ final destinationProvider = StateProvider<int>((ref) {
 final destinationExamProvider = StateProvider<int>((ref) {
   return 0;
 });
-
 final firebaseinitializerProvider = FutureProvider<FirebaseApp>((ref) async {
   FirebaseApp app = await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

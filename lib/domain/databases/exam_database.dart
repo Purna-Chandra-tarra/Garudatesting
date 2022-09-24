@@ -26,10 +26,56 @@ class ExamDatabase {
     return snapshot.docs.length;
   }
 
-  Stream getExam(String examId)  {
+  Stream getExam(String examId) {
     _examCollection = _firestore.collection('exam');
     Stream exam = _examCollection.doc(examId).snapshots();
     return exam;
+  }
+
+  Future updateExamStatus(bool status, String examId) async {
+    _examCollection = _firestore.collection('exam');
+    try {
+      await _examCollection.doc(examId).update({
+        "active": status,
+      });
+      return true;
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future updateExamType(String type, String examId) async {
+    _examCollection = _firestore.collection('exam');
+    try {
+      await _examCollection.doc(examId).update({
+        "type": type,
+      });
+      return true;
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future updateDifficultyType(String diff, String examId) async {
+    _examCollection = _firestore.collection('exam');
+    try {
+      await _examCollection.doc(examId).update({
+        "difficulty_level": diff,
+      });
+      return true;
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future deleteExam(String examId) async {
+    _examCollection = _firestore.collection('exam');
+    try {
+      await _examCollection.doc(examId).delete();
+      return true;
+    } catch (e) {
+      return e.toString();
+    }
   }
 
   Future addExam(Exam exam) async {
@@ -39,7 +85,7 @@ class ExamDatabase {
         "exam_id": exam.examId,
         "exam_name": exam.examName,
         "type": exam.examType,
-        "exam_difficulty": exam.difficulty,
+        "difficulty_level": exam.difficulty,
         "active": exam.active,
       });
       return true;
