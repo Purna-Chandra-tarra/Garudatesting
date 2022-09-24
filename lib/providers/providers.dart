@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:garudaexams_dashboard/auth/auth_service.dart';
 import 'package:garudaexams_dashboard/domain/databases/exam_database.dart';
+import 'package:garudaexams_dashboard/domain/databases/query_database.dart';
 import 'package:garudaexams_dashboard/domain/databases/user_database.dart';
 import 'package:garudaexams_dashboard/firebase_options.dart';
 
@@ -36,4 +37,7 @@ final examDatabaseProvider = Provider<ExamDatabase>((ref) {
 });
 final userDatabaseProvider = Provider<UserDatabase>((ref) {
   return UserDatabase();
+});
+final queryDatabaseProvider = Provider<QueryDatabase>((ref) {
+  return QueryDatabase();
 });

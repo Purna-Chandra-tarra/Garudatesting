@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:garudaexams_dashboard/presentation/destinations/dashboard.dart';
 import 'package:garudaexams_dashboard/presentation/destinations/exams.dart';
+import 'package:garudaexams_dashboard/presentation/destinations/queries.dart';
 import 'package:garudaexams_dashboard/presentation/destinations/students.dart';
 import 'package:garudaexams_dashboard/presentation/pages/sign_in_page.dart';
 import 'package:garudaexams_dashboard/providers/providers.dart';
@@ -72,19 +73,24 @@ class HomePage extends ConsumerWidget {
             extended: true,
             destinations: const [
               NavigationRailDestination(
-                icon: Icon(Icons.home),
-                selectedIcon: Icon(Icons.home),
+                icon: Icon(Icons.home_outlined),
+                selectedIcon: Icon(Icons.home_rounded),
                 label: Text('Dashboard'),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.person),
-                selectedIcon: Icon(Icons.person),
+                icon: Icon(Icons.person_outline_rounded),
+                selectedIcon: Icon(Icons.person_rounded),
                 label: Text('Students'),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.notes),
-                selectedIcon: Icon(Icons.notes),
+                icon: Icon(Icons.notes_outlined),
+                selectedIcon: Icon(Icons.notes_rounded),
                 label: Text('Exams'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.warning_amber_rounded),
+                selectedIcon: Icon(Icons.warning_rounded),
+                label: Text('Queries'),
               ),
             ],
             selectedIndex: ref.watch(destinationProvider),
@@ -97,6 +103,8 @@ class HomePage extends ConsumerWidget {
                 return const Students();
               case 2:
                 return const Exams();
+              case 3:
+                return const Queries();
               default:
                 return Container();
             }

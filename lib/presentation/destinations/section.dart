@@ -21,66 +21,61 @@ class Section extends ConsumerWidget {
       child: SizedBox(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width - 320,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Section',
-                style: Theme.of(context).textTheme.headline5?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: StreamBuilder(
-                  stream: examDatabase.getSection(examId),
-                  builder: (context, AsyncSnapshot snapshot) {
-                    if (snapshot.hasData) {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: snapshot.data.docs.length,
-                        itemBuilder: ((context, index) {
-                          return Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(18.0),
-                              child: Row(
-                                children: [
-                                  Text(snapshot.data.docs[index]['section']),
-                                  const Spacer(),
-                                  IconButton(
-                                    onPressed: () async {
-                                      showLoaderDialog(context);
-                                      await examDatabase.deleteExamSection(
-                                        examId,
-                                        snapshot.data.docs[index].id,
-                                      );
-                                      Navigator.pop(context);
-                                    },
-                                    icon: Icon(
-                                      Icons.delete,
-                                      color:
-                                          Theme.of(context).colorScheme.error,
-                                    ),
-                                  )
-                                ],
-                              ),
+        child: ListView(
+          children: [
+            Text(
+              'Section',
+              style: Theme.of(context).textTheme.headline5?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: StreamBuilder(
+                stream: examDatabase.getSection(examId),
+                builder: (context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: snapshot.data.docs.length,
+                      itemBuilder: ((context, index) {
+                        return Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(18.0),
+                            child: Row(
+                              children: [
+                                Text(snapshot.data.docs[index]['section']),
+                                const Spacer(),
+                                IconButton(
+                                  onPressed: () async {
+                                    showLoaderDialog(context);
+                                    await examDatabase.deleteExamSection(
+                                      examId,
+                                      snapshot.data.docs[index].id,
+                                    );
+                                    Navigator.pop(context);
+                                  },
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
+                                )
+                              ],
                             ),
-                          );
-                        }),
-                      );
-                    } else {
-                      return const CupertinoActivityIndicator();
-                    }
-                  },
-                ),
-              )
-            ],
-          ),
+                          ),
+                        );
+                      }),
+                    );
+                  } else {
+                    return const CupertinoActivityIndicator();
+                  }
+                },
+              ),
+            )
+          ],
         ),
       ),
     );

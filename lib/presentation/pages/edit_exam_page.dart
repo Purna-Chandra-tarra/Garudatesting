@@ -240,23 +240,28 @@ class EditExamPage extends ConsumerWidget {
             extended: true,
             destinations: const [
               NavigationRailDestination(
-                icon: Icon(Icons.abc),
+                icon: Icon(Icons.abc_outlined),
+                selectedIcon: Icon(Icons.abc_rounded),
                 label: Text("Exam Details"),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.notes),
+                selectedIcon: Icon(Icons.notes_rounded),
                 label: Text("Subjects"),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.insert_page_break),
+                icon: Icon(Icons.insert_page_break_outlined),
+                selectedIcon: Icon(Icons.insert_page_break_rounded),
                 label: Text("Sections"),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.question_mark_rounded),
+                selectedIcon: Icon(Icons.question_mark_outlined),
                 label: Text("Questions"),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.diamond_outlined),
+                selectedIcon: Icon(Icons.diamond_rounded),
                 label: Text("Subscriptions"),
               ),
             ],
