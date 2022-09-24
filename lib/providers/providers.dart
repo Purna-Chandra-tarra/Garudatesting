@@ -7,10 +7,10 @@ import 'package:garudaexams_dashboard/domain/databases/exam_database.dart';
 import 'package:garudaexams_dashboard/domain/databases/user_database.dart';
 import 'package:garudaexams_dashboard/firebase_options.dart';
 
-final destinationProvider = StateProvider<int>((ref) {
+final destinationProvider = StateProvider.autoDispose<int>((ref) {
   return 0;
 });
-final destinationExamProvider = StateProvider<int>((ref) {
+final destinationExamProvider = StateProvider.autoDispose<int>((ref) {
   return 0;
 });
 final firebaseinitializerProvider = FutureProvider<FirebaseApp>((ref) async {

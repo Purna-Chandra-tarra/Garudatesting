@@ -93,4 +93,114 @@ class ExamDatabase {
       return e.toString();
     }
   }
+
+  Stream getSubject(String examId) {
+    _examCollection = _firestore.collection('exam');
+    Stream subject =
+        _examCollection.doc(examId).collection('subjects').snapshots();
+    return subject;
+  }
+
+  Stream getSection(String examId) {
+    _examCollection = _firestore.collection('exam');
+    Stream subject =
+        _examCollection.doc(examId).collection('sections').snapshots();
+    return subject;
+  }
+
+  Future deleteExamSubject(String examId, String subjectId) async {
+    _examCollection = _firestore.collection('exam');
+    try {
+      await _examCollection
+          .doc(examId)
+          .collection('subjects')
+          .doc(subjectId)
+          .delete();
+      return true;
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future addExamSubject(
+      String examId, String subjectName, String subjectId) async {
+    _examCollection = _firestore.collection('exam');
+    try {
+      await _examCollection
+          .doc(examId)
+          .collection('subjects')
+          .doc(subjectId)
+          .set({
+        "name": subjectName,
+      });
+      return true;
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future deleteExamSection(String examId, String sectionId) async {
+    _examCollection = _firestore.collection('exam');
+    try {
+      await _examCollection
+          .doc(examId)
+          .collection('sections')
+          .doc(sectionId)
+          .delete();
+      return true;
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future addExamSection(
+      String examId, String sectionName, String sectionId) async {
+    _examCollection = _firestore.collection('exam');
+    try {
+      await _examCollection
+          .doc(examId)
+          .collection('sections')
+          .doc(sectionId)
+          .set({
+        "section": sectionName,
+      });
+      return true;
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future addSubscription(
+      {required String examId,
+      required int amount,
+      required String features,
+      required String id,
+      required int period}) async {
+    _examCollection = _firestore.collection('exam');
+    try {
+      await _examCollection.doc(examId).collection('subscriptions').doc().set({
+        "amount": amount,
+        "features": features,
+        "id": id,
+        "period": period,
+      });
+      return true;
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future deleteSubscription(String examId, String subscriptionId) async {
+    _examCollection = _firestore.collection('exam');
+    try {
+      await _examCollection
+          .doc(examId)
+          .collection('subscriptions')
+          .doc(subscriptionId)
+          .delete();
+      return true;
+    } catch (e) {
+      return e.toString();
+    }
+  }
 }
