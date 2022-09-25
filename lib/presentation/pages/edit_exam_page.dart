@@ -283,7 +283,9 @@ class EditExamPage extends ConsumerWidget {
                     examId: examId,
                   );
                 case 3:
-                  return const Question();
+                  return  Question(
+                    examId: examId,
+                  );
                 case 4:
                   return Subscription(
                     examId: examId,

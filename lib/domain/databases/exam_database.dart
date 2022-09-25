@@ -170,6 +170,28 @@ class ExamDatabase {
     }
   }
 
+  Future<List<String>> getSubjectList(String examId) async {
+    _examCollection = _firestore.collection('exam');
+    List<String> subjectList = [];
+    QuerySnapshot snapshot =
+        await _examCollection.doc(examId).collection('subjects').get();
+    for (var element in snapshot.docs) {
+      subjectList.add(element['name']);
+    }
+    return subjectList;
+  }
+
+  Future<List<String>> getSectionList(String examId) async {
+    _examCollection = _firestore.collection('exam');
+    List<String> sectionList = [];
+    QuerySnapshot snapshot =
+        await _examCollection.doc(examId).collection('sections').get();
+    for (var element in snapshot.docs) {
+      sectionList.add(element['section']);
+    }
+    return sectionList;
+  }
+
   Future addSubscription(
       {required String examId,
       required int amount,
@@ -198,6 +220,23 @@ class ExamDatabase {
           .collection('subscriptions')
           .doc(subscriptionId)
           .delete();
+      return true;
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Stream getQuestions(String examId) {
+    _examCollection = _firestore.collection('exam');
+    return _examCollection.doc(examId).collection('questions').snapshots();
+  }
+
+  Future updateQuestion(
+      String examId, String questionId, Map<String, Object> map) async {
+    CollectionReference questionCollection =
+        _firestore.collection('exam').doc(examId).collection('questions');
+    try {
+      await questionCollection.doc(questionId).update(map);
       return true;
     } catch (e) {
       return e.toString();
