@@ -47,11 +47,11 @@ class HomePage extends ConsumerWidget {
                 showCupertinoDialog(
                     context: context,
                     builder: (context) {
-                      return CupertinoAlertDialog(
+                      return AlertDialog(
                         title: const Text('Error'),
                         content: Text(e.toString()),
                         actions: [
-                          CupertinoDialogAction(
+                          ElevatedButton(
                             child: const Text('OK'),
                             onPressed: () {
                               Navigator.of(context).pop();

@@ -57,23 +57,23 @@ class EditExamPage extends ConsumerWidget {
                 showCupertinoDialog(
                     context: context,
                     builder: (context) {
-                      return CupertinoAlertDialog(
+                      return AlertDialog(
                         title: const Text("Add Subject"),
                         content: Column(
                           children: [
-                            CupertinoTextField(
+                            TextField(
                               controller: subjectController,
                             ),
                           ],
                         ),
                         actions: [
-                          CupertinoDialogAction(
+                          ElevatedButton(
                             child: const Text("Cancel"),
                             onPressed: () {
                               Navigator.pop(context);
                             },
                           ),
-                          CupertinoDialogAction(
+                          ElevatedButton(
                             child: const Text("Add"),
                             onPressed: () async {
                               int random(int min, int max) {
@@ -104,23 +104,23 @@ class EditExamPage extends ConsumerWidget {
                 showCupertinoDialog(
                     context: context,
                     builder: (context) {
-                      return CupertinoAlertDialog(
+                      return AlertDialog(
                         title: const Text("Add Section"),
                         content: Column(
                           children: [
-                            CupertinoTextField(
+                            TextField(
                               controller: sectionController,
                             ),
                           ],
                         ),
                         actions: [
-                          CupertinoDialogAction(
+                          ElevatedButton(
                             child: const Text("Cancel"),
                             onPressed: () {
                               Navigator.pop(context);
                             },
                           ),
-                          CupertinoDialogAction(
+                          ElevatedButton(
                             child: const Text("Add"),
                             onPressed: () async {
                               int random(int min, int max) {
@@ -157,43 +157,49 @@ class EditExamPage extends ConsumerWidget {
                 showCupertinoDialog(
                     context: context,
                     builder: (context) {
-                      return CupertinoAlertDialog(
+                      return AlertDialog(
                         title: const Text("Add Subscription"),
-                        content: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: CupertinoTextField(
-                                controller: amountController,
-                                placeholder: "Amount",
+                        content: SizedBox(
+                          height: 500,
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextField(
+                                  controller: amountController,
+                                  decoration: const InputDecoration(
+                                      helperText: "Amount"),
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: CupertinoTextField(
-                                controller: featuresController,
-                                placeholder: "Features",
-                                expands: true,
-                                maxLines: null,
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextField(
+                                  controller: featuresController,
+                                  decoration: const InputDecoration(
+                                      helperText: "Features"),
+                                  expands: true,
+                                  maxLines: null,
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: CupertinoTextField(
-                                placeholder: "Period",
-                                controller: periodController,
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextField(
+                                  decoration: const InputDecoration(
+                                      helperText: "Period"),
+                                  controller: periodController,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         actions: [
-                          CupertinoDialogAction(
+                          ElevatedButton(
                             child: const Text("Cancel"),
                             onPressed: () {
                               Navigator.pop(context);
                             },
                           ),
-                          CupertinoDialogAction(
+                          ElevatedButton(
                             child: const Text("Add"),
                             onPressed: () async {
                               int random(int min, int max) {
@@ -283,7 +289,7 @@ class EditExamPage extends ConsumerWidget {
                     examId: examId,
                   );
                 case 3:
-                  return  Question(
+                  return Question(
                     examId: examId,
                   );
                 case 4:

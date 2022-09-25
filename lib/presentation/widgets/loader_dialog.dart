@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 showLoaderDialog(BuildContext context) {
-  CupertinoAlertDialog alert = const CupertinoAlertDialog(
+  AlertDialog alert = const AlertDialog(
     title: Text('Loading'),
     content: CupertinoActivityIndicator(),
   );

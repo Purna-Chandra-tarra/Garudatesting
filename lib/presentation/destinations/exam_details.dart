@@ -126,19 +126,19 @@ class ExamDetails extends ConsumerWidget {
                             showCupertinoDialog(
                               context: context,
                               builder: (context) {
-                                return CupertinoAlertDialog(
+                                return AlertDialog(
                                   title: const Text("Change Exam Type"),
-                                  content: CupertinoTextField(
+                                  content: TextField(
                                     controller: examTypeController,
                                   ),
                                   actions: [
-                                    CupertinoDialogAction(
+                                    ElevatedButton(
                                       child: const Text("Back"),
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
                                     ),
-                                    CupertinoDialogAction(
+                                    ElevatedButton(
                                       child: const Text("Change"),
                                       onPressed: () async {
                                         showLoaderDialog(context);
@@ -172,19 +172,19 @@ class ExamDetails extends ConsumerWidget {
                             showCupertinoDialog(
                               context: context,
                               builder: (context) {
-                                return CupertinoAlertDialog(
+                                return AlertDialog(
                                   title: const Text("Change Exam Difficulty"),
-                                  content: CupertinoTextField(
+                                  content: TextField(
                                     controller: examDifficultyController,
                                   ),
                                   actions: [
-                                    CupertinoDialogAction(
+                                    ElevatedButton(
                                       child: const Text("Back"),
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
                                     ),
-                                    CupertinoDialogAction(
+                                    ElevatedButton(
                                       child: const Text("Change"),
                                       onPressed: () async {
                                         showLoaderDialog(context);

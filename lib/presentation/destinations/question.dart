@@ -71,20 +71,20 @@ class Question extends ConsumerWidget {
                                                 showCupertinoDialog(
                                                   context: context,
                                                   builder: (context) {
-                                                    return CupertinoAlertDialog(
+                                                    return AlertDialog(
                                                       title: const Text(
                                                         "Update Question",
                                                       ),
                                                       content: Column(
                                                         children: [
-                                                          CupertinoTextField(
+                                                          TextField(
                                                             controller:
                                                                 questionController,
                                                           ),
                                                         ],
                                                       ),
                                                       actions: [
-                                                        CupertinoDialogAction(
+                                                        ElevatedButton(
                                                           child: const Text(
                                                             "Cancel",
                                                           ),
@@ -93,7 +93,7 @@ class Question extends ConsumerWidget {
                                                                 context);
                                                           },
                                                         ),
-                                                        CupertinoDialogAction(
+                                                        ElevatedButton(
                                                           child: const Text(
                                                             "Update",
                                                           ),
@@ -140,20 +140,20 @@ class Question extends ConsumerWidget {
                                                 showCupertinoDialog(
                                                   context: context,
                                                   builder: (context) {
-                                                    return CupertinoAlertDialog(
+                                                    return AlertDialog(
                                                       title: const Text(
                                                         "Update Option 1",
                                                       ),
                                                       content: Column(
                                                         children: [
-                                                          CupertinoTextField(
+                                                          TextField(
                                                             controller:
                                                                 optionController,
                                                           ),
                                                         ],
                                                       ),
                                                       actions: [
-                                                        CupertinoDialogAction(
+                                                        ElevatedButton(
                                                           child: const Text(
                                                             "Cancel",
                                                           ),
@@ -162,7 +162,7 @@ class Question extends ConsumerWidget {
                                                                 context);
                                                           },
                                                         ),
-                                                        CupertinoDialogAction(
+                                                        ElevatedButton(
                                                           child: const Text(
                                                             "Update",
                                                           ),
@@ -209,20 +209,20 @@ class Question extends ConsumerWidget {
                                                 showCupertinoDialog(
                                                   context: context,
                                                   builder: (context) {
-                                                    return CupertinoAlertDialog(
+                                                    return AlertDialog(
                                                       title: const Text(
                                                         "Update Option 2",
                                                       ),
                                                       content: Column(
                                                         children: [
-                                                          CupertinoTextField(
+                                                          TextField(
                                                             controller:
                                                                 optionController,
                                                           ),
                                                         ],
                                                       ),
                                                       actions: [
-                                                        CupertinoDialogAction(
+                                                        ElevatedButton(
                                                           child: const Text(
                                                             "Cancel",
                                                           ),
@@ -231,7 +231,7 @@ class Question extends ConsumerWidget {
                                                                 context);
                                                           },
                                                         ),
-                                                        CupertinoDialogAction(
+                                                        ElevatedButton(
                                                           child: const Text(
                                                             "Update",
                                                           ),
@@ -278,20 +278,20 @@ class Question extends ConsumerWidget {
                                                 showCupertinoDialog(
                                                   context: context,
                                                   builder: (context) {
-                                                    return CupertinoAlertDialog(
+                                                    return AlertDialog(
                                                       title: const Text(
                                                         "Update Option 3",
                                                       ),
                                                       content: Column(
                                                         children: [
-                                                          CupertinoTextField(
+                                                          TextField(
                                                             controller:
                                                                 optionController,
                                                           ),
                                                         ],
                                                       ),
                                                       actions: [
-                                                        CupertinoDialogAction(
+                                                        ElevatedButton(
                                                           child: const Text(
                                                             "Cancel",
                                                           ),
@@ -300,7 +300,7 @@ class Question extends ConsumerWidget {
                                                                 context);
                                                           },
                                                         ),
-                                                        CupertinoDialogAction(
+                                                        ElevatedButton(
                                                           child: const Text(
                                                             "Update",
                                                           ),
@@ -347,20 +347,20 @@ class Question extends ConsumerWidget {
                                                 showCupertinoDialog(
                                                   context: context,
                                                   builder: (context) {
-                                                    return CupertinoAlertDialog(
+                                                    return AlertDialog(
                                                       title: const Text(
                                                         "Update Option 4",
                                                       ),
                                                       content: Column(
                                                         children: [
-                                                          CupertinoTextField(
+                                                          TextField(
                                                             controller:
                                                                 optionController,
                                                           ),
                                                         ],
                                                       ),
                                                       actions: [
-                                                        CupertinoDialogAction(
+                                                        ElevatedButton(
                                                           child: const Text(
                                                             "Cancel",
                                                           ),
@@ -369,7 +369,7 @@ class Question extends ConsumerWidget {
                                                                 context);
                                                           },
                                                         ),
-                                                        CupertinoDialogAction(
+                                                        ElevatedButton(
                                                           child: const Text(
                                                             "Update",
                                                           ),
@@ -417,20 +417,20 @@ class Question extends ConsumerWidget {
                                                 showCupertinoDialog(
                                                   context: context,
                                                   builder: (context) {
-                                                    return CupertinoAlertDialog(
+                                                    return AlertDialog(
                                                       title: const Text(
                                                         "Update Answer(1,2,3,4)",
                                                       ),
                                                       content: Column(
                                                         children: [
-                                                          CupertinoTextField(
+                                                          TextField(
                                                             controller:
                                                                 optionController,
                                                           ),
                                                         ],
                                                       ),
                                                       actions: [
-                                                        CupertinoDialogAction(
+                                                        ElevatedButton(
                                                           child: const Text(
                                                             "Cancel",
                                                           ),
@@ -439,7 +439,7 @@ class Question extends ConsumerWidget {
                                                                 context);
                                                           },
                                                         ),
-                                                        CupertinoDialogAction(
+                                                        ElevatedButton(
                                                           child: const Text(
                                                             "Update",
                                                           ),
@@ -482,59 +482,71 @@ class Question extends ConsumerWidget {
                                           ),
                                           const Spacer(),
                                           IconButton(
-                                              onPressed: () {
-                                                // showCupertinoDialog(
-                                                //   context: context,
-                                                //   builder: (context) {
-                                                //     return CupertinoAlertDialog(
-                                                //       title: const Text(
-                                                //         "Update Section",
-                                                //       ),
-                                                //       content: Column(
-                                                //         children: const [],
-                                                //       ),
-                                                //       actions: [
-                                                //         CupertinoDialogAction(
-                                                //           child: const Text(
-                                                //             "Cancel",
-                                                //           ),
-                                                //           onPressed: () {
-                                                //             Navigator.pop(
-                                                //                 context);
-                                                //           },
-                                                //         ),
-                                                //         CupertinoDialogAction(
-                                                //           child: const Text(
-                                                //             "Update",
-                                                //           ),
-                                                //           onPressed: () async {
-                                                //             showLoaderDialog(
-                                                //                 context);
-                                                //             await examDatabase
-                                                //                 .updateQuestion(
-                                                //               examId,
-                                                //               snapshot
-                                                //                   .data
-                                                //                   .docs[index]
-                                                //                   .id,
-                                                //               {
-                                                //                 "answer": int.parse(
-                                                //                     optionController
-                                                //                         .text),
-                                                //               },
-                                                //             );
-                                                //             optionController
-                                                //                 .clear();
-                                                //             Navigator.pop(
-                                                //                 context);
-                                                //             Navigator.pop(
-                                                //                 context);
-                                                //           },
-                                                //         ),
-                                                //       ],
-                                                //     );
-                                                //   },
-                                                // );
+                                              onPressed: () async {
+                                                showLoaderDialog(context);
+                                                List<String> sections =
+                                                    await examDatabase
+                                                        .getSectionList(examId);
+
+                                                String section = snapshot.data
+                                                    .docs[index]['section'];
+                                                Navigator.pop(context);
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                        title: const Text(
+                                                            "Update Section"),
+                                                        content: SizedBox(
+                                                          height: 400,
+                                                          width: 500,
+                                                          child:
+                                                              ListView.builder(
+                                                            shrinkWrap: true,
+                                                            itemBuilder:
+                                                                (context,
+                                                                    index) {
+                                                              return ListTile(
+                                                                leading: Radio<
+                                                                    String>(
+                                                                  value:
+                                                                      sections[
+                                                                          index],
+                                                                  groupValue:
+                                                                      section,
+                                                                  onChanged:
+                                                                      (value) {
+                                                                    //TODO : FIX THIS
+                                                                    //  examDatabase
+                                                                    //     .updateQuestion(
+                                                                    //   examId,
+                                                                    //   snapshot
+                                                                    //       .data
+                                                                    //       .docs[index -
+                                                                    //           1]
+                                                                    //       .id,
+                                                                    //   {
+                                                                    //     "section":
+                                                                    //         value.toString(),
+                                                                    //   },
+                                                                    // );
+                                                                    // Navigator.pop(
+                                                                    //     context);
+                                                                  },
+                                                                ),
+                                                                title: Text(snapshot
+                                                                            .data
+                                                                            .docs[
+                                                                        index][
+                                                                    'section']),
+                                                              );
+                                                            },
+                                                            itemCount:
+                                                                sections.length,
+                                                          ),
+                                                        ));
+                                                  },
+                                                );
                                               },
                                               icon: const Icon(Icons.edit))
                                         ],

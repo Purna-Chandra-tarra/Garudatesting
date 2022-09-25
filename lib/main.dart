@@ -31,14 +31,14 @@ class MyApp extends ConsumerWidget {
           brightness: Brightness.light,
         ),
       ),
-      // darkTheme: ThemeData(
-      //   fontFamily: "DMSans",
-      //   useMaterial3: true,
-      //   colorScheme: ColorScheme.fromSeed(
-      //     seedColor: const Color(0xff7c79fc),
-      //     brightness: Brightness.dark,
-      //   ),
-      // ),
+      darkTheme: ThemeData(
+        fontFamily: "DMSans",
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xff7c79fc),
+          brightness: Brightness.dark,
+        ),
+      ),
       home: initialize.when(
         data: (app) => const AuthChecker(),
         loading: () => const LoadingPage(),

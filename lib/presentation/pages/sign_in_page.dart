@@ -58,11 +58,11 @@ class SignInPage extends ConsumerWidget {
                   showCupertinoDialog(
                       context: context,
                       builder: (context) {
-                        return CupertinoAlertDialog(
+                        return AlertDialog(
                           title: const Text('Error'),
                           content: Text(msg),
                           actions: [
-                            CupertinoDialogAction(
+                            ElevatedButton(
                               child: const Text('OK'),
                               onPressed: () {
                                 Navigator.of(context).pop();
