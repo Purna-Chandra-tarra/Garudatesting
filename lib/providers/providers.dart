@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:garudaexams_dashboard/auth/auth_service.dart';
 import 'package:garudaexams_dashboard/domain/databases/exam_database.dart';
 import 'package:garudaexams_dashboard/domain/databases/query_database.dart';
+import 'package:garudaexams_dashboard/domain/databases/storage.dart';
 import 'package:garudaexams_dashboard/domain/databases/user_database.dart';
 import 'package:garudaexams_dashboard/firebase_options.dart';
 
@@ -40,4 +41,10 @@ final userDatabaseProvider = Provider<UserDatabase>((ref) {
 });
 final queryDatabaseProvider = Provider<QueryDatabase>((ref) {
   return QueryDatabase();
+});
+final radioProvider = StateProvider<String>((ref) {
+  return "";
+});
+final storageProvider = Provider<Storage>((ref) {
+  return Storage();
 });

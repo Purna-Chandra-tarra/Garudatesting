@@ -59,11 +59,13 @@ class Question extends ConsumerWidget {
                                     children: [
                                       Row(
                                         children: [
-                                          Text(
-                                            snapshot.data.docs[index]
-                                                ['question'],
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                          Expanded(
+                                            child: Text(
+                                              snapshot.data.docs[index]
+                                                  ['question'],
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
                                           ),
                                           const Spacer(),
                                           IconButton(
@@ -131,8 +133,10 @@ class Question extends ConsumerWidget {
                                       ),
                                       Row(
                                         children: [
-                                          Text(
-                                            "Option 1. ${snapshot.data.docs[index]['option_one']}",
+                                          Expanded(
+                                            child: Text(
+                                              "Option 1. ${snapshot.data.docs[index]['option_one']}",
+                                            ),
                                           ),
                                           const Spacer(),
                                           IconButton(
@@ -200,8 +204,10 @@ class Question extends ConsumerWidget {
                                       ),
                                       Row(
                                         children: [
-                                          Text(
-                                            "Option 2. ${snapshot.data.docs[index]['option_two']}",
+                                          Expanded(
+                                            child: Text(
+                                              "Option 2. ${snapshot.data.docs[index]['option_two']}",
+                                            ),
                                           ),
                                           const Spacer(),
                                           IconButton(
@@ -269,8 +275,10 @@ class Question extends ConsumerWidget {
                                       ),
                                       Row(
                                         children: [
-                                          Text(
-                                            "Option 3. ${snapshot.data.docs[index]['option_three']}",
+                                          Expanded(
+                                            child: Text(
+                                              "Option 3. ${snapshot.data.docs[index]['option_three']}",
+                                            ),
                                           ),
                                           const Spacer(),
                                           IconButton(
@@ -338,8 +346,10 @@ class Question extends ConsumerWidget {
                                       ),
                                       Row(
                                         children: [
-                                          Text(
-                                            "Option 4. ${snapshot.data.docs[index]['option_four']}",
+                                          Expanded(
+                                            child: Text(
+                                              "Option 4. ${snapshot.data.docs[index]['option_four']}",
+                                            ),
                                           ),
                                           const Spacer(),
                                           IconButton(
@@ -408,8 +418,10 @@ class Question extends ConsumerWidget {
                                       const Divider(),
                                       Row(
                                         children: [
-                                          Text(
-                                            "Answer: Option ${snapshot.data.docs[index]['answer']}",
+                                          Expanded(
+                                            child: Text(
+                                              "Answer: Option ${snapshot.data.docs[index]['answer']}",
+                                            ),
                                           ),
                                           const Spacer(),
                                           IconButton(
@@ -477,96 +489,107 @@ class Question extends ConsumerWidget {
                                       ),
                                       Row(
                                         children: [
-                                          Text(
-                                            "Section: ${snapshot.data.docs[index]['section']}",
+                                          Expanded(
+                                            child: Text(
+                                              "Section: ${snapshot.data.docs[index]['section']}",
+                                            ),
                                           ),
                                           const Spacer(),
-                                          IconButton(
-                                              onPressed: () async {
-                                                showLoaderDialog(context);
-                                                List<String> sections =
-                                                    await examDatabase
-                                                        .getSectionList(examId);
-
-                                                String section = snapshot.data
-                                                    .docs[index]['section'];
-                                                Navigator.pop(context);
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return AlertDialog(
-                                                        title: const Text(
-                                                            "Update Section"),
-                                                        content: SizedBox(
-                                                          height: 400,
-                                                          width: 500,
-                                                          child:
-                                                              ListView.builder(
-                                                            shrinkWrap: true,
-                                                            itemBuilder:
-                                                                (context,
-                                                                    index) {
-                                                              return ListTile(
-                                                                leading: Radio<
-                                                                    String>(
-                                                                  value:
-                                                                      sections[
-                                                                          index],
-                                                                  groupValue:
-                                                                      section,
-                                                                  onChanged:
-                                                                      (value) {
-                                                                    //TODO : FIX THIS
-                                                                    //  examDatabase
-                                                                    //     .updateQuestion(
-                                                                    //   examId,
-                                                                    //   snapshot
-                                                                    //       .data
-                                                                    //       .docs[index -
-                                                                    //           1]
-                                                                    //       .id,
-                                                                    //   {
-                                                                    //     "section":
-                                                                    //         value.toString(),
-                                                                    //   },
-                                                                    // );
-                                                                    // Navigator.pop(
-                                                                    //     context);
-                                                                  },
-                                                                ),
-                                                                title: Text(snapshot
-                                                                            .data
-                                                                            .docs[
-                                                                        index][
-                                                                    'section']),
-                                                              );
-                                                            },
-                                                            itemCount:
-                                                                sections.length,
-                                                          ),
-                                                        ));
-                                                  },
-                                                );
-                                              },
-                                              icon: const Icon(Icons.edit))
+                                          //TODO: Add section update
+                                          // IconButton(
+                                          //     onPressed: () async {
+                                          //       showLoaderDialog(context);
+                                          // List<String> sections =
+                                          //     await examDatabase
+                                          //         .getSectionList(examId);
+                                          //       ref
+                                          //           .read(radioProvider.state)
+                                          //           .state = await snapshot
+                                          //               .data.docs[index]
+                                          //           ['section'];
+                                          //       Navigator.pop(context);
+                                          //       showDialog(
+                                          //           context: context,
+                                          //           builder: (context) {
+                                          //             return AlertDialog(
+                                          //               content: SizedBox(
+                                          //                 height: 500,
+                                          //                 width: 500,
+                                          //                 child: ListView
+                                          //                     .builder(
+                                          //                         itemCount: snapshot.data.docs[index]
+                                          //                                     [
+                                          //                                     'section'] ==
+                                          //                                 null
+                                          //                             ? sections
+                                          //                                     .length +
+                                          //                                 1
+                                          //                             : sections
+                                          //                                 .length,
+                                          //                         shrinkWrap:
+                                          //                             true,
+                                          //                         itemBuilder:
+                                          //                             (context,
+                                          //                                 index) {
+                                          //                           return Container(
+                                          //                             decoration:
+                                          //                                 BoxDecoration(
+                                          //                               borderRadius:
+                                          //                                   BorderRadius.circular(50),
+                                          //                               color: ref.watch(radioProvider) ==
+                                          //                                       snapshot.data.docs[index]['section']
+                                          //                                   ? Theme.of(context).colorScheme.primary
+                                          //                                   : Colors.white,
+                                          //                             ),
+                                          //                             child:
+                                          //                                 ListTile(
+                                          //                               title:
+                                          //                                   Text(
+                                          //                                 sections[
+                                          //                                     index],
+                                          //                               ),
+                                          //                               onTap:
+                                          //                                   () async {
+                                          //                                 ref.watch(radioProvider.state).state =
+                                          //                                     sections[index];
+                                          //                               },
+                                          //                             ),
+                                          //                           );
+                                          //                         }),
+                                          //               ),
+                                          //             );
+                                          //           });
+                                          //     },
+                                          //     icon: const Icon(Icons.edit))
                                         ],
                                       ),
                                       Row(
                                         children: [
-                                          Text(
-                                            "Subject: ${snapshot.data.docs[index]['subject']}",
+                                          Expanded(
+                                            child: Text(
+                                              "Subject: ${snapshot.data.docs[index]['subject']}",
+                                            ),
                                           ),
                                           const Spacer(),
-                                          IconButton(
-                                              onPressed: () {},
-                                              icon: const Icon(Icons.edit))
+                                          // IconButton(
+                                          //     onPressed: () {},
+                                          //     icon: const Icon(Icons.edit))
                                         ],
                                       ),
                                     ],
                                   ),
                                 ),
                                 IconButton(
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    showLoaderDialog(context);
+                                    await examDatabase.deleteQuestion(
+                                        examId, snapshot.data.docs[index].id);
+                                    await ref
+                                        .watch(storageProvider)
+                                        .deleteImage(
+                                            snapshot.data.docs[index].id);
+                                    Navigator.pop(context);
+                                  },
                                   icon: Icon(
                                     Icons.delete,
                                     color: Theme.of(context).colorScheme.error,

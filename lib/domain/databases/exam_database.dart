@@ -242,4 +242,27 @@ class ExamDatabase {
       return e.toString();
     }
   }
+
+  Future addQuestion(
+      String examId, String questionId, Map<String, Object> map) async {
+    CollectionReference questionCollection =
+        _firestore.collection('exam').doc(examId).collection('questions');
+    try {
+      await questionCollection.doc(questionId).set(map);
+      return true;
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future deleteQuestion(String examId, String questionId) async {
+    CollectionReference questionCollection =
+        _firestore.collection('exam').doc(examId).collection('questions');
+    try {
+      await questionCollection.doc(questionId).delete();
+      return true;
+    } catch (e) {
+      return e.toString();
+    }
+  }
 }
