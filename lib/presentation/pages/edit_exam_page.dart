@@ -2,6 +2,7 @@
 
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,6 @@ import 'package:garudaexams_dashboard/presentation/destinations/subject.dart';
 import 'package:garudaexams_dashboard/presentation/destinations/subscription.dart';
 import 'package:garudaexams_dashboard/presentation/widgets/loader_dialog.dart';
 import 'package:garudaexams_dashboard/providers/providers.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../domain/databases/exam_database.dart';
 
@@ -184,185 +184,203 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                     builder: (context) {
                       return AlertDialog(
                         title: const Text("Add Question"),
-                        content: Column(
-                          children: [
-                            TextField(
-                              decoration: const InputDecoration(
-                                hintText: "Question",
+                        content: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              TextField(
+                                decoration: const InputDecoration(
+                                  hintText: "Question",
+                                ),
+                                controller: questionController,
                               ),
-                              controller: questionController,
-                            ),
-                            TextField(
-                              decoration: const InputDecoration(
-                                hintText: "Option 1",
+                              TextField(
+                                decoration: const InputDecoration(
+                                  hintText: "Option 1",
+                                ),
+                                controller: option1Controller,
                               ),
-                              controller: option1Controller,
-                            ),
-                            TextField(
-                              decoration: const InputDecoration(
-                                hintText: "Option 2",
+                              TextField(
+                                decoration: const InputDecoration(
+                                  hintText: "Option 2",
+                                ),
+                                controller: option2Controller,
                               ),
-                              controller: option2Controller,
-                            ),
-                            TextField(
-                              decoration: const InputDecoration(
-                                hintText: "Option 3",
+                              TextField(
+                                decoration: const InputDecoration(
+                                  hintText: "Option 3",
+                                ),
+                                controller: option3Controller,
                               ),
-                              controller: option3Controller,
-                            ),
-                            TextField(
-                              decoration: const InputDecoration(
-                                hintText: "Option 4",
+                              TextField(
+                                decoration: const InputDecoration(
+                                  hintText: "Option 4",
+                                ),
+                                controller: option4Controller,
                               ),
-                              controller: option4Controller,
-                            ),
-                            TextField(
-                              decoration: const InputDecoration(
-                                hintText: "Answer",
+                              TextField(
+                                decoration: const InputDecoration(
+                                  hintText: "Answer",
+                                ),
+                                controller: answerController,
                               ),
-                              controller: answerController,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  showLoaderDialog(context);
-                                  List<String> sections = await examDatabase
-                                      .getSectionList(widget.examId);
-                                  Navigator.pop(context);
-                                  section = await showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          title: const Text("Select Section"),
-                                          content: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              SizedBox(
-                                                height: 500,
-                                                width: 500,
-                                                child: ListView.builder(
-                                                    itemCount: sections.length,
-                                                    shrinkWrap: true,
-                                                    itemBuilder:
-                                                        (context, index) {
-                                                      return Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
-                                                        child: ElevatedButton(
-                                                          child: Text(
-                                                            sections[index],
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    showLoaderDialog(context);
+                                    List<String> sections = await examDatabase
+                                        .getSectionList(widget.examId);
+                                    Navigator.pop(context);
+                                    section = await showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text("Select Section"),
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                SizedBox(
+                                                  height: 500,
+                                                  width: 500,
+                                                  child: ListView.builder(
+                                                      itemCount:
+                                                          sections.length,
+                                                      shrinkWrap: true,
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        return Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: ElevatedButton(
+                                                            child: Text(
+                                                              sections[index],
+                                                            ),
+                                                            onPressed:
+                                                                () async {
+                                                              Navigator.pop(
+                                                                  context,
+                                                                  sections[
+                                                                      index]);
+                                                            },
                                                           ),
-                                                          onPressed: () async {
-                                                            Navigator.pop(
-                                                                context,
-                                                                sections[
-                                                                    index]);
-                                                          },
-                                                        ),
-                                                      );
-                                                    }),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      });
-                                },
-                                child: const Text("Choose Section"),
+                                                        );
+                                                      }),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        });
+                                  },
+                                  child: const Text("Choose Section"),
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  showLoaderDialog(context);
-                                  List<String> sections = await examDatabase
-                                      .getSubjectList(widget.examId);
-                                  Navigator.pop(context);
-                                  subject = await showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          title: const Text("Select Subject"),
-                                          content: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              SizedBox(
-                                                height: 500,
-                                                width: 500,
-                                                child: ListView.builder(
-                                                    itemCount: sections.length,
-                                                    shrinkWrap: true,
-                                                    itemBuilder:
-                                                        (context, index) {
-                                                      return Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
-                                                        child: ElevatedButton(
-                                                          child: Text(
-                                                            sections[index],
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    showLoaderDialog(context);
+                                    List<String> sections = await examDatabase
+                                        .getSubjectList(widget.examId);
+                                    Navigator.pop(context);
+                                    subject = await showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text("Select Subject"),
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                SizedBox(
+                                                  height: 500,
+                                                  width: 500,
+                                                  child: ListView.builder(
+                                                      itemCount:
+                                                          sections.length,
+                                                      shrinkWrap: true,
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        return Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: ElevatedButton(
+                                                            child: Text(
+                                                              sections[index],
+                                                            ),
+                                                            onPressed:
+                                                                () async {
+                                                              Navigator.pop(
+                                                                  context,
+                                                                  sections[
+                                                                      index]);
+                                                            },
                                                           ),
-                                                          onPressed: () async {
-                                                            Navigator.pop(
-                                                                context,
-                                                                sections[
-                                                                    index]);
-                                                          },
-                                                        ),
-                                                      );
-                                                    }),
-                                              ),
-                                            ],
-                                          ),
+                                                        );
+                                                      }),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        });
+                                  },
+                                  child: const Text("Choose Subject"),
+                                ),
+                              ),
+                              ElevatedButton(
+                                  onPressed: () async {
+                                    FilePickerResult? image =
+                                        await FilePicker.platform.pickFiles();
+                                    showLoaderDialog(context);
+                                    imageUrl = await ref
+                                        .watch(storageProvider)
+                                        .uploadImages(
+                                          id.toString(),
+                                          image,
+                                          ref,
                                         );
-                                      });
-                                },
-                                child: const Text("Choose Subject"),
-                              ),
-                            ),
-                            ElevatedButton(
-                                onPressed: () async {
-                                  ImagePicker imagePicker = ImagePicker();
-                                  FilePickerResult? image =
-                                      await FilePicker.platform.pickFiles();
-                                  showLoaderDialog(context);
-                                  imageUrl = await ref
-                                      .watch(storageProvider)
-                                      .uploadImages(
-                                        id.toString(),
-                                        image,
-                                        ref,
-                                      );
-                                  Navigator.pop(context);
-                                },
-                                child: const Text(
-                                    "Add Explanation (Only .png files allowed)")),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  showLoaderDialog(context);
-                                  await examDatabase.addQuestion(
-                                      widget.examId, id.toString(), {
-                                    "answer": int.parse(answerController.text),
-                                    "option_one": option1Controller.text,
-                                    "option_two": option2Controller.text,
-                                    "option_three": option3Controller.text,
-                                    "option_four": option4Controller.text,
-                                    "question": questionController.text,
-                                    "section": section,
-                                    "subject": subject,
-                                    "image_url": imageUrl,
-                                  });
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                },
-                                child: const Text("Add Question"),
-                              ),
-                            )
-                          ],
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text(
+                                      "Add Explanation (Only .png files allowed)")),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    showLoaderDialog(context);
+                                    await examDatabase.addQuestion(
+                                        widget.examId, id.toString(), {
+                                      "answer":
+                                          int.parse(answerController.text),
+                                      "option_one": option1Controller.text,
+                                      "option_two": option2Controller.text,
+                                      "option_three": option3Controller.text,
+                                      "option_four": option4Controller.text,
+                                      "question": questionController.text,
+                                      "section": section,
+                                      "subject": subject,
+                                      "image_url": imageUrl,
+                                      "date_added": Timestamp.fromDate(
+                                        DateTime.now(),
+                                      ),
+                                    });
+                                    answerController.clear();
+                                    option1Controller.clear();
+                                    option2Controller.clear();
+                                    option3Controller.clear();
+                                    option4Controller.clear();
+                                    questionController.clear();
+                                    imageUrl = "";
+                                    section = "";
+                                    subject = "";
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text("Add Question"),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       );
                     });
@@ -383,7 +401,6 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                           height: 500,
                           child: Column(
                             children: [
-                              //TODO Fix
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: TextField(

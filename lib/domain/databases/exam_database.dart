@@ -228,7 +228,7 @@ class ExamDatabase {
 
   Stream getQuestions(String examId) {
     _examCollection = _firestore.collection('exam');
-    return _examCollection.doc(examId).collection('questions').snapshots();
+    return _examCollection.doc(examId).collection('questions').orderBy("date_added", descending: false).snapshots();
   }
 
   Future updateQuestion(
