@@ -2,7 +2,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:garudaexams_dashboard/presentation/widgets/loader_dialog.dart';
 
 class Storage {
   final storage = FirebaseStorage.instance;
@@ -18,7 +17,7 @@ class Storage {
     final questionImagesRef = storageRef.child("images/$imageName");
     await questionImagesRef.putData(
       fileBytes,
-      SettableMetadata(contentType: 'image/png'),
+      SettableMetadata(contentType: 'image'),
     );
     var url = await questionImagesRef.getDownloadURL();
     return url;

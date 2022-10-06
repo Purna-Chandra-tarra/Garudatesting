@@ -21,6 +21,8 @@ class Question extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ExamDatabase examDatabase = ref.watch(examDatabaseProvider);
+    late String subject = "";
+    late String section = "";
 
     return Padding(
       padding: const EdgeInsets.all(28.0),
@@ -497,72 +499,72 @@ class Question extends ConsumerWidget {
                                             ),
                                           ),
                                           const Spacer(),
-                                          //TODO: Add section update
-                                          // IconButton(
-                                          //     onPressed: () async {
-                                          //       showLoaderDialog(context);
-                                          // List<String> sections =
-                                          //     await examDatabase
-                                          //         .getSectionList(examId);
-                                          //       ref
-                                          //           .read(radioProvider.state)
-                                          //           .state = await snapshot
-                                          //               .data.docs[index]
-                                          //           ['section'];
-                                          //       Navigator.pop(context);
-                                          //       showDialog(
-                                          //           context: context,
-                                          //           builder: (context) {
-                                          //             return AlertDialog(
-                                          //               content: SizedBox(
-                                          //                 height: 500,
-                                          //                 width: 500,
-                                          //                 child: ListView
-                                          //                     .builder(
-                                          //                         itemCount: snapshot.data.docs[index]
-                                          //                                     [
-                                          //                                     'section'] ==
-                                          //                                 null
-                                          //                             ? sections
-                                          //                                     .length +
-                                          //                                 1
-                                          //                             : sections
-                                          //                                 .length,
-                                          //                         shrinkWrap:
-                                          //                             true,
-                                          //                         itemBuilder:
-                                          //                             (context,
-                                          //                                 index) {
-                                          //                           return Container(
-                                          //                             decoration:
-                                          //                                 BoxDecoration(
-                                          //                               borderRadius:
-                                          //                                   BorderRadius.circular(50),
-                                          //                               color: ref.watch(radioProvider) ==
-                                          //                                       snapshot.data.docs[index]['section']
-                                          //                                   ? Theme.of(context).colorScheme.primary
-                                          //                                   : Colors.white,
-                                          //                             ),
-                                          //                             child:
-                                          //                                 ListTile(
-                                          //                               title:
-                                          //                                   Text(
-                                          //                                 sections[
-                                          //                                     index],
-                                          //                               ),
-                                          //                               onTap:
-                                          //                                   () async {
-                                          //                                 ref.watch(radioProvider.state).state =
-                                          //                                     sections[index];
-                                          //                               },
-                                          //                             ),
-                                          //                           );
-                                          //                         }),
-                                          //               ),
-                                          //             );
-                                          //           });
-                                          //     },
-                                          //     icon: const Icon(Icons.edit))
+                                          IconButton(
+                                            onPressed: () async {
+                                              showLoaderDialog(context);
+                                              List<String> sections =
+                                                  await examDatabase
+                                                      .getSectionList(examId);
+                                              Navigator.pop(context);
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      title: const Text(
+                                                          "Select Sections"),
+                                                      content:
+                                                          SingleChildScrollView(
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            SizedBox(
+                                                              height: 500,
+                                                              width: 500,
+                                                              child: ListView
+                                                                  .builder(
+                                                                      itemCount:
+                                                                          sections
+                                                                              .length,
+                                                                      shrinkWrap:
+                                                                          true,
+                                                                      itemBuilder:
+                                                                          (context,
+                                                                              index1) {
+                                                                        return Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.all(8.0),
+                                                                          child:
+                                                                              ElevatedButton(
+                                                                            child:
+                                                                                Text(
+                                                                              sections[index1],
+                                                                            ),
+                                                                            onPressed:
+                                                                                () async {
+                                                                              showLoaderDialog(context);
+                                                                              await examDatabase.updateQuestion(
+                                                                                examId,
+                                                                                snapshot.data.docs[index].id,
+                                                                                {
+                                                                                  "section": sections[index1],
+                                                                                },
+                                                                              );
+                                                                              Navigator.pop(context);
+                                                                              Navigator.pop(context);
+                                                                            },
+                                                                          ),
+                                                                        );
+                                                                      }),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  });
+                                            },
+                                            icon: const Icon(Icons.edit),
+                                          )
                                         ],
                                       ),
                                       Row(
@@ -573,9 +575,72 @@ class Question extends ConsumerWidget {
                                             ),
                                           ),
                                           const Spacer(),
-                                          // IconButton(
-                                          //     onPressed: () {},
-                                          //     icon: const Icon(Icons.edit))
+                                          IconButton(
+                                            onPressed: () async {
+                                              showLoaderDialog(context);
+                                              List<String> subjects =
+                                                  await examDatabase
+                                                      .getSubjectList(examId);
+                                              Navigator.pop(context);
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      title: const Text(
+                                                          "Select Subject"),
+                                                      content:
+                                                          SingleChildScrollView(
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            SizedBox(
+                                                              height: 500,
+                                                              width: 500,
+                                                              child: ListView
+                                                                  .builder(
+                                                                      itemCount:
+                                                                          subjects
+                                                                              .length,
+                                                                      shrinkWrap:
+                                                                          true,
+                                                                      itemBuilder:
+                                                                          (context,
+                                                                              index1) {
+                                                                        return Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.all(8.0),
+                                                                          child:
+                                                                              ElevatedButton(
+                                                                            child:
+                                                                                Text(
+                                                                              subjects[index1],
+                                                                            ),
+                                                                            onPressed:
+                                                                                () async {
+                                                                              showLoaderDialog(context);
+                                                                              await examDatabase.updateQuestion(
+                                                                                examId,
+                                                                                snapshot.data.docs[index].id,
+                                                                                {
+                                                                                  "subject": subjects[index1],
+                                                                                },
+                                                                              );
+                                                                              Navigator.pop(context);
+                                                                              Navigator.pop(context);
+                                                                            },
+                                                                          ),
+                                                                        );
+                                                                      }),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  });
+                                            },
+                                            icon: const Icon(Icons.edit),
+                                          )
                                         ],
                                       ),
                                     ],

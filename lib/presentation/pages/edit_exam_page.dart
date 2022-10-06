@@ -236,38 +236,41 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                                         builder: (context) {
                                           return AlertDialog(
                                             title: const Text("Select Section"),
-                                            content: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                SizedBox(
-                                                  height: 500,
-                                                  width: 500,
-                                                  child: ListView.builder(
-                                                      itemCount:
-                                                          sections.length,
-                                                      shrinkWrap: true,
-                                                      itemBuilder:
-                                                          (context, index) {
-                                                        return Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(8.0),
-                                                          child: ElevatedButton(
-                                                            child: Text(
-                                                              sections[index],
+                                            content: SingleChildScrollView(
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  SizedBox(
+                                                    height: 500,
+                                                    width: 500,
+                                                    child: ListView.builder(
+                                                        itemCount:
+                                                            sections.length,
+                                                        shrinkWrap: true,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          return Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child:
+                                                                ElevatedButton(
+                                                              child: Text(
+                                                                sections[index],
+                                                              ),
+                                                              onPressed:
+                                                                  () async {
+                                                                Navigator.pop(
+                                                                    context,
+                                                                    sections[
+                                                                        index]);
+                                                              },
                                                             ),
-                                                            onPressed:
-                                                                () async {
-                                                              Navigator.pop(
-                                                                  context,
-                                                                  sections[
-                                                                      index]);
-                                                            },
-                                                          ),
-                                                        );
-                                                      }),
-                                                ),
-                                              ],
+                                                          );
+                                                        }),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           );
                                         });
@@ -288,38 +291,41 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                                         builder: (context) {
                                           return AlertDialog(
                                             title: const Text("Select Subject"),
-                                            content: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                SizedBox(
-                                                  height: 500,
-                                                  width: 500,
-                                                  child: ListView.builder(
-                                                      itemCount:
-                                                          sections.length,
-                                                      shrinkWrap: true,
-                                                      itemBuilder:
-                                                          (context, index) {
-                                                        return Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(8.0),
-                                                          child: ElevatedButton(
-                                                            child: Text(
-                                                              sections[index],
+                                            content: SingleChildScrollView(
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  SizedBox(
+                                                    height: 500,
+                                                    width: 500,
+                                                    child: ListView.builder(
+                                                        itemCount:
+                                                            sections.length,
+                                                        shrinkWrap: true,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          return Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child:
+                                                                ElevatedButton(
+                                                              child: Text(
+                                                                sections[index],
+                                                              ),
+                                                              onPressed:
+                                                                  () async {
+                                                                Navigator.pop(
+                                                                    context,
+                                                                    sections[
+                                                                        index]);
+                                                              },
                                                             ),
-                                                            onPressed:
-                                                                () async {
-                                                              Navigator.pop(
-                                                                  context,
-                                                                  sections[
-                                                                      index]);
-                                                            },
-                                                          ),
-                                                        );
-                                                      }),
-                                                ),
-                                              ],
+                                                          );
+                                                        }),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           );
                                         });
@@ -341,8 +347,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                                         );
                                     Navigator.pop(context);
                                   },
-                                  child: const Text(
-                                      "Add Explanation (Only .png files allowed)")),
+                                  child: const Text("Add Explanation Image")),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: ElevatedButton(
