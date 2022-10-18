@@ -21,7 +21,7 @@ final firebaseinitializerProvider = FutureProvider<FirebaseApp>((ref) async {
   );
   await FirebaseAppCheck.instance.activate(
     webRecaptchaSiteKey:
-        '6LfCxiUiAAAAACzcdmzCqTkFJrPhKH52nLl6Ui-f', // If you're building a web app.
+        '6Lf5w40iAAAAAFYbUNy-ADR_kvZWOZaILQzKmNOC-f', // If you're building a web app.
   );
   return app;
 });

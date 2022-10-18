@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -643,6 +644,24 @@ class Question extends ConsumerWidget {
                                           )
                                         ],
                                       ),
+                                      ElevatedButton(
+                                          onPressed: () async {
+                                            FilePickerResult? image =
+                                                await FilePicker.platform
+                                                    .pickFiles();
+                                            showLoaderDialog(context);
+                                            await ref
+                                                .watch(storageProvider)
+                                                .uploadImages(
+                                                  snapshot.data.docs[index].id
+                                                      .toString(),
+                                                  image,
+                                                  ref,
+                                                );
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text(
+                                              "Change Explanation Image")),
                                     ],
                                   ),
                                 ),
