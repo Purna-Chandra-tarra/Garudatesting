@@ -62,6 +62,8 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
 
   final TextEditingController answerController = TextEditingController();
 
+  final TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     ExamDatabase examDatabase = ref.watch(examDatabaseProvider);
@@ -71,10 +73,43 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
           case 0:
             return FloatingActionButton.extended(
               onPressed: () async {
-                showLoaderDialog(context);
-                await examDatabase.deleteExam(widget.examId);
-                Navigator.pop(context);
-                Navigator.pop(context);
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('Enter Password'),
+                      content: TextField(
+                        obscureText: true,
+                        controller: passwordController,
+                      ),
+                      actions: [
+                        ElevatedButton(
+                          onPressed: () async {
+                            showLoaderDialog(context);
+                            if (await ref
+                                    .watch(masterPasswordDatabaseProvider)
+                                    .getPassword() ==
+                                passwordController.text) {
+                              await examDatabase.deleteExam(widget.examId);
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            } else {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Wrong Password'),
+                                ),
+                              );
+                            }
+                          },
+                          child: const Text("Delete"),
+                        )
+                      ],
+                    );
+                  },
+                );
               },
               backgroundColor: Theme.of(context).colorScheme.error,
               foregroundColor: Theme.of(context).colorScheme.onError,

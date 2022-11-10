@@ -29,8 +29,7 @@ class Students extends ConsumerWidget {
                 child: StreamBuilder(
                   builder: (context, AsyncSnapshot snapshot) {
                     if (!snapshot.hasData) {
-                      return const Center(
-                          child: CupertinoActivityIndicator());
+                      return const Center(child: CupertinoActivityIndicator());
                     } else {
                       return ListView.builder(
                         shrinkWrap: true,
@@ -45,7 +44,8 @@ class Students extends ConsumerWidget {
                                   Container(
                                     decoration: BoxDecoration(
                                       color: snapshot.data.docs[index]
-                                              ['logged_in']
+                                                    ['device_id'] !=
+                                                "error"
                                           ? Colors.green[900]
                                           : Colors.red[800],
                                       borderRadius: BorderRadius.circular(3),
@@ -53,7 +53,9 @@ class Students extends ConsumerWidget {
                                     child: Padding(
                                       padding: const EdgeInsets.all(3.0),
                                       child: Text(
-                                        snapshot.data.docs[index]['logged_in']
+                                        snapshot.data.docs[index]
+                                                    ['device_id'] !=
+                                                "error"
                                             ? "ACTIVE"
                                             : 'INACTIVE',
                                         style: Theme.of(context)

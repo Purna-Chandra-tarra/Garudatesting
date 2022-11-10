@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:garudaexams_dashboard/auth/auth_service.dart';
 import 'package:garudaexams_dashboard/domain/databases/exam_database.dart';
+import 'package:garudaexams_dashboard/domain/databases/masterpassword_database.dart';
 import 'package:garudaexams_dashboard/domain/databases/query_database.dart';
 import 'package:garudaexams_dashboard/domain/databases/storage.dart';
 import 'package:garudaexams_dashboard/domain/databases/user_database.dart';
@@ -35,6 +36,9 @@ final authServiceProvider = ChangeNotifierProvider<AuthService>((ref) {
 
 final examDatabaseProvider = Provider<ExamDatabase>((ref) {
   return ExamDatabase();
+});
+final masterPasswordDatabaseProvider = Provider<MasterPasswordDatabase>((ref) {
+  return MasterPasswordDatabase();
 });
 final userDatabaseProvider = Provider<UserDatabase>((ref) {
   return UserDatabase();

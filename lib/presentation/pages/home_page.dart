@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:garudaexams_dashboard/presentation/destinations/dashboard.dart';
 import 'package:garudaexams_dashboard/presentation/destinations/exams.dart';
+import 'package:garudaexams_dashboard/presentation/destinations/master_password.dart';
 import 'package:garudaexams_dashboard/presentation/destinations/queries.dart';
 import 'package:garudaexams_dashboard/presentation/destinations/students.dart';
 import 'package:garudaexams_dashboard/presentation/pages/sign_in_page.dart';
@@ -92,6 +93,11 @@ class HomePage extends ConsumerWidget {
                 selectedIcon: Icon(Icons.warning_rounded),
                 label: Text('Queries'),
               ),
+              NavigationRailDestination(
+                icon: Icon(Icons.password_outlined),
+                selectedIcon: Icon(Icons.password_rounded),
+                label: Text('Master Password'),
+              ),
             ],
             selectedIndex: ref.watch(destinationProvider),
           ),
@@ -105,6 +111,8 @@ class HomePage extends ConsumerWidget {
                 return const Exams();
               case 3:
                 return const Queries();
+              case 4:
+                return  MasterPassword();
               default:
                 return Container();
             }
