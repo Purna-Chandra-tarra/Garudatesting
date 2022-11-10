@@ -104,7 +104,7 @@ class HomePage extends ConsumerWidget {
           Builder(builder: (context) {
             switch (ref.watch(destinationProvider)) {
               case 0:
-                return const Dashboard();
+                return Dashboard();
               case 1:
                 return const Students();
               case 2:
@@ -112,7 +112,7 @@ class HomePage extends ConsumerWidget {
               case 3:
                 return const Queries();
               case 4:
-                return  MasterPassword();
+                return MasterPassword();
               default:
                 return Container();
             }

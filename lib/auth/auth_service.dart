@@ -19,6 +19,10 @@ class AuthService extends ChangeNotifier {
     _auth.setSettings(appVerificationDisabledForTesting: true);
   }
 
+  Future<void> changeAccountPassword(String newPassword) async {
+    await _user!.updatePassword(newPassword);
+  }
+
   Future<String> signInWithEmail(String email, String password) async {
     try {
       await _auth.signInWithEmailAndPassword(

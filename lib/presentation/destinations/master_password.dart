@@ -51,6 +51,11 @@ class MasterPassword extends ConsumerWidget {
                             password: newPasswordController.text,
                           );
                       Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Success"),
+                        ),
+                      );
                     } else {
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
