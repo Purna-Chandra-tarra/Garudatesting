@@ -3,6 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:garudaexams_dashboard/presentation/destinations/about_us.dart';
 import 'package:garudaexams_dashboard/presentation/destinations/dashboard.dart';
 import 'package:garudaexams_dashboard/presentation/destinations/exams.dart';
 import 'package:garudaexams_dashboard/presentation/destinations/master_password.dart';
@@ -98,13 +99,18 @@ class HomePage extends ConsumerWidget {
                 selectedIcon: Icon(Icons.password_rounded),
                 label: Text('Master Password'),
               ),
+              NavigationRailDestination(
+                icon: Icon(Icons.info_outline_rounded),
+                selectedIcon: Icon(Icons.info),
+                label: Text('About Us'),
+              ),
             ],
             selectedIndex: ref.watch(destinationProvider),
           ),
           Builder(builder: (context) {
             switch (ref.watch(destinationProvider)) {
               case 0:
-                return Dashboard();
+                return const Dashboard();
               case 1:
                 return const Students();
               case 2:
@@ -113,6 +119,8 @@ class HomePage extends ConsumerWidget {
                 return const Queries();
               case 4:
                 return MasterPassword();
+              case 5:
+                return AboutUs();
               default:
                 return Container();
             }

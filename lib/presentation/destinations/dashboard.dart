@@ -4,15 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:garudaexams_dashboard/domain/databases/user_database.dart';
-import 'package:garudaexams_dashboard/presentation/widgets/loader_dialog.dart';
 
 import '../../domain/databases/exam_database.dart';
 import '../../providers/providers.dart';
 
 class Dashboard extends ConsumerWidget {
-  Dashboard({Key? key}) : super(key: key);
-
-  final TextEditingController _newPasswordController = TextEditingController();
+  const Dashboard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -120,55 +117,6 @@ class Dashboard extends ConsumerWidget {
                     ),
                   ),
                 ],
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: const Text('Update Account Password'),
-                        content: TextField(
-                          controller: _newPasswordController,
-                          decoration: const InputDecoration(
-                            hintText: 'Enter new password',
-                          ),
-                        ),
-                        actions: [
-                          ElevatedButton(
-                              onPressed: () async {
-                                try {
-                                  showLoaderDialog(context);
-                                  await ref
-                                      .watch(authServiceProvider)
-                                      .user!
-                                      .updatePassword(
-                                          _newPasswordController.text);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text("Success"),
-                                    ),
-                                  );
-                                } catch (e) {
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(e.toString()),
-                                    ),
-                                  );
-                                }
-                              },
-                              child: const Text("Submit"))
-                        ],
-                      );
-                    },
-                  );
-                },
-                child: const Text("Change Account Password"),
               ),
             ],
           ),
