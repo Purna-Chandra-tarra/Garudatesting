@@ -645,11 +645,13 @@ class Question extends ConsumerWidget {
                                         ],
                                       ),
                                       ElevatedButton(
-                                          onPressed: () async {
+                                        onPressed: () async {
+                                          showLoaderDialog(context);
+                                          try {
                                             FilePickerResult? image =
                                                 await FilePicker.platform
                                                     .pickFiles();
-                                            showLoaderDialog(context);
+
                                             await ref
                                                 .watch(storageProvider)
                                                 .uploadImages(
@@ -659,9 +661,13 @@ class Question extends ConsumerWidget {
                                                   ref,
                                                 );
                                             Navigator.pop(context);
-                                          },
-                                          child: const Text(
-                                              "Change Explanation Image")),
+                                          } catch (e) {
+                                            Navigator.pop(context);
+                                          }
+                                        },
+                                        child: const Text(
+                                            "Change Explanation Image"),
+                                      ),
                                     ],
                                   ),
                                 ),

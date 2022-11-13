@@ -195,11 +195,6 @@ class HomePage extends ConsumerWidget {
                         label: Text('Dashboard'),
                       ),
                       NavigationRailDestination(
-                        icon: Icon(Icons.person_outline_rounded),
-                        selectedIcon: Icon(Icons.person_rounded),
-                        label: Text('Students'),
-                      ),
-                      NavigationRailDestination(
                         icon: Icon(Icons.notes_outlined),
                         selectedIcon: Icon(Icons.notes_rounded),
                         label: Text('Exams'),
@@ -212,21 +207,20 @@ class HomePage extends ConsumerWidget {
                     ],
                     selectedIndex: ref.watch(destinationProvider),
                   ),
-                  Builder(builder: (context) {
-                    switch (ref.watch(destinationProvider)) {
-                      case 0:
-                        return const Dashboard();
-                      case 1:
-                        return const Students();
-                      case 2:
-                        return const Exams();
-                      case 3:
-                        return const Queries();
-
-                      default:
-                        return Container();
-                    }
-                  }),
+                  Builder(
+                    builder: (context) {
+                      switch (ref.watch(destinationProvider)) {
+                        case 0:
+                          return const Dashboard();
+                        case 1:
+                          return const Exams();
+                        case 2:
+                          return const Queries();
+                        default:
+                          return Container();
+                      }
+                    },
+                  ),
                 ],
               );
             }

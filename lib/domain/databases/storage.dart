@@ -8,7 +8,7 @@ class Storage {
 
   final storageRef = FirebaseStorage.instance.ref();
 
-  Future<String> uploadImages(
+  Future<String>uploadImages(
     String imageName,
     FilePickerResult? imageFile,
     WidgetRef ref,

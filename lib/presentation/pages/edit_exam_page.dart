@@ -370,17 +370,22 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                               ),
                               ElevatedButton(
                                   onPressed: () async {
-                                    FilePickerResult? image =
-                                        await FilePicker.platform.pickFiles();
                                     showLoaderDialog(context);
-                                    imageUrl = await ref
-                                        .watch(storageProvider)
-                                        .uploadImages(
-                                          id.toString(),
-                                          image,
-                                          ref,
-                                        );
-                                    Navigator.pop(context);
+                                    try {
+                                      FilePickerResult? image =
+                                          await FilePicker.platform.pickFiles();
+
+                                      await ref
+                                          .watch(storageProvider)
+                                          .uploadImages(
+                                            id.toString(),
+                                            image,
+                                            ref,
+                                          );
+                                      Navigator.pop(context);
+                                    } catch (e) {
+                                      Navigator.pop(context);
+                                    }
                                   },
                                   child: const Text("Add Explanation Image")),
                               Padding(
@@ -519,74 +524,149 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
       appBar: AppBar(
         title: const Text("Edit Exam"),
       ),
-      body: Row(
-        children: [
-          NavigationRail(
-            onDestinationSelected: (value) {
-              ref.read(destinationExamProvider.state).state = value;
-            },
-            extended: true,
-            destinations: const [
-              NavigationRailDestination(
-                icon: Icon(Icons.abc_outlined),
-                selectedIcon: Icon(Icons.abc_rounded),
-                label: Text("Exam Details"),
+      body: FutureBuilder(
+          future: ref.watch(userDatabaseProvider).isSuperUser(
+                ref.watch(authServiceProvider).user!.email.toString(),
               ),
-              NavigationRailDestination(
-                icon: Icon(Icons.notes),
-                selectedIcon: Icon(Icons.notes_rounded),
-                label: Text("Subjects"),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.insert_page_break_outlined),
-                selectedIcon: Icon(Icons.insert_page_break_rounded),
-                label: Text("Sections"),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.question_mark_rounded),
-                selectedIcon: Icon(Icons.question_mark_outlined),
-                label: Text("Questions"),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.diamond_outlined),
-                selectedIcon: Icon(Icons.diamond_rounded),
-                label: Text("Subscriptions"),
-              ),
-            ],
-            selectedIndex: ref.watch(destinationExamProvider),
-          ),
-          Expanded(
-            child: Builder(builder: (context) {
-              switch (ref.watch(destinationExamProvider)) {
-                case 0:
-                  return ExamDetails(
-                    examId: widget.examId,
-                  );
-                case 1:
-                  return Subject(
-                    examId: widget.examId,
-                  );
-                case 2:
-                  return Section(
-                    examId: widget.examId,
-                  );
-                case 3:
-                  return Question(
-                    examId: widget.examId,
-                  );
-                case 4:
-                  return Subscription(
-                    examId: widget.examId,
-                  );
-                default:
-                  return ExamDetails(
-                    examId: widget.examId,
-                  );
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data) {
+                return Row(
+                  children: [
+                    NavigationRail(
+                      onDestinationSelected: (value) {
+                        ref.read(destinationExamProvider.state).state = value;
+                      },
+                      extended: true,
+                      destinations: const [
+                        NavigationRailDestination(
+                          icon: Icon(Icons.abc_outlined),
+                          selectedIcon: Icon(Icons.abc_rounded),
+                          label: Text("Exam Details"),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.notes),
+                          selectedIcon: Icon(Icons.notes_rounded),
+                          label: Text("Subjects"),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.insert_page_break_outlined),
+                          selectedIcon: Icon(Icons.insert_page_break_rounded),
+                          label: Text("Sections"),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.question_mark_rounded),
+                          selectedIcon: Icon(Icons.question_mark_outlined),
+                          label: Text("Questions"),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.diamond_outlined),
+                          selectedIcon: Icon(Icons.diamond_rounded),
+                          label: Text("Subscriptions"),
+                        ),
+                      ],
+                      selectedIndex: ref.watch(destinationExamProvider),
+                    ),
+                    Expanded(
+                      child: Builder(builder: (context) {
+                        switch (ref.watch(destinationExamProvider)) {
+                          case 0:
+                            return ExamDetails(
+                              examId: widget.examId,
+                            );
+                          case 1:
+                            return Subject(
+                              examId: widget.examId,
+                            );
+                          case 2:
+                            return Section(
+                              examId: widget.examId,
+                            );
+                          case 3:
+                            return Question(
+                              examId: widget.examId,
+                            );
+                          case 4:
+                            return Subscription(
+                              examId: widget.examId,
+                            );
+                          default:
+                            return ExamDetails(
+                              examId: widget.examId,
+                            );
+                        }
+                      }),
+                    )
+                  ],
+                );
+              } else {
+                return Row(
+                  children: [
+                    NavigationRail(
+                      onDestinationSelected: (value) {
+                        ref.read(destinationExamProvider.state).state = value;
+                      },
+                      extended: true,
+                      destinations: const [
+                        NavigationRailDestination(
+                          icon: Icon(Icons.abc_outlined),
+                          selectedIcon: Icon(Icons.abc_rounded),
+                          label: Text("Exam Details"),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.notes),
+                          selectedIcon: Icon(Icons.notes_rounded),
+                          label: Text("Subjects"),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.insert_page_break_outlined),
+                          selectedIcon: Icon(Icons.insert_page_break_rounded),
+                          label: Text("Sections"),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.question_mark_rounded),
+                          selectedIcon: Icon(Icons.question_mark_outlined),
+                          label: Text("Questions"),
+                        ),
+                      ],
+                      selectedIndex: ref.watch(destinationExamProvider),
+                    ),
+                    Expanded(
+                      child: Builder(builder: (context) {
+                        switch (ref.watch(destinationExamProvider)) {
+                          case 0:
+                            return ExamDetails(
+                              examId: widget.examId,
+                            );
+                          case 1:
+                            return Subject(
+                              examId: widget.examId,
+                            );
+                          case 2:
+                            return Section(
+                              examId: widget.examId,
+                            );
+                          case 3:
+                            return Question(
+                              examId: widget.examId,
+                            );
+                          default:
+                            return ExamDetails(
+                              examId: widget.examId,
+                            );
+                        }
+                      }),
+                    )
+                  ],
+                );
               }
-            }),
-          )
-        ],
-      ),
+            } else {
+              return const Center(
+                  child: CupertinoActivityIndicator(
+                radius: 50,
+              ));
+            }
+          }),
     );
   }
 }
