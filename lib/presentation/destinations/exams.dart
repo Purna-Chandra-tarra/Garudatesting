@@ -81,30 +81,54 @@ class Exams extends ConsumerWidget {
                                     const SizedBox(
                                       width: 5,
                                     ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: snapshot.data.docs[index]
-                                                ['active']
-                                            ? Colors.green[900]
-                                            : Colors.red[800],
-                                        borderRadius: BorderRadius.circular(3),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(3.0),
-                                        child: Text(
-                                          snapshot.data.docs[index]['active']
-                                              ? "ACTIVE"
-                                              : 'INACTIVE',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall
-                                              ?.copyWith(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                        ),
-                                      ),
-                                    ),
+                                    FutureBuilder(
+                                        future: ref
+                                            .watch(userDatabaseProvider)
+                                            .isSuperUser(
+                                              ref
+                                                  .watch(authServiceProvider)
+                                                  .user!
+                                                  .email
+                                                  .toString(),
+                                            ),
+                                        builder: (context, AsyncSnapshot data) {
+                                          if (data.hasData) {
+                                            if (data.data) {
+                                              return Container(
+                                                decoration: BoxDecoration(
+                                                  color: snapshot.data
+                                                          .docs[index]['active']
+                                                      ? Colors.green[900]
+                                                      : Colors.red[800],
+                                                  borderRadius:
+                                                      BorderRadius.circular(3),
+                                                ),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(3.0),
+                                                  child: Text(
+                                                    snapshot.data.docs[index]
+                                                            ['active']
+                                                        ? "ACTIVE"
+                                                        : 'INACTIVE',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodySmall
+                                                        ?.copyWith(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                  ),
+                                                ),
+                                              );
+                                            } else {
+                                              return const SizedBox();
+                                            }
+                                          } else {
+                                            return const CupertinoActivityIndicator();
+                                          }
+                                        }),
                                     const SizedBox(
                                       width: 5,
                                     ),
