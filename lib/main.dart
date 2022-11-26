@@ -36,7 +36,7 @@ class MyApp extends ConsumerWidget {
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xff7c79fc),
-          brightness: Brightness.dark,
+          brightness: Brightness.light,
         ),
       ),
       home: initialize.when(

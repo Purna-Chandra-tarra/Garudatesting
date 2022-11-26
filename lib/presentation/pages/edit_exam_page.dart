@@ -60,6 +60,21 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
 
   final TextEditingController option4Controller = TextEditingController();
 
+  final TextEditingController questionEquationController =
+      TextEditingController();
+
+  final TextEditingController option1EquationController =
+      TextEditingController();
+
+  final TextEditingController option2EquationController =
+      TextEditingController();
+
+  final TextEditingController option3EquationController =
+      TextEditingController();
+
+  final TextEditingController option4EquationController =
+      TextEditingController();
+
   final TextEditingController answerController = TextEditingController();
 
   final TextEditingController passwordController = TextEditingController();
@@ -230,9 +245,21 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                               ),
                               TextField(
                                 decoration: const InputDecoration(
+                                  hintText: "Question Equation",
+                                ),
+                                controller: questionEquationController,
+                              ),
+                              TextField(
+                                decoration: const InputDecoration(
                                   hintText: "Option 1",
                                 ),
                                 controller: option1Controller,
+                              ),
+                              TextField(
+                                decoration: const InputDecoration(
+                                  hintText: "Option 1 Equation",
+                                ),
+                                controller: option1EquationController,
                               ),
                               TextField(
                                 decoration: const InputDecoration(
@@ -242,15 +269,33 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                               ),
                               TextField(
                                 decoration: const InputDecoration(
+                                  hintText: "Option 2 equation",
+                                ),
+                                controller: option2EquationController,
+                              ),
+                              TextField(
+                                decoration: const InputDecoration(
                                   hintText: "Option 3",
                                 ),
                                 controller: option3Controller,
                               ),
                               TextField(
                                 decoration: const InputDecoration(
+                                  hintText: "Option 3 Equation",
+                                ),
+                                controller: option3EquationController,
+                              ),
+                              TextField(
+                                decoration: const InputDecoration(
                                   hintText: "Option 4",
                                 ),
                                 controller: option4Controller,
+                              ),
+                              TextField(
+                                decoration: const InputDecoration(
+                                  hintText: "Option 4 Equation",
+                                ),
+                                controller: option4EquationController,
                               ),
                               TextField(
                                 decoration: const InputDecoration(
@@ -402,6 +447,16 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                                       "option_three": option3Controller.text,
                                       "option_four": option4Controller.text,
                                       "question": questionController.text,
+                                      "option_one_equation":
+                                          option1EquationController.text,
+                                      "option_two_equation":
+                                          option2EquationController.text,
+                                      "option_three_equation":
+                                          option3EquationController.text,
+                                      "option_four_equation":
+                                          option4EquationController.text,
+                                      "question_equation":
+                                          questionEquationController.text,
                                       "section": section,
                                       "subject": subject,
                                       "image_url": imageUrl,

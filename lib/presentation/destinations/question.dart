@@ -3,6 +3,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:garudaexams_dashboard/domain/databases/exam_database.dart';
 import 'package:garudaexams_dashboard/presentation/widgets/loader_dialog.dart';
@@ -17,6 +18,8 @@ class Question extends ConsumerWidget {
 
   final String examId;
   final TextEditingController questionController = TextEditingController();
+  final TextEditingController questionEquationController =
+      TextEditingController();
   final TextEditingController optionController = TextEditingController();
 
   @override
@@ -139,6 +142,84 @@ class Question extends ConsumerWidget {
                                       Row(
                                         children: [
                                           Expanded(
+                                            child: Math.tex(
+                                              snapshot.data.docs[index]
+                                                      .data()
+                                                      .toString()
+                                                      .contains(
+                                                          'question_equation')
+                                                  ? snapshot.data.docs[index]
+                                                      ['question_equation']
+                                                  : "No Equation",
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          IconButton(
+                                              onPressed: () {
+                                                showCupertinoDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      title: const Text(
+                                                        "Update Question Equation",
+                                                      ),
+                                                      content: Column(
+                                                        children: [
+                                                          TextField(
+                                                            controller:
+                                                                questionEquationController,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      actions: [
+                                                        ElevatedButton(
+                                                          child: const Text(
+                                                            "Cancel",
+                                                          ),
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                        ),
+                                                        ElevatedButton(
+                                                          child: const Text(
+                                                            "Update",
+                                                          ),
+                                                          onPressed: () async {
+                                                            showLoaderDialog(
+                                                                context);
+                                                            await examDatabase
+                                                                .updateQuestion(
+                                                              examId,
+                                                              snapshot
+                                                                  .data
+                                                                  .docs[index]
+                                                                  .id,
+                                                              {
+                                                                "question_equation":
+                                                                    questionEquationController
+                                                                        .text
+                                                              },
+                                                            );
+                                                            questionEquationController
+                                                                .clear();
+                                                            Navigator.pop(
+                                                                context);
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              icon: const Icon(Icons.edit))
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
                                             child: Text(
                                               "Option 1. ${snapshot.data.docs[index]['option_one']}",
                                             ),
@@ -192,6 +273,84 @@ class Question extends ConsumerWidget {
                                                               },
                                                             );
                                                             optionController
+                                                                .clear();
+                                                            Navigator.pop(
+                                                                context);
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              icon: const Icon(Icons.edit))
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Math.tex(
+                                              snapshot.data.docs[index]
+                                                      .data()
+                                                      .toString()
+                                                      .contains(
+                                                          'option_one_equation')
+                                                  ? snapshot.data.docs[index]
+                                                      ['option_one_equation']
+                                                  : "No Option 1 Equation",
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          IconButton(
+                                              onPressed: () {
+                                                showCupertinoDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      title: const Text(
+                                                        "Update Option 1 Equation",
+                                                      ),
+                                                      content: Column(
+                                                        children: [
+                                                          TextField(
+                                                            controller:
+                                                                questionEquationController,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      actions: [
+                                                        ElevatedButton(
+                                                          child: const Text(
+                                                            "Cancel",
+                                                          ),
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                        ),
+                                                        ElevatedButton(
+                                                          child: const Text(
+                                                            "Update",
+                                                          ),
+                                                          onPressed: () async {
+                                                            showLoaderDialog(
+                                                                context);
+                                                            await examDatabase
+                                                                .updateQuestion(
+                                                              examId,
+                                                              snapshot
+                                                                  .data
+                                                                  .docs[index]
+                                                                  .id,
+                                                              {
+                                                                "option_one_equation":
+                                                                    questionEquationController
+                                                                        .text
+                                                              },
+                                                            );
+                                                            questionEquationController
                                                                 .clear();
                                                             Navigator.pop(
                                                                 context);
@@ -281,6 +440,84 @@ class Question extends ConsumerWidget {
                                       Row(
                                         children: [
                                           Expanded(
+                                            child: Math.tex(
+                                              snapshot.data.docs[index]
+                                                      .data()
+                                                      .toString()
+                                                      .contains(
+                                                          'option_two_equation')
+                                                  ? snapshot.data.docs[index]
+                                                      ['option_two_equation']
+                                                  : "No Option 2 Equation",
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          IconButton(
+                                              onPressed: () {
+                                                showCupertinoDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      title: const Text(
+                                                        "Update Option 2 Equation",
+                                                      ),
+                                                      content: Column(
+                                                        children: [
+                                                          TextField(
+                                                            controller:
+                                                                questionEquationController,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      actions: [
+                                                        ElevatedButton(
+                                                          child: const Text(
+                                                            "Cancel",
+                                                          ),
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                        ),
+                                                        ElevatedButton(
+                                                          child: const Text(
+                                                            "Update",
+                                                          ),
+                                                          onPressed: () async {
+                                                            showLoaderDialog(
+                                                                context);
+                                                            await examDatabase
+                                                                .updateQuestion(
+                                                              examId,
+                                                              snapshot
+                                                                  .data
+                                                                  .docs[index]
+                                                                  .id,
+                                                              {
+                                                                "option_two_equation":
+                                                                    questionEquationController
+                                                                        .text
+                                                              },
+                                                            );
+                                                            questionEquationController
+                                                                .clear();
+                                                            Navigator.pop(
+                                                                context);
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              icon: const Icon(Icons.edit))
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
                                             child: Text(
                                               "Option 3. ${snapshot.data.docs[index]['option_three']}",
                                             ),
@@ -352,6 +589,84 @@ class Question extends ConsumerWidget {
                                       Row(
                                         children: [
                                           Expanded(
+                                            child: Math.tex(
+                                              snapshot.data.docs[index]
+                                                      .data()
+                                                      .toString()
+                                                      .contains(
+                                                          'option_three_equation')
+                                                  ? snapshot.data.docs[index]
+                                                      ['option_three_equation']
+                                                  : "No Option 3 Equation",
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          IconButton(
+                                              onPressed: () {
+                                                showCupertinoDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      title: const Text(
+                                                        "Update Option 3 Equation",
+                                                      ),
+                                                      content: Column(
+                                                        children: [
+                                                          TextField(
+                                                            controller:
+                                                                questionEquationController,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      actions: [
+                                                        ElevatedButton(
+                                                          child: const Text(
+                                                            "Cancel",
+                                                          ),
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                        ),
+                                                        ElevatedButton(
+                                                          child: const Text(
+                                                            "Update",
+                                                          ),
+                                                          onPressed: () async {
+                                                            showLoaderDialog(
+                                                                context);
+                                                            await examDatabase
+                                                                .updateQuestion(
+                                                              examId,
+                                                              snapshot
+                                                                  .data
+                                                                  .docs[index]
+                                                                  .id,
+                                                              {
+                                                                "option_three_equation":
+                                                                    questionEquationController
+                                                                        .text
+                                                              },
+                                                            );
+                                                            questionEquationController
+                                                                .clear();
+                                                            Navigator.pop(
+                                                                context);
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              icon: const Icon(Icons.edit))
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
                                             child: Text(
                                               "Option 4. ${snapshot.data.docs[index]['option_four']}",
                                             ),
@@ -405,6 +720,84 @@ class Question extends ConsumerWidget {
                                                               },
                                                             );
                                                             optionController
+                                                                .clear();
+                                                            Navigator.pop(
+                                                                context);
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              icon: const Icon(Icons.edit))
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Math.tex(
+                                              snapshot.data.docs[index]
+                                                      .data()
+                                                      .toString()
+                                                      .contains(
+                                                          'option_four_equation')
+                                                  ? snapshot.data.docs[index]
+                                                      ['option_four_equation']
+                                                  : "No Option 4 Equation",
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          IconButton(
+                                              onPressed: () {
+                                                showCupertinoDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      title: const Text(
+                                                        "Update Option 4 Equation",
+                                                      ),
+                                                      content: Column(
+                                                        children: [
+                                                          TextField(
+                                                            controller:
+                                                                questionEquationController,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      actions: [
+                                                        ElevatedButton(
+                                                          child: const Text(
+                                                            "Cancel",
+                                                          ),
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                        ),
+                                                        ElevatedButton(
+                                                          child: const Text(
+                                                            "Update",
+                                                          ),
+                                                          onPressed: () async {
+                                                            showLoaderDialog(
+                                                                context);
+                                                            await examDatabase
+                                                                .updateQuestion(
+                                                              examId,
+                                                              snapshot
+                                                                  .data
+                                                                  .docs[index]
+                                                                  .id,
+                                                              {
+                                                                "option_four_equation":
+                                                                    questionEquationController
+                                                                        .text
+                                                              },
+                                                            );
+                                                            questionEquationController
                                                                 .clear();
                                                             Navigator.pop(
                                                                 context);

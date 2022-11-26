@@ -1,4 +1,3 @@
-import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,10 +19,10 @@ final firebaseinitializerProvider = FutureProvider<FirebaseApp>((ref) async {
   FirebaseApp app = await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FirebaseAppCheck.instance.activate(
-    webRecaptchaSiteKey:
-        '6Lf5w40iAAAAAFYbUNy-ADR_kvZWOZaILQzKmNOC-f', // If you're building a web app.
-  );
+  // await FirebaseAppCheck.instance.activate(
+  //   webRecaptchaSiteKey:
+  //       '6Lf5w40iAAAAAFYbUNy-ADR_kvZWOZaILQzKmNOC-f', // If you're building a web app.
+  // );
   return app;
 });
 final authStateProvider = StreamProvider<User?>((ref) {
