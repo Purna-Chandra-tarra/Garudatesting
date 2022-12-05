@@ -1045,7 +1045,7 @@ class Question extends ConsumerWidget {
                                                 await FilePicker.platform
                                                     .pickFiles();
 
-                                            await ref
+                                            final imageUrl = await ref
                                                 .watch(storageProvider)
                                                 .uploadImages(
                                                   snapshot.data.docs[index].id
@@ -1053,6 +1053,13 @@ class Question extends ConsumerWidget {
                                                   image,
                                                   ref,
                                                 );
+                                            await examDatabase.updateQuestion(
+                                              examId,
+                                              snapshot.data.docs[index].id,
+                                              {
+                                                "image_url": imageUrl,
+                                              },
+                                            );
                                             Navigator.pop(context);
                                           } catch (e) {
                                             Navigator.pop(context);

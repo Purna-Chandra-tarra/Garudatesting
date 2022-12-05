@@ -420,7 +420,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                                       FilePickerResult? image =
                                           await FilePicker.platform.pickFiles();
 
-                                      await ref
+                                      imageUrl = await ref
                                           .watch(storageProvider)
                                           .uploadImages(
                                             id.toString(),
