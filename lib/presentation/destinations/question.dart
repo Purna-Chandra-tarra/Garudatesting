@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_pagination/firebase_pagination.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
@@ -49,11 +48,10 @@ class Question extends ConsumerWidget {
                 stream: examDatabase.getQuestions(examId),
                 builder: (context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData) {
-                    return FirestorePagination(
-                      query: snapshot.data,
-                      isLive: true,
+                    return ListView.builder(
                       shrinkWrap: true,
-                      itemBuilder: ((context, documentSnapshots, index) {
+                      itemCount: snapshot.data.docs.length,
+                      itemBuilder: ((context, index) {
                         return Card(
                           child: Padding(
                             padding: const EdgeInsets.all(18.0),
