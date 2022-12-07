@@ -4,6 +4,7 @@ import 'package:garudaexams_dashboard/data/models/exam_model.dart';
 class ExamDatabase {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late CollectionReference _examCollection;
+  int pageSize = 10;
 
   Stream getExamList() {
     _examCollection = _firestore.collection('exam');
@@ -226,13 +227,12 @@ class ExamDatabase {
     }
   }
 
-  Stream getQuestions(String examId) {
+  getQuestions(String examId) {
     _examCollection = _firestore.collection('exam');
     return _examCollection
         .doc(examId)
         .collection('questions')
-        .orderBy("date_added", descending: false)
-        .snapshots();
+        .orderBy("date_added", descending: false);
   }
 
   Future updateQuestion(
