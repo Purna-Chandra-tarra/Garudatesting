@@ -10,6 +10,12 @@ class UserDatabase {
     return stream;
   }
 
+  Future changeStudentStatus(String phoneNo) async {
+    await _firestore.collection('users').doc(phoneNo).update(
+      {'device_id': 'error'},
+    );
+  }
+
   //is super user
   Future<bool> isSuperUser(String email) async {
     return await _firestore

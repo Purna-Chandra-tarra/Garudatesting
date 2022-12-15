@@ -49,20 +49,44 @@ class Subject extends ConsumerWidget {
                               children: [
                                 Text(snapshot.data.docs[index]['name']),
                                 const Spacer(),
-                                IconButton(
-                                  onPressed: () async {
-                                    showLoaderDialog(context);
-                                    await examDatabase.deleteExamSubject(
-                                      examId,
-                                      snapshot.data.docs[index].id,
-                                    );
-                                    Navigator.pop(context);
+                                FutureBuilder(
+                                  builder: (context, AsyncSnapshot snapshot) {
+                                    if (snapshot.hasData) {
+                                      if (snapshot.data) {
+                                        return IconButton(
+                                          onPressed: () async {
+                                            showLoaderDialog(context);
+                                            await examDatabase
+                                                .deleteExamSubject(
+                                              examId,
+                                              snapshot.data.docs[index].id,
+                                            );
+                                            Navigator.pop(context);
+                                          },
+                                          icon: Icon(
+                                            Icons.delete,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .error,
+                                          ),
+                                        );
+                                      } else {
+                                        return const SizedBox();
+                                      }
+                                    } else {
+                                      return const CupertinoActivityIndicator();
+                                    }
                                   },
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Theme.of(context).colorScheme.error,
-                                  ),
-                                )
+                                  future: ref
+                                      .watch(userDatabaseProvider)
+                                      .isSuperUser(
+                                        ref
+                                            .watch(authServiceProvider)
+                                            .user!
+                                            .email
+                                            .toString(),
+                                      ),
+                                ),
                               ],
                             ),
                           ),

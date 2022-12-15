@@ -72,46 +72,67 @@ class ExamDetails extends ConsumerWidget {
                     const SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      children: [
-                        const Text("Exam Status: "),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: snapshot.data['active']
-                                ? Colors.green[900]
-                                : Colors.red[800],
-                            borderRadius: BorderRadius.circular(3),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(3.0),
-                            child: Text(
-                              snapshot.data['active'] ? "ACTIVE" : 'INACTIVE',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
+                    FutureBuilder(
+                      builder: (context, AsyncSnapshot snapshot1) {
+                        if (snapshot1.hasData) {
+                          if (snapshot1.data) {
+                            return Row(
+                              children: [
+                                const Text("Exam Status: "),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: snapshot.data['active']
+                                        ? Colors.green[900]
+                                        : Colors.red[800],
+                                    borderRadius: BorderRadius.circular(3),
                                   ),
-                            ),
-                          ),
-                        ),
-                        const Spacer(),
-                        TextButton(
-                          onPressed: () async {
-                            showLoaderDialog(context);
-                            await examDatabase.updateExamStatus(
-                              !snapshot.data['active'],
-                              examId,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: Text(
+                                      snapshot.data['active']
+                                          ? "ACTIVE"
+                                          : 'INACTIVE',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+                                  ),
+                                ),
+                                const Spacer(),
+                                TextButton(
+                                  onPressed: () async {
+                                    showLoaderDialog(context);
+                                    await examDatabase.updateExamStatus(
+                                      !snapshot.data['active'],
+                                      examId,
+                                    );
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text("Change Status"),
+                                )
+                              ],
                             );
-                            Navigator.pop(context);
-                          },
-                          child: const Text("Change Status"),
-                        )
-                      ],
+                          } else {
+                            return const SizedBox();
+                          }
+                        } else {
+                          return const CupertinoActivityIndicator();
+                        }
+                      },
+                      future: ref.watch(userDatabaseProvider).isSuperUser(
+                            ref
+                                .watch(authServiceProvider)
+                                .user!
+                                .email
+                                .toString(),
+                          ),
                     ),
                     Row(
                       children: [
