@@ -79,6 +79,28 @@ class Students extends ConsumerWidget {
                                         ),
                                       ),
                                     ),
+                                    const SizedBox(width: 5),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        borderRadius: BorderRadius.circular(3),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(3.0),
+                                        child: SelectableText(
+                                          snapshot.data.docs[index]['phone_no'],
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall
+                                              ?.copyWith(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                        ),
+                                      ),
+                                    ),
                                     const Spacer(),
                                   ],
                                 ),
