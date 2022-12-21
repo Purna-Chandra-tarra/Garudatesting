@@ -469,6 +469,11 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                                     option2Controller.clear();
                                     option3Controller.clear();
                                     option4Controller.clear();
+                                    option1EquationController.clear();
+                                    option2EquationController.clear();
+                                    option3EquationController.clear();
+                                    option4EquationController.clear();
+
                                     questionController.clear();
                                     imageUrl = "";
                                     section = "";

@@ -944,28 +944,25 @@ class Question extends ConsumerWidget {
                                 ElevatedButton(
                                   onPressed: () async {
                                     showLoaderDialog(context);
-                                    try {
-                                      FilePickerResult? image =
-                                          await FilePicker.platform.pickFiles();
 
-                                      final imageUrl = await ref
-                                          .watch(storageProvider)
-                                          .uploadImages(
-                                            docs[index].id.toString(),
-                                            image,
-                                            ref,
-                                          );
-                                      await examDatabase.updateQuestion(
-                                        examId,
-                                        documentSnapshots[index].id,
-                                        {
-                                          "image_url": imageUrl,
-                                        },
-                                      );
-                                      Navigator.pop(context);
-                                    } catch (e) {
-                                      Navigator.pop(context);
-                                    }
+                                    FilePickerResult? image =
+                                        await FilePicker.platform.pickFiles();
+
+                                    final imageUrl = await ref
+                                        .watch(storageProvider)
+                                        .uploadImages(
+                                          documentSnapshots[index].id,
+                                          image,
+                                          ref,
+                                        );
+                                    await examDatabase.updateQuestion(
+                                      examId,
+                                      documentSnapshots[index].id,
+                                      {
+                                        "image_url": imageUrl,
+                                      },
+                                    );
+                                    Navigator.pop(context);
                                   },
                                   child: const Text("Change Explanation Image"),
                                 ),
