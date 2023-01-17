@@ -199,6 +199,11 @@ class HomePage extends ConsumerWidget {
                         selectedIcon: Icon(Icons.notes_rounded),
                         label: Text('Exams'),
                       ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.info_outline_rounded),
+                        selectedIcon: Icon(Icons.info),
+                        label: Text('About Us'),
+                      ),
                     ],
                     selectedIndex: ref.watch(destinationProvider),
                   ),
@@ -209,6 +214,8 @@ class HomePage extends ConsumerWidget {
                           return const Dashboard();
                         case 1:
                           return const Exams();
+                        case 2:
+                          return AboutUs();
                         default:
                           return Container();
                       }
