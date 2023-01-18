@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:garudaexams_dashboard/data/models/exam_model.dart';
 
 class ExamDatabase {
@@ -227,12 +228,9 @@ class ExamDatabase {
     }
   }
 
-  getQuestions(String examId) {
+  Query getQuestions(String examId, WidgetRef ref) {
     _examCollection = _firestore.collection('exam');
-    return _examCollection
-        .doc(examId)
-        .collection('questions')
-        .orderBy("date_added", descending: false);
+    return _examCollection.doc(examId).collection('questions');
   }
 
   Future updateQuestion(

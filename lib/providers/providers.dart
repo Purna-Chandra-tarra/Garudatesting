@@ -9,6 +9,10 @@ import 'package:garudaexams_dashboard/domain/databases/storage.dart';
 import 'package:garudaexams_dashboard/domain/databases/user_database.dart';
 import 'package:garudaexams_dashboard/firebase_options.dart';
 
+final searchQuestionProvider = StateProvider<String>((ref) {
+  return "This is Question 12";
+});
+
 final destinationProvider = StateProvider.autoDispose<int>((ref) {
   return 0;
 });
