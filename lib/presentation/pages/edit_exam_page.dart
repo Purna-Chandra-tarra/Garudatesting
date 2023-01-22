@@ -50,6 +50,8 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
 
   late String imageUrl = "";
 
+  late String questionImageUrl = "";
+
   final TextEditingController questionController = TextEditingController();
 
   final TextEditingController option1Controller = TextEditingController();
@@ -414,25 +416,50 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                                 ),
                               ),
                               ElevatedButton(
-                                  onPressed: () async {
-                                    showLoaderDialog(context);
-                                    try {
-                                      FilePickerResult? image =
-                                          await FilePicker.platform.pickFiles();
+                                onPressed: () async {
+                                  showLoaderDialog(context);
+                                  try {
+                                    FilePickerResult? image =
+                                        await FilePicker.platform.pickFiles();
 
-                                      imageUrl = await ref
-                                          .watch(storageProvider)
-                                          .uploadImages(
-                                            id.toString(),
-                                            image,
-                                            ref,
-                                          );
-                                      Navigator.pop(context);
-                                    } catch (e) {
-                                      Navigator.pop(context);
-                                    }
-                                  },
-                                  child: const Text("Add Explanation Image")),
+                                    imageUrl = await ref
+                                        .watch(storageProvider)
+                                        .uploadImages(
+                                          id.toString(),
+                                          image,
+                                          ref,
+                                        );
+                                    Navigator.pop(context);
+                                  } catch (e) {
+                                    Navigator.pop(context);
+                                  }
+                                },
+                                child: const Text("Add Explanation Image"),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              ElevatedButton(
+                                onPressed: () async {
+                                  showLoaderDialog(context);
+                                  try {
+                                    FilePickerResult? image =
+                                        await FilePicker.platform.pickFiles();
+
+                                    questionImageUrl = await ref
+                                        .watch(storageProvider)
+                                        .uploadQuestionImages(
+                                          id.toString(),
+                                          image,
+                                          ref,
+                                        );
+                                    Navigator.pop(context);
+                                  } catch (e) {
+                                    Navigator.pop(context);
+                                  }
+                                },
+                                child: const Text("Add Question Image"),
+                              ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: ElevatedButton(
@@ -460,6 +487,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                                       "section": section,
                                       "subject": subject,
                                       "image_url": imageUrl,
+                                      "question_image_url": questionImageUrl,
                                       "date_added": Timestamp.fromDate(
                                         DateTime.now(),
                                       ),

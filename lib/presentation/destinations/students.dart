@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,7 +28,7 @@ class Students extends ConsumerWidget {
               SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: StreamBuilder(
-                  builder: (context, AsyncSnapshot snapshot) {
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (!snapshot.hasData) {
                       return const Center(child: CupertinoActivityIndicator());
                     } else {
@@ -37,12 +38,12 @@ class Students extends ConsumerWidget {
                           return Card(
                             child: ListTile(
                               title: Text(
-                                "Student Name: ${snapshot.data.docs[index]['name']}",
+                                "Student Name: ${snapshot.data?.docs[index]['name']}",
                               ),
                               subtitle: GestureDetector(
                                 onTap: () async {
                                   String phoneNo = await snapshot
-                                      .data.docs[index]['phone_no'];
+                                      .data?.docs[index]['phone_no'];
                                   await ref
                                       .watch(userDatabaseProvider)
                                       .changeStudentStatus(phoneNo);
@@ -52,18 +53,18 @@ class Students extends ConsumerWidget {
                                     GestureDetector(
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          color: snapshot.data.docs[index]
+                                          color: snapshot.data?.docs[index]
                                                       ['device_id'] !=
                                                   "error"
-                                              ? Colors.green[900]
-                                              : Colors.red[800],
+                                              ? Colors.green
+                                              : Colors.red,
                                           borderRadius:
                                               BorderRadius.circular(3),
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(3.0),
                                           child: Text(
-                                            snapshot.data.docs[index]
+                                            snapshot.data?.docs[index]
                                                         ['device_id'] !=
                                                     "error"
                                                 ? "ACTIVE"
@@ -90,7 +91,8 @@ class Students extends ConsumerWidget {
                                       child: Padding(
                                         padding: const EdgeInsets.all(3.0),
                                         child: SelectableText(
-                                          snapshot.data.docs[index]['phone_no'],
+                                          snapshot.data?.docs[index]
+                                              ['phone_no'],
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodySmall
@@ -108,7 +110,7 @@ class Students extends ConsumerWidget {
                             ),
                           );
                         },
-                        itemCount: snapshot.data.docs.length,
+                        itemCount: snapshot.data?.docs.length,
                       );
                     }
                   },

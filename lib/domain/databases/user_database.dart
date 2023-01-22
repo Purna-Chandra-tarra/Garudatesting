@@ -4,9 +4,9 @@ class UserDatabase {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late CollectionReference _examCollection;
 
-  Stream getUserList() {
+  Stream<QuerySnapshot> getUserList() {
     _examCollection = _firestore.collection('users');
-    Stream stream = _examCollection.snapshots();
+    Stream<QuerySnapshot> stream = _examCollection.snapshots();
     return stream;
   }
 

@@ -8,7 +8,7 @@ class Storage {
 
   final storageRef = FirebaseStorage.instance.ref();
 
-  Future<String>uploadImages(
+  Future<String> uploadImages(
     String imageName,
     FilePickerResult? imageFile,
     WidgetRef ref,
@@ -21,6 +21,26 @@ class Storage {
     );
     var url = await questionImagesRef.getDownloadURL();
     return url;
+  }
+
+  Future<String> uploadQuestionImages(
+    String imageName,
+    FilePickerResult? imageFile,
+    WidgetRef ref,
+  ) async {
+    Uint8List fileBytes = imageFile!.files.first.bytes ?? Uint8List(0);
+    final questionImagesRef = storageRef.child("question/$imageName");
+    await questionImagesRef.putData(
+      fileBytes,
+      SettableMetadata(contentType: 'image'),
+    );
+    var url = await questionImagesRef.getDownloadURL();
+    return url;
+  }
+
+  Future deleteQuestionImage(String imageName) async {
+    final questionImagesRef = storageRef.child("question/$imageName");
+    await questionImagesRef.delete();
   }
 
   Future deleteImage(String imageName) async {

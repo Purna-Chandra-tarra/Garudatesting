@@ -38,9 +38,10 @@ class _QuestionState extends ConsumerState<Question> {
     ExamDatabase examDatabase = ref.watch(examDatabaseProvider);
 
     return Padding(
-      padding: const EdgeInsets.all(28.0),
+      padding: const EdgeInsets.all(0),
       child: SizedBox(
         width: MediaQuery.of(context).size.width - 290,
+        height: MediaQuery.of(context).size.height,
         child: Column(
           children: [
             Row(
@@ -55,7 +56,9 @@ class _QuestionState extends ConsumerState<Question> {
                 SizedBox(
                   width: 300,
                   child: TextField(
-                    onEditingComplete: () {},
+                    onChanged: (value) {
+                      setState(() {});
+                    },
                     controller: searchController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -1023,6 +1026,34 @@ class _QuestionState extends ConsumerState<Question> {
                                     child:
                                         const Text("Change Explanation Image"),
                                   ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      showLoaderDialog(context);
+
+                                      FilePickerResult? image =
+                                          await FilePicker.platform.pickFiles();
+
+                                      final imageUrl = await ref
+                                          .watch(storageProvider)
+                                          .uploadQuestionImages(
+                                            documentSnapshots[index].id,
+                                            image,
+                                            ref,
+                                          );
+                                      await examDatabase.updateQuestion(
+                                        widget.examId,
+                                        documentSnapshots[index].id,
+                                        {
+                                          "question_image_url": imageUrl,
+                                        },
+                                      );
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text("Change Question Image"),
+                                  ),
                                 ],
                               ),
                             ),
@@ -1034,6 +1065,10 @@ class _QuestionState extends ConsumerState<Question> {
                                 await ref
                                     .watch(storageProvider)
                                     .deleteImage(documentSnapshots[index].id);
+                                await ref
+                                    .watch(storageProvider)
+                                    .deleteQuestionImage(
+                                        documentSnapshots[index].id);
                                 Navigator.pop(context);
                               },
                               icon: Icon(
