@@ -48,7 +48,7 @@ class _QuestionState extends ConsumerState<Question> {
               children: [
                 Text(
                   'Question',
-                  style: Theme.of(context).textTheme.headline5?.copyWith(
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                 ),
@@ -755,6 +755,73 @@ class _QuestionState extends ConsumerState<Question> {
                                                           },
                                                         );
                                                         questionEquationController
+                                                            .clear();
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(context);
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          },
+                                          icon: const Icon(Icons.edit))
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: SelectableText(
+                                          "Youtube Link: ${docs['youtube_link']}",
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      IconButton(
+                                          onPressed: () {
+                                            showCupertinoDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: const Text(
+                                                    "Update Youtube Link",
+                                                  ),
+                                                  content: Column(
+                                                    children: [
+                                                      TextField(
+                                                        controller:
+                                                            optionController,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  actions: [
+                                                    ElevatedButton(
+                                                      child: const Text(
+                                                        "Cancel",
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                    ),
+                                                    ElevatedButton(
+                                                      child: const Text(
+                                                        "Update",
+                                                      ),
+                                                      onPressed: () async {
+                                                        showLoaderDialog(
+                                                            context);
+                                                        await examDatabase
+                                                            .updateQuestion(
+                                                          widget.examId,
+                                                          documentSnapshots[
+                                                                  index]
+                                                              .id,
+                                                          {
+                                                            "youtube_link":
+                                                                optionController
+                                                                    .text
+                                                          },
+                                                        );
+                                                        optionController
                                                             .clear();
                                                         Navigator.pop(context);
                                                         Navigator.pop(context);

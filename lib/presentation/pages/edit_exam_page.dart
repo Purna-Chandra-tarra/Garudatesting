@@ -62,6 +62,8 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
 
   final TextEditingController option4Controller = TextEditingController();
 
+  final TextEditingController youtubeController = TextEditingController();
+
   final TextEditingController questionEquationController =
       TextEditingController();
 
@@ -305,6 +307,12 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                                 ),
                                 controller: answerController,
                               ),
+                              TextField(
+                                decoration: const InputDecoration(
+                                  hintText: "Youtube Link",
+                                ),
+                                controller: youtubeController,
+                              ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: ElevatedButton(
@@ -491,6 +499,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                                       "date_added": Timestamp.fromDate(
                                         DateTime.now(),
                                       ),
+                                      "youtube_link": youtubeController.text
                                     });
                                     answerController.clear();
                                     option1Controller.clear();
@@ -501,7 +510,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                                     option2EquationController.clear();
                                     option3EquationController.clear();
                                     option4EquationController.clear();
-
+                                    youtubeController.clear();
                                     questionController.clear();
                                     imageUrl = "";
                                     section = "";
