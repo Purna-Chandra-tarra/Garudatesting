@@ -1067,59 +1067,89 @@ class _QuestionState extends ConsumerState<Question> {
                                       )
                                     ],
                                   ),
-                                  ElevatedButton(
-                                    onPressed: () async {
-                                      showLoaderDialog(context);
+                                  Row(
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          showLoaderDialog(context);
 
-                                      FilePickerResult? image =
-                                          await FilePicker.platform.pickFiles();
+                                          FilePickerResult? image =
+                                              await FilePicker.platform
+                                                  .pickFiles();
 
-                                      final imageUrl = await ref
-                                          .watch(storageProvider)
-                                          .uploadImages(
+                                          final imageUrl = await ref
+                                              .watch(storageProvider)
+                                              .uploadImages(
+                                                documentSnapshots[index].id,
+                                                image,
+                                                ref,
+                                              );
+                                          await examDatabase.updateQuestion(
+                                            widget.examId,
                                             documentSnapshots[index].id,
-                                            image,
-                                            ref,
+                                            {
+                                              "image_url": imageUrl,
+                                            },
                                           );
-                                      await examDatabase.updateQuestion(
-                                        widget.examId,
-                                        documentSnapshots[index].id,
-                                        {
-                                          "image_url": imageUrl,
+                                          Navigator.pop(context);
                                         },
-                                      );
-                                      Navigator.pop(context);
-                                    },
-                                    child:
-                                        const Text("Change Explanation Image"),
+                                        child: const Text(
+                                            "Change Explanation Image"),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: docs['image_url'] == null ||
+                                                docs['image_url'] == ""
+                                            ? const Icon(
+                                                Icons.image_not_supported,
+                                              )
+                                            : const Icon(Icons.image),
+                                      ),
+                                    ],
                                   ),
                                   const SizedBox(
                                     height: 10,
                                   ),
-                                  ElevatedButton(
-                                    onPressed: () async {
-                                      showLoaderDialog(context);
+                                  Row(
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          showLoaderDialog(context);
 
-                                      FilePickerResult? image =
-                                          await FilePicker.platform.pickFiles();
+                                          FilePickerResult? image =
+                                              await FilePicker.platform
+                                                  .pickFiles();
 
-                                      final imageUrl = await ref
-                                          .watch(storageProvider)
-                                          .uploadQuestionImages(
+                                          final imageUrl = await ref
+                                              .watch(storageProvider)
+                                              .uploadQuestionImages(
+                                                documentSnapshots[index].id,
+                                                image,
+                                                ref,
+                                              );
+                                          await examDatabase.updateQuestion(
+                                            widget.examId,
                                             documentSnapshots[index].id,
-                                            image,
-                                            ref,
+                                            {
+                                              "question_image_url": imageUrl,
+                                            },
                                           );
-                                      await examDatabase.updateQuestion(
-                                        widget.examId,
-                                        documentSnapshots[index].id,
-                                        {
-                                          "question_image_url": imageUrl,
+                                          Navigator.pop(context);
                                         },
-                                      );
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text("Change Question Image"),
+                                        child:
+                                            const Text("Change Question Image"),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: docs['question_image_url'] ==
+                                                    null ||
+                                                docs['question_image_url'] == ""
+                                            ? const Icon(
+                                                Icons.image_not_supported,
+                                              )
+                                            : const Icon(Icons.image),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
