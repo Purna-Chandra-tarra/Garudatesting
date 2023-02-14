@@ -46,6 +46,7 @@ dependencies:
   paginate_firestore:
     git:
       url: https://github.com/Chandram-Dutta/paginate_firestore.git
+  firebase_ui_firestore: ^1.2.4
 
 
 dev_dependencies:

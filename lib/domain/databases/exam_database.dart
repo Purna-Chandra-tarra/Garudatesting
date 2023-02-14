@@ -228,7 +228,7 @@ class ExamDatabase {
     }
   }
 
-  Query getQuestions(String examId, WidgetRef ref) {
+  Query<Map<String, dynamic>> getQuestions(String examId, WidgetRef ref) {
     _examCollection = _firestore.collection('exam');
     return _examCollection.doc(examId).collection('questions');
   }
