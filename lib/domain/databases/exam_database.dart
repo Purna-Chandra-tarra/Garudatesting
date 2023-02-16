@@ -28,10 +28,9 @@ class ExamDatabase {
     return snapshot.docs.length;
   }
 
-  Stream getExam(String examId) {
+  Stream<DocumentSnapshot> getExam(String examId) {
     _examCollection = _firestore.collection('exam');
-    Stream exam = _examCollection.doc(examId).snapshots();
-    return exam;
+    return _examCollection.doc(examId).snapshots();
   }
 
   Future updateExamStatus(bool status, String examId) async {
@@ -51,6 +50,18 @@ class ExamDatabase {
     try {
       await _examCollection.doc(examId).update({
         "type": type,
+      });
+      return true;
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future updateYoutube(bool value, String examId) async {
+    _examCollection = _firestore.collection('exam');
+    try {
+      await _examCollection.doc(examId).update({
+        "youtube": value,
       });
       return true;
     } catch (e) {
@@ -89,6 +100,7 @@ class ExamDatabase {
         "type": exam.examType,
         "difficulty_level": exam.difficulty,
         "active": exam.active,
+        "youtube": exam.youtube,
       });
       return true;
     } catch (e) {

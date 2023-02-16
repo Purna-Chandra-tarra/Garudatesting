@@ -4,6 +4,7 @@ class Exam {
   final int examId;
   final String examType;
   final bool active;
+  final bool youtube;
 
   Exam({
     required this.examName,
@@ -11,5 +12,6 @@ class Exam {
     required this.examId,
     required this.examType,
     required this.active,
+    required this.youtube,
   });
 }

@@ -29,11 +29,13 @@ class CreateExamPage extends ConsumerWidget {
           showLoaderDialog(context);
           if (await examDatabase.addExam(
             Exam(
-                examName: examNameController.text,
-                difficulty: examDifficultyController.text,
-                examId: random(10000000, 50000000),
-                examType: examTypeController.text,
-                active: false),
+              examName: examNameController.text,
+              difficulty: examDifficultyController.text,
+              examId: random(10000000, 50000000),
+              examType: examTypeController.text,
+              active: false,
+              youtube: false,
+            ),
           )) {
             Navigator.pop(context);
             Navigator.pop(context);

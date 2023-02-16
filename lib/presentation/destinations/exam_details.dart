@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,7 +28,7 @@ class ExamDetails extends ConsumerWidget {
         child: SingleChildScrollView(
           child: StreamBuilder(
             stream: ref.watch(examDatabaseProvider).getExam(examId),
-            builder: (context, AsyncSnapshot snapshot) {
+            builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
               if (snapshot.hasData || snapshot.hasError) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -35,9 +36,10 @@ class ExamDetails extends ConsumerWidget {
                   children: [
                     Text(
                       'Exam Details',
-                      style: Theme.of(context).textTheme.headline5?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                      style:
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                     ),
                     const SizedBox(
                       height: 20,
@@ -53,7 +55,7 @@ class ExamDetails extends ConsumerWidget {
                                 const SizedBox(
                                   width: 5,
                                 ),
-                                Text(snapshot.data['exam_name']),
+                                Text(snapshot.data!['exam_name']),
                               ],
                             ),
                             Row(
@@ -62,7 +64,7 @@ class ExamDetails extends ConsumerWidget {
                                 const SizedBox(
                                   width: 5,
                                 ),
-                                Text(snapshot.data['exam_id'].toString()),
+                                Text(snapshot.data!['exam_id'].toString()),
                               ],
                             ),
                           ],
@@ -84,7 +86,7 @@ class ExamDetails extends ConsumerWidget {
                                 ),
                                 Container(
                                   decoration: BoxDecoration(
-                                    color: snapshot.data['active']
+                                    color: snapshot.data!['active']
                                         ? Colors.green[900]
                                         : Colors.red[800],
                                     borderRadius: BorderRadius.circular(3),
@@ -92,7 +94,7 @@ class ExamDetails extends ConsumerWidget {
                                   child: Padding(
                                     padding: const EdgeInsets.all(3.0),
                                     child: Text(
-                                      snapshot.data['active']
+                                      snapshot.data!['active']
                                           ? "ACTIVE"
                                           : 'INACTIVE',
                                       style: Theme.of(context)
@@ -110,7 +112,7 @@ class ExamDetails extends ConsumerWidget {
                                   onPressed: () async {
                                     showLoaderDialog(context);
                                     await examDatabase.updateExamStatus(
-                                      !snapshot.data['active'],
+                                      !snapshot.data!['active'],
                                       examId,
                                     );
                                     Navigator.pop(context);
@@ -140,7 +142,7 @@ class ExamDetails extends ConsumerWidget {
                         const SizedBox(
                           width: 5,
                         ),
-                        Text(snapshot.data['type']),
+                        Text(snapshot.data!['type']),
                         const Spacer(),
                         TextButton(
                           onPressed: () async {
@@ -186,7 +188,7 @@ class ExamDetails extends ConsumerWidget {
                         const SizedBox(
                           width: 5,
                         ),
-                        Text(snapshot.data['difficulty_level']),
+                        Text(snapshot.data!['difficulty_level']),
                         const Spacer(),
                         TextButton(
                           onPressed: () async {
@@ -223,6 +225,21 @@ class ExamDetails extends ConsumerWidget {
                             );
                           },
                           child: const Text("Change Difficulty"),
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Text("Youtube: "),
+                        const Spacer(),
+                        Switch(
+                          value: snapshot.data!['youtube'],
+                          onChanged: (value) {
+                            examDatabase.updateYoutube(
+                              value,
+                              examId,
+                            );
+                          },
                         )
                       ],
                     ),
