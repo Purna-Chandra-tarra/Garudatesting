@@ -110,6 +110,8 @@ class _QuestionState extends ConsumerState<Question> {
                                     const Spacer(),
                                     IconButton(
                                         onPressed: () {
+                                          questionController.text =
+                                              docs['question'];
                                           showCupertinoDialog(
                                             context: context,
                                             builder: (context) {
@@ -118,6 +120,8 @@ class _QuestionState extends ConsumerState<Question> {
                                                   "Update Question",
                                                 ),
                                                 content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
                                                     TextField(
                                                       controller:
@@ -174,6 +178,8 @@ class _QuestionState extends ConsumerState<Question> {
                                     const Spacer(),
                                     IconButton(
                                         onPressed: () {
+                                          questionEquationController.text =
+                                              docs['question_equation'];
                                           showCupertinoDialog(
                                             context: context,
                                             builder: (context) {
@@ -182,6 +188,8 @@ class _QuestionState extends ConsumerState<Question> {
                                                   "Update Question Equation",
                                                 ),
                                                 content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
                                                     TextField(
                                                       controller:
@@ -238,6 +246,8 @@ class _QuestionState extends ConsumerState<Question> {
                                     const Spacer(),
                                     IconButton(
                                         onPressed: () {
+                                          optionController.text =
+                                              docs['option_one'];
                                           showCupertinoDialog(
                                             context: context,
                                             builder: (context) {
@@ -246,6 +256,8 @@ class _QuestionState extends ConsumerState<Question> {
                                                   "Update Option 1",
                                                 ),
                                                 content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
                                                     TextField(
                                                       controller:
@@ -302,6 +314,8 @@ class _QuestionState extends ConsumerState<Question> {
                                     const Spacer(),
                                     IconButton(
                                         onPressed: () {
+                                          questionEquationController.text =
+                                              docs['option_one_equation'];
                                           showCupertinoDialog(
                                             context: context,
                                             builder: (context) {
@@ -310,6 +324,8 @@ class _QuestionState extends ConsumerState<Question> {
                                                   "Update Option 1 Equation",
                                                 ),
                                                 content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
                                                     TextField(
                                                       controller:
@@ -366,6 +382,8 @@ class _QuestionState extends ConsumerState<Question> {
                                     const Spacer(),
                                     IconButton(
                                         onPressed: () {
+                                          optionController.text =
+                                              docs['option_two'];
                                           showCupertinoDialog(
                                             context: context,
                                             builder: (context) {
@@ -374,6 +392,8 @@ class _QuestionState extends ConsumerState<Question> {
                                                   "Update Option 2",
                                                 ),
                                                 content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
                                                     TextField(
                                                       controller:
@@ -430,6 +450,8 @@ class _QuestionState extends ConsumerState<Question> {
                                     const Spacer(),
                                     IconButton(
                                         onPressed: () {
+                                          questionEquationController.text =
+                                              docs['option_two_equation'];
                                           showCupertinoDialog(
                                             context: context,
                                             builder: (context) {
@@ -438,6 +460,8 @@ class _QuestionState extends ConsumerState<Question> {
                                                   "Update Option 2 Equation",
                                                 ),
                                                 content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
                                                     TextField(
                                                       controller:
@@ -494,6 +518,8 @@ class _QuestionState extends ConsumerState<Question> {
                                     const Spacer(),
                                     IconButton(
                                         onPressed: () {
+                                          optionController.text =
+                                              docs['option_three'];
                                           showCupertinoDialog(
                                             context: context,
                                             builder: (context) {
@@ -502,6 +528,8 @@ class _QuestionState extends ConsumerState<Question> {
                                                   "Update Option 3",
                                                 ),
                                                 content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
                                                     TextField(
                                                       controller:
@@ -558,6 +586,8 @@ class _QuestionState extends ConsumerState<Question> {
                                     const Spacer(),
                                     IconButton(
                                         onPressed: () {
+                                          questionEquationController.text =
+                                              docs['option_three_equation'];
                                           showCupertinoDialog(
                                             context: context,
                                             builder: (context) {
@@ -566,6 +596,8 @@ class _QuestionState extends ConsumerState<Question> {
                                                   "Update Option 3 Equation",
                                                 ),
                                                 content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
                                                     TextField(
                                                       controller:
@@ -622,6 +654,8 @@ class _QuestionState extends ConsumerState<Question> {
                                     const Spacer(),
                                     IconButton(
                                         onPressed: () {
+                                          optionController.text =
+                                              docs['option_four'];
                                           showCupertinoDialog(
                                             context: context,
                                             builder: (context) {
@@ -630,6 +664,8 @@ class _QuestionState extends ConsumerState<Question> {
                                                   "Update Option 4",
                                                 ),
                                                 content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
                                                     TextField(
                                                       controller:
@@ -686,6 +722,8 @@ class _QuestionState extends ConsumerState<Question> {
                                     const Spacer(),
                                     IconButton(
                                         onPressed: () {
+                                          questionEquationController.text =
+                                              docs['option_four_equation'];
                                           showCupertinoDialog(
                                             context: context,
                                             builder: (context) {
@@ -694,6 +732,8 @@ class _QuestionState extends ConsumerState<Question> {
                                                   "Update Option 4 Equation",
                                                 ),
                                                 content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
                                                     TextField(
                                                       controller:
@@ -750,6 +790,8 @@ class _QuestionState extends ConsumerState<Question> {
                                     const Spacer(),
                                     IconButton(
                                         onPressed: () {
+                                          optionController.text =
+                                              docs['youtube_link'];
                                           showCupertinoDialog(
                                             context: context,
                                             builder: (context) {
@@ -758,6 +800,8 @@ class _QuestionState extends ConsumerState<Question> {
                                                   "Update Youtube Link",
                                                 ),
                                                 content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
                                                     TextField(
                                                       controller:
@@ -814,6 +858,8 @@ class _QuestionState extends ConsumerState<Question> {
                                     const Spacer(),
                                     IconButton(
                                         onPressed: () {
+                                          optionController.text =
+                                              docs['answer'].toString();
                                           showCupertinoDialog(
                                             context: context,
                                             builder: (context) {
@@ -822,6 +868,8 @@ class _QuestionState extends ConsumerState<Question> {
                                                   "Update Answer(1,2,3,4)",
                                                 ),
                                                 content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
                                                     TextField(
                                                       controller:

@@ -22,7 +22,7 @@ class Exams extends ConsumerWidget {
             children: [
               Text(
                 'Exams',
-                style: Theme.of(context).textTheme.headline5?.copyWith(
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
