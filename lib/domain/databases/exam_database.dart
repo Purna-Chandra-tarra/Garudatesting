@@ -115,6 +115,26 @@ class ExamDatabase {
     return subject;
   }
 
+  Future<int> getSubjectLength(String examId, String subject) async {
+    _examCollection = _firestore.collection('exam');
+    QuerySnapshot snapshot = await _examCollection
+        .doc(examId)
+        .collection('questions')
+        .where("subject", isEqualTo: subject)
+        .get();
+    return snapshot.docs.length;
+  }
+
+  Future<int> getSectionLength(String examId, String section) async {
+    _examCollection = _firestore.collection('exam');
+    QuerySnapshot snapshot = await _examCollection
+        .doc(examId)
+        .collection('questions')
+        .where("section", isEqualTo: section)
+        .get();
+    return snapshot.docs.length;
+  }
+
   Stream getSection(String examId) {
     _examCollection = _firestore.collection('exam');
     Stream subject =

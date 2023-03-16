@@ -25,7 +25,7 @@ class Subject extends ConsumerWidget {
           children: [
             Text(
               'Subject',
-              style: Theme.of(context).textTheme.headline5?.copyWith(
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
@@ -49,6 +49,19 @@ class Subject extends ConsumerWidget {
                               children: [
                                 Text(snapshot.data.docs[index]['name']),
                                 const Spacer(),
+                                FutureBuilder(
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      return Text(snapshot.data.toString());
+                                    } else {
+                                      return const CupertinoActivityIndicator();
+                                    }
+                                  },
+                                  future: ref
+                                      .watch(examDatabaseProvider)
+                                      .getSubjectLength(examId,
+                                          snapshot.data.docs[index]['subject']),
+                                ),
                                 FutureBuilder(
                                   builder: (context, AsyncSnapshot snapshot) {
                                     if (snapshot.hasData) {
