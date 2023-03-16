@@ -60,7 +60,7 @@ class Subject extends ConsumerWidget {
                                   future: ref
                                       .watch(examDatabaseProvider)
                                       .getSubjectLength(examId,
-                                          snapshot.data.docs[index]['subject']),
+                                          snapshot.data.docs[index]['name']),
                                 ),
                                 FutureBuilder(
                                   builder: (context, AsyncSnapshot snapshot) {
