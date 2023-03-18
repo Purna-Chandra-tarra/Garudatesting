@@ -158,30 +158,6 @@ class Exams extends ConsumerWidget {
                                     const Spacer(),
                                   ],
                                 ),
-                                trailing: FutureBuilder(
-                                  future: examDatabase.getExamLength(snapshot
-                                      .data.docs[index]['exam_id']
-                                      .toString()),
-                                  builder:
-                                      ((context, AsyncSnapshot<int> snapshot) {
-                                    if (!snapshot.hasData) {
-                                      return const CupertinoActivityIndicator();
-                                    } else {
-                                      return Text(
-                                        "${snapshot.data} questions",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall
-                                            ?.copyWith(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .primary,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                      );
-                                    }
-                                  }),
-                                ),
                               ),
                             ),
                           );

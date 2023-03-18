@@ -184,6 +184,31 @@ class ExamDetails extends ConsumerWidget {
                     ),
                     Row(
                       children: [
+                        const Text("No of Questions: "),
+                        FutureBuilder(
+                          future: examDatabase.getExamLength(examId),
+                          builder: ((context, AsyncSnapshot<int> snapshot) {
+                            if (!snapshot.hasData) {
+                              return const CupertinoActivityIndicator();
+                            } else {
+                              return Text(
+                                "${snapshot.data}",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                              );
+                            }
+                          }),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
                         const Text("Exam Difficulty: "),
                         const SizedBox(
                           width: 5,
