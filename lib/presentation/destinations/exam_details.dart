@@ -253,20 +253,39 @@ class ExamDetails extends ConsumerWidget {
                         )
                       ],
                     ),
-                    Row(
-                      children: [
-                        const Text("Youtube: "),
-                        const Spacer(),
-                        Switch(
-                          value: snapshot.data!['youtube'],
-                          onChanged: (value) {
-                            examDatabase.updateYoutube(
-                              value,
-                              examId,
+                    FutureBuilder(
+                      builder: (context, AsyncSnapshot snapshot1) {
+                        if (snapshot1.hasData) {
+                          if (snapshot1.data) {
+                            return Row(
+                              children: [
+                                const Text("Youtube: "),
+                                const Spacer(),
+                                Switch(
+                                  value: snapshot.data!['youtube'],
+                                  onChanged: (value) {
+                                    examDatabase.updateYoutube(
+                                      value,
+                                      examId,
+                                    );
+                                  },
+                                )
+                              ],
                             );
-                          },
-                        )
-                      ],
+                          } else {
+                            return const SizedBox();
+                          }
+                        } else {
+                          return const CupertinoActivityIndicator();
+                        }
+                      },
+                      future: ref.watch(userDatabaseProvider).isSuperUser(
+                            ref
+                                .watch(authServiceProvider)
+                                .user!
+                                .email
+                                .toString(),
+                          ),
                     ),
                   ],
                 );

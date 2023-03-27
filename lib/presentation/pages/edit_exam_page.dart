@@ -345,15 +345,50 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                                                                     .all(8.0),
                                                             child:
                                                                 ElevatedButton(
-                                                              child: Text(
-                                                                sections[index],
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Text(
+                                                                    sections[
+                                                                        index],
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    width: 10,
+                                                                  ),
+                                                                  FutureBuilder(
+                                                                    builder:
+                                                                        (context,
+                                                                            snapshot) {
+                                                                      if (snapshot
+                                                                          .hasData) {
+                                                                        return Text(snapshot
+                                                                            .data
+                                                                            .toString());
+                                                                      } else {
+                                                                        return const CupertinoActivityIndicator();
+                                                                      }
+                                                                    },
+                                                                    future: ref
+                                                                        .watch(
+                                                                            examDatabaseProvider)
+                                                                        .getSectionLength(
+                                                                          widget
+                                                                              .examId,
+                                                                          sections[
+                                                                              index],
+                                                                        ),
+                                                                  ),
+                                                                ],
                                                               ),
                                                               onPressed:
                                                                   () async {
                                                                 Navigator.pop(
-                                                                    context,
-                                                                    sections[
-                                                                        index]);
+                                                                  context,
+                                                                  sections[
+                                                                      index],
+                                                                );
                                                               },
                                                             ),
                                                           );
