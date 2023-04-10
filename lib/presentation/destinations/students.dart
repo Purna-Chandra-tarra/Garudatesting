@@ -21,7 +21,7 @@ class Students extends ConsumerWidget {
             children: [
               Text(
                 'Students',
-                style: Theme.of(context).textTheme.headline5?.copyWith(
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
@@ -37,6 +37,15 @@ class Students extends ConsumerWidget {
                         itemBuilder: (context, index) {
                           return Card(
                             child: ListTile(
+                              trailing: FilledButton(
+                                onPressed: () async {
+                                  ref
+                                      .read(userDatabaseProvider)
+                                      .changeStudentStatus(snapshot
+                                          .data?.docs[index]['phone_no']);
+                                },
+                                child: const Text("Reset"),
+                              ),
                               title: Text(
                                 "Student Name: ${snapshot.data?.docs[index]['name']}",
                               ),
