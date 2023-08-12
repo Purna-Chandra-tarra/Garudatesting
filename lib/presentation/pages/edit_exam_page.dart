@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:garudaexams_dashboard/presentation/destinations/exam_details.dart';
 import 'package:garudaexams_dashboard/presentation/destinations/question.dart';
@@ -82,6 +83,12 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
   final TextEditingController answerController = TextEditingController();
 
   final TextEditingController passwordController = TextEditingController();
+
+  FilePickerResult? questionImage;
+
+  FilePickerResult? image;
+
+  String? errorMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -236,331 +243,404 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                 showDialog(
                     context: context,
                     builder: (context) {
-                      return AlertDialog(
-                        title: const Text("Add Question"),
-                        content: SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              TextField(
-                                decoration: const InputDecoration(
-                                  hintText: "Question",
+                      return StatefulBuilder(
+                        builder: (context, setState) => AlertDialog(
+                          title: const Text("Add Question"),
+                          content: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                if (errorMessage != null)
+                                  Text(
+                                    errorMessage.toString(),
+                                    style: const TextStyle(color: Colors.red),
+                                  ),
+                                TextField(
+                                  decoration: const InputDecoration(
+                                    hintText: "Question",
+                                  ),
+                                  controller: questionController,
                                 ),
-                                controller: questionController,
-                              ),
-                              TextField(
-                                decoration: const InputDecoration(
-                                  hintText: "Question Equation",
+                                TextField(
+                                  decoration: const InputDecoration(
+                                    hintText: "Question Equation",
+                                  ),
+                                  controller: questionEquationController,
                                 ),
-                                controller: questionEquationController,
-                              ),
-                              TextField(
-                                decoration: const InputDecoration(
-                                  hintText: "Option 1",
+                                TextField(
+                                  decoration: const InputDecoration(
+                                    hintText: "Option 1",
+                                  ),
+                                  controller: option1Controller,
                                 ),
-                                controller: option1Controller,
-                              ),
-                              TextField(
-                                decoration: const InputDecoration(
-                                  hintText: "Option 1 Equation",
+                                TextField(
+                                  decoration: const InputDecoration(
+                                    hintText: "Option 1 Equation",
+                                  ),
+                                  controller: option1EquationController,
                                 ),
-                                controller: option1EquationController,
-                              ),
-                              TextField(
-                                decoration: const InputDecoration(
-                                  hintText: "Option 2",
+                                TextField(
+                                  decoration: const InputDecoration(
+                                    hintText: "Option 2",
+                                  ),
+                                  controller: option2Controller,
                                 ),
-                                controller: option2Controller,
-                              ),
-                              TextField(
-                                decoration: const InputDecoration(
-                                  hintText: "Option 2 equation",
+                                TextField(
+                                  decoration: const InputDecoration(
+                                    hintText: "Option 2 equation",
+                                  ),
+                                  controller: option2EquationController,
                                 ),
-                                controller: option2EquationController,
-                              ),
-                              TextField(
-                                decoration: const InputDecoration(
-                                  hintText: "Option 3",
+                                TextField(
+                                  decoration: const InputDecoration(
+                                    hintText: "Option 3",
+                                  ),
+                                  controller: option3Controller,
                                 ),
-                                controller: option3Controller,
-                              ),
-                              TextField(
-                                decoration: const InputDecoration(
-                                  hintText: "Option 3 Equation",
+                                TextField(
+                                  decoration: const InputDecoration(
+                                    hintText: "Option 3 Equation",
+                                  ),
+                                  controller: option3EquationController,
                                 ),
-                                controller: option3EquationController,
-                              ),
-                              TextField(
-                                decoration: const InputDecoration(
-                                  hintText: "Option 4",
+                                TextField(
+                                  decoration: const InputDecoration(
+                                    hintText: "Option 4",
+                                  ),
+                                  controller: option4Controller,
                                 ),
-                                controller: option4Controller,
-                              ),
-                              TextField(
-                                decoration: const InputDecoration(
-                                  hintText: "Option 4 Equation",
+                                TextField(
+                                  decoration: const InputDecoration(
+                                    hintText: "Option 4 Equation",
+                                  ),
+                                  controller: option4EquationController,
                                 ),
-                                controller: option4EquationController,
-                              ),
-                              TextField(
-                                decoration: const InputDecoration(
-                                  hintText: "Answer",
-                                ),
-                                controller: answerController,
-                              ),
-                              TextField(
-                                decoration: const InputDecoration(
-                                  hintText: "Youtube Link",
-                                ),
-                                controller: youtubeController,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ElevatedButton(
-                                  onPressed: () async {
-                                    showLoaderDialog(context);
-                                    List<String> sections = await examDatabase
-                                        .getSectionList(widget.examId);
-                                    Navigator.pop(context);
-                                    section = await showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            title: const Text("Select Section"),
-                                            content: SingleChildScrollView(
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  SizedBox(
-                                                    height: 500,
-                                                    width: 500,
-                                                    child: ListView.builder(
-                                                        itemCount:
-                                                            sections.length,
-                                                        shrinkWrap: true,
-                                                        itemBuilder:
-                                                            (context, index) {
-                                                          return Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(8.0),
-                                                            child:
-                                                                ElevatedButton(
-                                                              child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                children: [
-                                                                  Text(
-                                                                    sections[
-                                                                        index],
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    width: 10,
-                                                                  ),
-                                                                  FutureBuilder(
-                                                                    builder:
-                                                                        (context,
-                                                                            snapshot) {
-                                                                      if (snapshot
-                                                                          .hasData) {
-                                                                        return Text(snapshot
-                                                                            .data
-                                                                            .toString());
-                                                                      } else {
-                                                                        return const CupertinoActivityIndicator();
-                                                                      }
-                                                                    },
-                                                                    future: ref
-                                                                        .watch(
-                                                                            examDatabaseProvider)
-                                                                        .getSectionLength(
-                                                                          widget
-                                                                              .examId,
-                                                                          sections[
-                                                                              index],
-                                                                        ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              onPressed:
-                                                                  () async {
-                                                                Navigator.pop(
-                                                                  context,
-                                                                  sections[
-                                                                      index],
-                                                                );
-                                                              },
-                                                            ),
-                                                          );
-                                                        }),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        });
+                                TextFormField(
+                                  decoration: const InputDecoration(
+                                    hintText: "Answer",
+                                  ),
+                                  keyboardType: TextInputType.number,
+                                  controller: answerController,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                  ],
+                                  onChanged: (value) {
+                                    // if there is some value then we set the error message to null
+                                    if (value.isNotEmpty) {
+                                      setState(() {
+                                        errorMessage = null;
+                                      });
+                                    }
                                   },
-                                  child: const Text("Choose Section"),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ElevatedButton(
-                                  onPressed: () async {
-                                    showLoaderDialog(context);
-                                    List<String> sections = await examDatabase
-                                        .getSubjectList(widget.examId);
-                                    Navigator.pop(context);
-                                    subject = await showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            title: const Text("Select Subject"),
-                                            content: SingleChildScrollView(
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  SizedBox(
-                                                    height: 500,
-                                                    width: 500,
-                                                    child: ListView.builder(
-                                                        itemCount:
-                                                            sections.length,
-                                                        shrinkWrap: true,
-                                                        itemBuilder:
-                                                            (context, index) {
-                                                          return Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(8.0),
-                                                            child:
-                                                                ElevatedButton(
-                                                              child: Text(
-                                                                sections[index],
-                                                              ),
-                                                              onPressed:
-                                                                  () async {
-                                                                Navigator.pop(
+                                TextField(
+                                  decoration: const InputDecoration(
+                                    hintText: "Youtube Link",
+                                  ),
+                                  controller: youtubeController,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ElevatedButton(
+                                    onPressed: () async {
+                                      showLoaderDialog(context);
+                                      List<String> sections = await examDatabase
+                                          .getSectionList(widget.examId);
+                                      Navigator.pop(context);
+                                      section = await showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title:
+                                                  const Text("Select Section"),
+                                              content: SingleChildScrollView(
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    SizedBox(
+                                                      height: 500,
+                                                      width: 500,
+                                                      child: ListView.builder(
+                                                          itemCount:
+                                                              sections.length,
+                                                          shrinkWrap: true,
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            return Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8.0),
+                                                              child:
+                                                                  ElevatedButton(
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Text(
+                                                                      sections[
+                                                                          index],
+                                                                    ),
+                                                                    const SizedBox(
+                                                                      width: 10,
+                                                                    ),
+                                                                    FutureBuilder(
+                                                                      builder:
+                                                                          (context,
+                                                                              snapshot) {
+                                                                        if (snapshot
+                                                                            .hasData) {
+                                                                          return Text(snapshot
+                                                                              .data
+                                                                              .toString());
+                                                                        } else {
+                                                                          return const CupertinoActivityIndicator();
+                                                                        }
+                                                                      },
+                                                                      future: ref
+                                                                          .watch(
+                                                                              examDatabaseProvider)
+                                                                          .getSectionLength(
+                                                                            widget.examId,
+                                                                            sections[index],
+                                                                          ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                onPressed:
+                                                                    () async {
+                                                                  Navigator.pop(
                                                                     context,
                                                                     sections[
-                                                                        index]);
-                                                              },
-                                                            ),
-                                                          );
-                                                        }),
-                                                  ),
-                                                ],
+                                                                        index],
+                                                                  );
+                                                                },
+                                                              ),
+                                                            );
+                                                          }),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          );
-                                        });
-                                  },
-                                  child: const Text("Choose Subject"),
+                                            );
+                                          });
+                                    },
+                                    child: const Text("Choose Section"),
+                                  ),
                                 ),
-                              ),
-                              ElevatedButton(
-                                onPressed: () async {
-                                  showLoaderDialog(context);
-                                  try {
-                                    FilePickerResult? image =
-                                        await FilePicker.platform.pickFiles();
-
-                                    imageUrl = await ref
-                                        .watch(storageProvider)
-                                        .uploadImages(
-                                          id.toString(),
-                                          image,
-                                          ref,
-                                        );
-                                    Navigator.pop(context);
-                                  } catch (e) {
-                                    Navigator.pop(context);
-                                  }
-                                },
-                                child: const Text("Add Explanation Image"),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              ElevatedButton(
-                                onPressed: () async {
-                                  showLoaderDialog(context);
-                                  try {
-                                    FilePickerResult? image =
-                                        await FilePicker.platform.pickFiles();
-
-                                    questionImageUrl = await ref
-                                        .watch(storageProvider)
-                                        .uploadQuestionImages(
-                                          id.toString(),
-                                          image,
-                                          ref,
-                                        );
-                                    Navigator.pop(context);
-                                  } catch (e) {
-                                    Navigator.pop(context);
-                                  }
-                                },
-                                child: const Text("Add Question Image"),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ElevatedButton(
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ElevatedButton(
+                                    onPressed: () async {
+                                      showLoaderDialog(context);
+                                      List<String> sections = await examDatabase
+                                          .getSubjectList(widget.examId);
+                                      Navigator.pop(context);
+                                      subject = await showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title:
+                                                  const Text("Select Subject"),
+                                              content: SingleChildScrollView(
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    SizedBox(
+                                                      height: 500,
+                                                      width: 500,
+                                                      child: ListView.builder(
+                                                          itemCount:
+                                                              sections.length,
+                                                          shrinkWrap: true,
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            return Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8.0),
+                                                              child:
+                                                                  ElevatedButton(
+                                                                child: Text(
+                                                                  sections[
+                                                                      index],
+                                                                ),
+                                                                onPressed:
+                                                                    () async {
+                                                                  Navigator.pop(
+                                                                      context,
+                                                                      sections[
+                                                                          index]);
+                                                                },
+                                                              ),
+                                                            );
+                                                          }),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          });
+                                    },
+                                    child: const Text("Choose Subject"),
+                                  ),
+                                ),
+                                ElevatedButton(
                                   onPressed: () async {
                                     showLoaderDialog(context);
-                                    await examDatabase.addQuestion(
-                                        widget.examId, id.toString(), {
-                                      "answer":
-                                          int.parse(answerController.text),
-                                      "option_one": option1Controller.text,
-                                      "option_two": option2Controller.text,
-                                      "option_three": option3Controller.text,
-                                      "option_four": option4Controller.text,
-                                      "question": questionController.text,
-                                      "option_one_equation":
-                                          option1EquationController.text,
-                                      "option_two_equation":
-                                          option2EquationController.text,
-                                      "option_three_equation":
-                                          option3EquationController.text,
-                                      "option_four_equation":
-                                          option4EquationController.text,
-                                      "question_equation":
-                                          questionEquationController.text,
-                                      "section": section,
-                                      "subject": subject,
-                                      "image_url": imageUrl,
-                                      "question_image_url": questionImageUrl,
-                                      "date_added": Timestamp.fromDate(
-                                        DateTime.now(),
-                                      ),
-                                      "youtube_link": youtubeController.text
-                                    });
-                                    answerController.clear();
-                                    option1Controller.clear();
-                                    option2Controller.clear();
-                                    option3Controller.clear();
-                                    option4Controller.clear();
-                                    option1EquationController.clear();
-                                    option2EquationController.clear();
-                                    option3EquationController.clear();
-                                    option4EquationController.clear();
-                                    youtubeController.clear();
-                                    questionController.clear();
-                                    imageUrl = "";
-                                    section = "";
-                                    subject = "";
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
+                                    try {
+                                      image =
+                                          await FilePicker.platform.pickFiles();
+
+                                      // if the image is null, we do nothing
+                                      if (image == null) {
+                                        Navigator.pop(context);
+                                        return;
+                                      }
+
+                                      // setting the error message to null
+                                      setState(() {
+                                        errorMessage = null;
+                                      });
+
+                                      imageUrl = await ref
+                                          .watch(storageProvider)
+                                          .uploadImages(
+                                            id.toString(),
+                                            image,
+                                            ref,
+                                          );
+                                      Navigator.pop(context);
+                                    } catch (e) {
+                                      Navigator.pop(context);
+                                    }
                                   },
-                                  child: const Text("Add Question"),
+                                  child: const Text("Add Explanation Image"),
                                 ),
-                              )
-                            ],
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    showLoaderDialog(context);
+                                    try {
+                                      questionImage =
+                                          await FilePicker.platform.pickFiles();
+
+                                      // if the question image is null then we do nothing
+                                      if (questionImage == null) {
+                                        Navigator.pop(context);
+                                        return;
+                                      }
+
+                                      // setting the error message to null
+                                      setState(() {
+                                        errorMessage = null;
+                                      });
+
+                                      questionImageUrl = await ref
+                                          .watch(storageProvider)
+                                          .uploadQuestionImages(
+                                            id.toString(),
+                                            questionImage,
+                                            ref,
+                                          );
+                                      Navigator.pop(context);
+                                    } catch (e) {
+                                      Navigator.pop(context);
+                                    }
+                                  },
+                                  child: const Text("Add Question Image"),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ElevatedButton(
+                                    onPressed: () async {
+                                      // if the image and the question image are null, we show an error message accordingly
+                                      if (answerController.text.isEmpty) {
+                                        setState(() {
+                                          errorMessage =
+                                              'Answer can not be empty.';
+                                        });
+                                        return;
+                                      } else if (image == null) {
+                                        setState(() {
+                                          errorMessage =
+                                              'Explanation image can not be empty.';
+                                        });
+                                        return;
+                                      } else if (questionImage == null) {
+                                        setState(() {
+                                          errorMessage =
+                                              'Question image can not be empty.';
+                                        });
+                                        return;
+                                      } else {
+                                        setState(() {
+                                          errorMessage = null;
+                                        });
+                                      }
+
+                                      showLoaderDialog(context);
+                                      await examDatabase.addQuestion(
+                                          widget.examId, id.toString(), {
+                                        "answer":
+                                            int.parse(answerController.text),
+                                        "option_one": option1Controller.text,
+                                        "option_two": option2Controller.text,
+                                        "option_three": option3Controller.text,
+                                        "option_four": option4Controller.text,
+                                        "question": questionController.text,
+                                        "option_one_equation":
+                                            option1EquationController.text,
+                                        "option_two_equation":
+                                            option2EquationController.text,
+                                        "option_three_equation":
+                                            option3EquationController.text,
+                                        "option_four_equation":
+                                            option4EquationController.text,
+                                        "question_equation":
+                                            questionEquationController.text,
+                                        "section": section,
+                                        "subject": subject,
+                                        "image_url": imageUrl,
+                                        "question_image_url": questionImageUrl,
+                                        "date_added": Timestamp.fromDate(
+                                          DateTime.now(),
+                                        ),
+                                        "youtube_link": youtubeController.text
+                                      });
+                                      answerController.clear();
+                                      option1Controller.clear();
+                                      option2Controller.clear();
+                                      option3Controller.clear();
+                                      option4Controller.clear();
+                                      option1EquationController.clear();
+                                      option2EquationController.clear();
+                                      option3EquationController.clear();
+                                      option4EquationController.clear();
+                                      youtubeController.clear();
+                                      questionController.clear();
+                                      imageUrl = "";
+                                      section = "";
+                                      subject = "";
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text("Add Question"),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       );
                     });
+
+                setState(() {
+                  errorMessage = null;
+                });
               },
               label: const Text("Add Question"),
               icon: const Icon(Icons.add),
