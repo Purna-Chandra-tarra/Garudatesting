@@ -40,11 +40,29 @@ class Storage {
 
   Future deleteQuestionImage(String imageName) async {
     final questionImagesRef = storageRef.child("question/$imageName");
+
+    // trying to get the download url of the question image
+    // if the download url doesn't exist then we will get an error indicating that the image doesn't exist
+    try {
+      await questionImagesRef.getDownloadURL();
+    } catch (e) {
+      return; // if the image does not exist, we just return
+    }
+
     await questionImagesRef.delete();
   }
 
   Future deleteImage(String imageName) async {
     final questionImagesRef = storageRef.child("images/$imageName");
+
+    // trying to get the download url of the question image
+    // if the download url doesn't exist then we will get an error indicating that the image doesn't exist
+    try {
+      await questionImagesRef.getDownloadURL();
+    } catch (e) {
+      return; // if the image does not exist, we just return
+    }
+
     await questionImagesRef.delete();
   }
 }
