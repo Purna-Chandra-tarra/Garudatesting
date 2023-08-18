@@ -49,10 +49,15 @@ class SignInPage extends ConsumerWidget {
                 );
                 Navigator.pop(context);
                 if (msg == "Signed In") {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomePage()),
-                    (Route<dynamic> route) => false,
+                  // Navigator.pushAndRemoveUntil(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => const HomePage()),
+                  //   (Route<dynamic> route) => false,
+                  // );
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => const HomePage(),
+                    ),
                   );
                 } else {
                   showCupertinoDialog(
