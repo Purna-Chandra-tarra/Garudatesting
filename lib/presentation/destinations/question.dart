@@ -990,9 +990,9 @@ class _QuestionState extends ConsumerState<Question> {
                                                                       (context,
                                                                           index1) {
                                                                     return Padding(
-                                                                      padding:
-                                                                          const EdgeInsets.all(
-                                                                              8.0),
+                                                                      padding: const EdgeInsets
+                                                                          .all(
+                                                                          8.0),
                                                                       child:
                                                                           ElevatedButton(
                                                                         child:
@@ -1072,9 +1072,9 @@ class _QuestionState extends ConsumerState<Question> {
                                                                       (context,
                                                                           index1) {
                                                                     return Padding(
-                                                                      padding:
-                                                                          const EdgeInsets.all(
-                                                                              8.0),
+                                                                      padding: const EdgeInsets
+                                                                          .all(
+                                                                          8.0),
                                                                       child:
                                                                           ElevatedButton(
                                                                         child:
@@ -1117,27 +1117,28 @@ class _QuestionState extends ConsumerState<Question> {
                                     children: [
                                       ElevatedButton(
                                         onPressed: () async {
-                                          showLoaderDialog(context);
-
                                           FilePickerResult? image =
                                               await FilePicker.platform
                                                   .pickFiles();
 
-                                          final imageUrl = await ref
-                                              .watch(storageProvider)
-                                              .uploadImages(
-                                                documentSnapshots.id,
-                                                image,
-                                                ref,
-                                              );
-                                          await examDatabase.updateQuestion(
-                                            widget.examId,
-                                            documentSnapshots.id,
-                                            {
-                                              "image_url": imageUrl,
-                                            },
-                                          );
-                                          Navigator.pop(context);
+                                          if (image != null) {
+                                            showLoaderDialog(context);
+                                            final imageUrl = await ref
+                                                .watch(storageProvider)
+                                                .uploadImages(
+                                                  documentSnapshots.id,
+                                                  image,
+                                                  ref,
+                                                );
+                                            await examDatabase.updateQuestion(
+                                              widget.examId,
+                                              documentSnapshots.id,
+                                              {
+                                                "image_url": imageUrl,
+                                              },
+                                            );
+                                            Navigator.pop(context);
+                                          }
                                         },
                                         child: const Text(
                                             "Change Explanation Image"),
@@ -1160,27 +1161,29 @@ class _QuestionState extends ConsumerState<Question> {
                                     children: [
                                       ElevatedButton(
                                         onPressed: () async {
-                                          showLoaderDialog(context);
-
                                           FilePickerResult? image =
                                               await FilePicker.platform
                                                   .pickFiles();
 
-                                          final imageUrl = await ref
-                                              .watch(storageProvider)
-                                              .uploadQuestionImages(
-                                                documentSnapshots.id,
-                                                image,
-                                                ref,
-                                              );
-                                          await examDatabase.updateQuestion(
-                                            widget.examId,
-                                            documentSnapshots.id,
-                                            {
-                                              "question_image_url": imageUrl,
-                                            },
-                                          );
-                                          Navigator.pop(context);
+                                          // if image is not empty, we uplod it
+                                          if (image != null) {
+                                            showLoaderDialog(context);
+                                            final imageUrl = await ref
+                                                .watch(storageProvider)
+                                                .uploadQuestionImages(
+                                                  documentSnapshots.id,
+                                                  image,
+                                                  ref,
+                                                );
+                                            await examDatabase.updateQuestion(
+                                              widget.examId,
+                                              documentSnapshots.id,
+                                              {
+                                                "question_image_url": imageUrl,
+                                              },
+                                            );
+                                            Navigator.pop(context);
+                                          }
                                         },
                                         child:
                                             const Text("Change Question Image"),
@@ -2133,9 +2136,9 @@ class _QuestionState extends ConsumerState<Question> {
                                                                       (context,
                                                                           index1) {
                                                                     return Padding(
-                                                                      padding:
-                                                                          const EdgeInsets.all(
-                                                                              8.0),
+                                                                      padding: const EdgeInsets
+                                                                          .all(
+                                                                          8.0),
                                                                       child:
                                                                           ElevatedButton(
                                                                         child:
@@ -2215,9 +2218,9 @@ class _QuestionState extends ConsumerState<Question> {
                                                                       (context,
                                                                           index1) {
                                                                     return Padding(
-                                                                      padding:
-                                                                          const EdgeInsets.all(
-                                                                              8.0),
+                                                                      padding: const EdgeInsets
+                                                                          .all(
+                                                                          8.0),
                                                                       child:
                                                                           ElevatedButton(
                                                                         child:
@@ -2260,27 +2263,28 @@ class _QuestionState extends ConsumerState<Question> {
                                     children: [
                                       ElevatedButton(
                                         onPressed: () async {
-                                          showLoaderDialog(context);
-
                                           FilePickerResult? image =
                                               await FilePicker.platform
                                                   .pickFiles();
 
-                                          final imageUrl = await ref
-                                              .watch(storageProvider)
-                                              .uploadImages(
-                                                documentSnapshots.id,
-                                                image,
-                                                ref,
-                                              );
-                                          await examDatabase.updateQuestion(
-                                            widget.examId,
-                                            documentSnapshots.id,
-                                            {
-                                              "image_url": imageUrl,
-                                            },
-                                          );
-                                          Navigator.pop(context);
+                                          if (image != null) {
+                                            showLoaderDialog(context);
+                                            final imageUrl = await ref
+                                                .watch(storageProvider)
+                                                .uploadImages(
+                                                  documentSnapshots.id,
+                                                  image,
+                                                  ref,
+                                                );
+                                            await examDatabase.updateQuestion(
+                                              widget.examId,
+                                              documentSnapshots.id,
+                                              {
+                                                "image_url": imageUrl,
+                                              },
+                                            );
+                                            Navigator.pop(context);
+                                          }
                                         },
                                         child: const Text(
                                             "Change Explanation Image"),
@@ -2303,27 +2307,28 @@ class _QuestionState extends ConsumerState<Question> {
                                     children: [
                                       ElevatedButton(
                                         onPressed: () async {
-                                          showLoaderDialog(context);
-
                                           FilePickerResult? image =
                                               await FilePicker.platform
                                                   .pickFiles();
 
-                                          final imageUrl = await ref
-                                              .watch(storageProvider)
-                                              .uploadQuestionImages(
-                                                documentSnapshots.id,
-                                                image,
-                                                ref,
-                                              );
-                                          await examDatabase.updateQuestion(
-                                            widget.examId,
-                                            documentSnapshots.id,
-                                            {
-                                              "question_image_url": imageUrl,
-                                            },
-                                          );
-                                          Navigator.pop(context);
+                                          if (image != null) {
+                                            showLoaderDialog(context);
+                                            final imageUrl = await ref
+                                                .watch(storageProvider)
+                                                .uploadQuestionImages(
+                                                  documentSnapshots.id,
+                                                  image,
+                                                  ref,
+                                                );
+                                            await examDatabase.updateQuestion(
+                                              widget.examId,
+                                              documentSnapshots.id,
+                                              {
+                                                "question_image_url": imageUrl,
+                                              },
+                                            );
+                                            Navigator.pop(context);
+                                          }
                                         },
                                         child:
                                             const Text("Change Question Image"),

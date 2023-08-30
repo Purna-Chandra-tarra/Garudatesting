@@ -488,32 +488,24 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                                 ),
                                 ElevatedButton(
                                   onPressed: () async {
-                                    showLoaderDialog(context);
                                     try {
                                       image =
                                           await FilePicker.platform.pickFiles();
 
-                                      // if the image is null, we do nothing
-                                      if (image == null) {
+                                      // if image is not null, we upload it
+                                      if (image != null) {
+                                        showLoaderDialog(context);
+                                        imageUrl = await ref
+                                            .watch(storageProvider)
+                                            .uploadImages(
+                                              id.toString(),
+                                              image,
+                                              ref,
+                                            );
                                         Navigator.pop(context);
-                                        return;
                                       }
-
-                                      // setting the error message to null
-                                      setState(() {
-                                        errorMessage = null;
-                                      });
-
-                                      imageUrl = await ref
-                                          .watch(storageProvider)
-                                          .uploadImages(
-                                            id.toString(),
-                                            image,
-                                            ref,
-                                          );
-                                      Navigator.pop(context);
                                     } catch (e) {
-                                      Navigator.pop(context);
+                                      print(e);
                                     }
                                   },
                                   child: const Text("Add Explanation Image"),
@@ -523,32 +515,24 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                                 ),
                                 ElevatedButton(
                                   onPressed: () async {
-                                    showLoaderDialog(context);
                                     try {
                                       questionImage =
                                           await FilePicker.platform.pickFiles();
 
-                                      // if the question image is null then we do nothing
-                                      if (questionImage == null) {
+                                      // if question image is not null, we upload it
+                                      if (questionImage != null) {
+                                        showLoaderDialog(context);
+                                        questionImageUrl = await ref
+                                            .watch(storageProvider)
+                                            .uploadQuestionImages(
+                                              id.toString(),
+                                              questionImage,
+                                              ref,
+                                            );
                                         Navigator.pop(context);
-                                        return;
                                       }
-
-                                      // setting the error message to null
-                                      setState(() {
-                                        errorMessage = null;
-                                      });
-
-                                      questionImageUrl = await ref
-                                          .watch(storageProvider)
-                                          .uploadQuestionImages(
-                                            id.toString(),
-                                            questionImage,
-                                            ref,
-                                          );
-                                      Navigator.pop(context);
                                     } catch (e) {
-                                      Navigator.pop(context);
+                                      print(e);
                                     }
                                   },
                                   child: const Text("Add Question Image"),
@@ -564,23 +548,11 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                                               'Answer can not be empty.';
                                         });
                                         return;
-                                      } else if (image == null) {
-                                        setState(() {
-                                          errorMessage =
-                                              'Explanation image can not be empty.';
-                                        });
-                                        return;
-                                      } else if (questionImage == null) {
-                                        setState(() {
-                                          errorMessage =
-                                              'Question image can not be empty.';
-                                        });
-                                        return;
-                                      } else {
-                                        setState(() {
-                                          errorMessage = null;
-                                        });
                                       }
+
+                                      setState(() {
+                                        errorMessage = null;
+                                      });
 
                                       showLoaderDialog(context);
                                       await examDatabase.addQuestion(
