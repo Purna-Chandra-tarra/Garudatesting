@@ -32,9 +32,26 @@ class _QuestionState extends ConsumerState<Question> {
 
   final TextEditingController optionController = TextEditingController();
 
+  final TextEditingController explanationMatterController =
+      TextEditingController();
+
+  final TextEditingController explanationHeadingController =
+      TextEditingController();
+
   final TextEditingController searchController = TextEditingController();
 
   bool searchType = false;
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    questionController.dispose();
+    questionEquationController.dispose();
+    optionController.dispose();
+    explanationMatterController.dispose();
+    searchController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,6 +120,14 @@ class _QuestionState extends ConsumerState<Question> {
                           ),
                   itemBuilder: (context, documentSnapshots) {
                     Map<String, dynamic> docs = documentSnapshots.data();
+
+                    // explanation matter components
+                    final List<String> explanationMatterComponents =
+                        (docs['explanation_matter'] as String)
+                            .split(' ')
+                            .where((element) => element.isNotEmpty)
+                            .toList();
+
                     return Card(
                       child: Padding(
                         padding: const EdgeInsets.all(18.0),
@@ -866,6 +891,181 @@ class _QuestionState extends ConsumerState<Question> {
                                                           },
                                                         );
                                                         optionController
+                                                            .clear();
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(context);
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          },
+                                          icon: const Icon(Icons.edit))
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: SelectableText(
+                                          "Explanation Heading: ${docs['explanation_heading'] ?? ''}",
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      IconButton(
+                                          onPressed: () {
+                                            explanationHeadingController.text =
+                                                docs['explanation_heading'] ??
+                                                    '';
+                                            showCupertinoDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: const Text(
+                                                    "Update Explanation Heading",
+                                                  ),
+                                                  content: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      TextField(
+                                                        controller:
+                                                            explanationHeadingController,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  actions: [
+                                                    ElevatedButton(
+                                                      child: const Text(
+                                                        "Cancel",
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                    ),
+                                                    ElevatedButton(
+                                                      child: const Text(
+                                                        "Update",
+                                                      ),
+                                                      onPressed: () async {
+                                                        showLoaderDialog(
+                                                            context);
+                                                        await examDatabase
+                                                            .updateQuestion(
+                                                          widget.examId,
+                                                          documentSnapshots.id,
+                                                          {
+                                                            "explanation_heading":
+                                                                explanationHeadingController
+                                                                    .text
+                                                          },
+                                                        );
+                                                        explanationHeadingController
+                                                            .clear();
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(context);
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          },
+                                          icon: const Icon(Icons.edit))
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Wrap(
+                                          children: [
+                                            const SelectableText(
+                                              'Explanation Matter: ',
+                                            ),
+                                            ...explanationMatterComponents
+                                                .asMap()
+                                                .keys
+                                                .map((index) {
+                                              // grabbing the value for the current key
+                                              final String value =
+                                                  explanationMatterComponents[
+                                                      index];
+
+                                              // if value is enclosed in ``, then we simply render it as Math tex
+                                              if (value[0] == '`' &&
+                                                  value[value.length - 1] ==
+                                                      '`') {
+                                                return Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Math.tex(value.replaceAll(
+                                                        '`', '')),
+                                                    Text(index ==
+                                                            explanationMatterComponents
+                                                                    .length -
+                                                                1
+                                                        ? ''
+                                                        : ' '),
+                                                  ],
+                                                );
+                                              }
+
+                                              return Text(
+                                                  '$value${index == explanationMatterComponents.length - 1 ? '' : ' '}');
+                                            }).toList(),
+                                          ],
+                                        ),
+                                      ),
+                                      IconButton(
+                                          onPressed: () {
+                                            explanationMatterController.text =
+                                                docs['explanation_matter'] ??
+                                                    '';
+                                            showCupertinoDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: const Text(
+                                                    "Update Explanation Matter",
+                                                  ),
+                                                  content: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      TextField(
+                                                        controller:
+                                                            explanationMatterController,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  actions: [
+                                                    ElevatedButton(
+                                                      child: const Text(
+                                                        "Cancel",
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                    ),
+                                                    ElevatedButton(
+                                                      child: const Text(
+                                                        "Update",
+                                                      ),
+                                                      onPressed: () async {
+                                                        showLoaderDialog(
+                                                            context);
+                                                        await examDatabase
+                                                            .updateQuestion(
+                                                          widget.examId,
+                                                          documentSnapshots.id,
+                                                          {
+                                                            "explanation_matter":
+                                                                explanationMatterController
+                                                                    .text,
+                                                          },
+                                                        );
+                                                        explanationMatterController
                                                             .clear();
                                                         Navigator.pop(context);
                                                         Navigator.pop(context);
@@ -1249,6 +1449,13 @@ class _QuestionState extends ConsumerState<Question> {
                   itemBuilder: (context, documentSnapshots) {
                     Map<String, dynamic> docs = documentSnapshots.data();
 
+                    // explanation matter components
+                    final List<String> explanationMatterComponents =
+                        (docs['explanation_matter'] as String)
+                            .split(' ')
+                            .where((element) => element.isNotEmpty)
+                            .toList();
+
                     return Card(
                       child: Padding(
                         padding: const EdgeInsets.all(18.0),
@@ -2012,6 +2219,179 @@ class _QuestionState extends ConsumerState<Question> {
                                                           },
                                                         );
                                                         optionController
+                                                            .clear();
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(context);
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          },
+                                          icon: const Icon(Icons.edit))
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: SelectableText(
+                                          "Explanation Heading: ${docs['explanation_heading'] ?? ''}",
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      IconButton(
+                                          onPressed: () {
+                                            explanationHeadingController.text =
+                                                docs['explanation_heading'] ??
+                                                    '';
+                                            showCupertinoDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: const Text(
+                                                    "Update Explanation Heading",
+                                                  ),
+                                                  content: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      TextField(
+                                                        controller:
+                                                            explanationHeadingController,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  actions: [
+                                                    ElevatedButton(
+                                                      child: const Text(
+                                                        "Cancel",
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                    ),
+                                                    ElevatedButton(
+                                                      child: const Text(
+                                                        "Update",
+                                                      ),
+                                                      onPressed: () async {
+                                                        showLoaderDialog(
+                                                            context);
+                                                        await examDatabase
+                                                            .updateQuestion(
+                                                          widget.examId,
+                                                          documentSnapshots.id,
+                                                          {
+                                                            "explanation_heading":
+                                                                explanationHeadingController
+                                                                    .text
+                                                          },
+                                                        );
+                                                        explanationHeadingController
+                                                            .clear();
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(context);
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          },
+                                          icon: const Icon(Icons.edit))
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const SelectableText(
+                                            'Explanation Matter: ',
+                                          ),
+                                          ...explanationMatterComponents
+                                              .asMap()
+                                              .keys
+                                              .map((index) {
+                                            // grabbing the value for the current key
+                                            final String value =
+                                                explanationMatterComponents[
+                                                    index];
+
+                                            // if value is enclosed in ``, then we simply render it as Math tex
+                                            if (value[0] == '`' &&
+                                                value[value.length - 1] ==
+                                                    '`') {
+                                              return Row(
+                                                children: [
+                                                  Math.tex(value.replaceAll(
+                                                      '`', '')),
+                                                  Text(index ==
+                                                          explanationMatterComponents
+                                                                  .length -
+                                                              1
+                                                      ? ''
+                                                      : ' '),
+                                                ],
+                                              );
+                                            }
+
+                                            return Text(
+                                                '$value${index == explanationMatterComponents.length - 1 ? '' : ' '}');
+                                          }).toList(),
+                                        ],
+                                      ),
+                                      const Spacer(),
+                                      IconButton(
+                                          onPressed: () {
+                                            explanationMatterController.text =
+                                                docs['explanation_matter'] ??
+                                                    '';
+                                            showCupertinoDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: const Text(
+                                                    "Update Explanation Matter",
+                                                  ),
+                                                  content: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      TextField(
+                                                        controller:
+                                                            explanationMatterController,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  actions: [
+                                                    ElevatedButton(
+                                                      child: const Text(
+                                                        "Cancel",
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                    ),
+                                                    ElevatedButton(
+                                                      child: const Text(
+                                                        "Update",
+                                                      ),
+                                                      onPressed: () async {
+                                                        showLoaderDialog(
+                                                            context);
+                                                        await examDatabase
+                                                            .updateQuestion(
+                                                          widget.examId,
+                                                          documentSnapshots.id,
+                                                          {
+                                                            "explanation_matter":
+                                                                explanationMatterController
+                                                                    .text,
+                                                          },
+                                                        );
+                                                        explanationMatterController
                                                             .clear();
                                                         Navigator.pop(context);
                                                         Navigator.pop(context);

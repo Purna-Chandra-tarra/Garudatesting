@@ -65,6 +65,12 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
 
   final TextEditingController youtubeController = TextEditingController();
 
+  final TextEditingController explanationMatterController =
+      TextEditingController();
+
+  final TextEditingController explanationHeadingController =
+      TextEditingController();
+
   final TextEditingController questionEquationController =
       TextEditingController();
 
@@ -338,6 +344,20 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                                   ),
                                   controller: youtubeController,
                                 ),
+                                TextField(
+                                  decoration: const InputDecoration(
+                                    hintText: "Explanation Heading",
+                                  ),
+                                  controller: explanationHeadingController,
+                                ),
+                                TextField(
+                                  decoration: const InputDecoration(
+                                    hintText: "Explanation Matter",
+                                  ),
+                                  minLines: 3,
+                                  maxLines: 3,
+                                  controller: explanationMatterController,
+                                ),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: ElevatedButton(
@@ -581,7 +601,11 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                                         "date_added": Timestamp.fromDate(
                                           DateTime.now(),
                                         ),
-                                        "youtube_link": youtubeController.text
+                                        "youtube_link": youtubeController.text,
+                                        "explanation_matter":
+                                            explanationMatterController.text,
+                                        "explanation_heading":
+                                            explanationHeadingController.text,
                                       });
                                       answerController.clear();
                                       option1Controller.clear();
@@ -593,6 +617,8 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                                       option3EquationController.clear();
                                       option4EquationController.clear();
                                       youtubeController.clear();
+                                      explanationMatterController.clear();
+                                      explanationHeadingController.clear();
                                       questionController.clear();
                                       imageUrl = "";
                                       section = "";
