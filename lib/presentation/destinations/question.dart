@@ -122,11 +122,47 @@ class _QuestionState extends ConsumerState<Question> {
                     Map<String, dynamic> docs = documentSnapshots.data();
 
                     // explanation matter components
-                    final List<String> explanationMatterComponents =
-                        (docs['explanation_matter'] as String)
-                            .split(' ')
-                            .where((element) => element.isNotEmpty)
-                            .toList();
+                    final List<String> explanationMatterComponents = [];
+
+                    // flag whether we are extracting a simple word or the latex expression
+                    bool extractingWord = true;
+
+                    // temp string to hold the extracted words
+                    String tempString = '';
+
+                    // iterating through the string
+                    for (int i = 0;
+                        i < (docs['explanation_matter'] ?? '').length;
+                        i++) {
+                      // grabbing the current character
+                      String currentChar = docs['explanation_matter'][i];
+
+                      if (currentChar == '`') {
+                        if (extractingWord) {
+                          extractingWord = false;
+
+                          // if tempString is not empty then we add it to the list
+                          if (tempString.isNotEmpty) {
+                            explanationMatterComponents.add(tempString);
+                          }
+
+                          tempString = '';
+                          tempString += '`';
+                        } else {
+                          extractingWord = true;
+                          tempString += '`';
+                          explanationMatterComponents.add(tempString);
+                          tempString = '';
+                        }
+                      } else {
+                        tempString += currentChar;
+                      }
+                    }
+
+                    if (tempString.isNotEmpty) {
+                      explanationMatterComponents.add(tempString);
+                      tempString = '';
+                    }
 
                     return Card(
                       child: Padding(
@@ -983,36 +1019,17 @@ class _QuestionState extends ConsumerState<Question> {
                                               'Explanation Matter: ',
                                             ),
                                             ...explanationMatterComponents
-                                                .asMap()
-                                                .keys
-                                                .map((index) {
-                                              // grabbing the value for the current key
-                                              final String value =
-                                                  explanationMatterComponents[
-                                                      index];
-
+                                                .map((component) {
                                               // if value is enclosed in ``, then we simply render it as Math tex
-                                              if (value[0] == '`' &&
-                                                  value[value.length - 1] ==
+                                              if (component[0] == '`' &&
+                                                  component[component.length -
+                                                          1] ==
                                                       '`') {
-                                                return Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    Math.tex(value.replaceAll(
-                                                        '`', '')),
-                                                    Text(index ==
-                                                            explanationMatterComponents
-                                                                    .length -
-                                                                1
-                                                        ? ''
-                                                        : ' '),
-                                                  ],
-                                                );
+                                                return Math.tex(component
+                                                    .replaceAll('`', ''));
                                               }
 
-                                              return Text(
-                                                  '$value${index == explanationMatterComponents.length - 1 ? '' : ' '}');
+                                              return Text(component);
                                             }).toList(),
                                           ],
                                         ),
@@ -1450,11 +1467,42 @@ class _QuestionState extends ConsumerState<Question> {
                     Map<String, dynamic> docs = documentSnapshots.data();
 
                     // explanation matter components
-                    final List<String> explanationMatterComponents =
-                        (docs['explanation_matter'] as String)
-                            .split(' ')
-                            .where((element) => element.isNotEmpty)
-                            .toList();
+                    final List<String> explanationMatterComponents = [];
+
+                    // flag whether we are extracting a simple word or the latex expression
+                    bool extractingWord = true;
+
+                    // temp string to hold the extracted words
+                    String tempString = '';
+
+                    // iterating through the string
+                    for (int i = 0;
+                        i < (docs['explanation_matter'] ?? '').length;
+                        i++) {
+                      // grabbing the current character
+                      String currentChar = docs['explanation_matter'][i];
+
+                      if (currentChar == '`') {
+                        if (extractingWord) {
+                          extractingWord = false;
+                          explanationMatterComponents.add(tempString);
+                          tempString = '';
+                          tempString += '`';
+                        } else {
+                          extractingWord = true;
+                          tempString += '`';
+                          explanationMatterComponents.add(tempString);
+                          tempString = '';
+                        }
+                      } else {
+                        tempString += currentChar;
+                      }
+                    }
+
+                    if (tempString.isNotEmpty) {
+                      explanationMatterComponents.add(tempString);
+                      tempString = '';
+                    }
 
                     return Card(
                       child: Padding(
@@ -2304,45 +2352,28 @@ class _QuestionState extends ConsumerState<Question> {
                                   ),
                                   Row(
                                     children: [
-                                      Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const SelectableText(
-                                            'Explanation Matter: ',
-                                          ),
-                                          ...explanationMatterComponents
-                                              .asMap()
-                                              .keys
-                                              .map((index) {
-                                            // grabbing the value for the current key
-                                            final String value =
-                                                explanationMatterComponents[
-                                                    index];
+                                      Expanded(
+                                        child: Wrap(
+                                          children: [
+                                            const SelectableText(
+                                              'Explanation Matter: ',
+                                            ),
+                                            ...explanationMatterComponents
+                                                .map((component) {
+                                              // if value is enclosed in ``, then we simply render it as Math tex
+                                              if (component[0] == '`' &&
+                                                  component[component.length -
+                                                          1] ==
+                                                      '`') {
+                                                return Math.tex(component
+                                                    .replaceAll('`', ''));
+                                              }
 
-                                            // if value is enclosed in ``, then we simply render it as Math tex
-                                            if (value[0] == '`' &&
-                                                value[value.length - 1] ==
-                                                    '`') {
-                                              return Row(
-                                                children: [
-                                                  Math.tex(value.replaceAll(
-                                                      '`', '')),
-                                                  Text(index ==
-                                                          explanationMatterComponents
-                                                                  .length -
-                                                              1
-                                                      ? ''
-                                                      : ' '),
-                                                ],
-                                              );
-                                            }
-
-                                            return Text(
-                                                '$value${index == explanationMatterComponents.length - 1 ? '' : ' '}');
-                                          }).toList(),
-                                        ],
+                                              return Text(component);
+                                            }).toList(),
+                                          ],
+                                        ),
                                       ),
-                                      const Spacer(),
                                       IconButton(
                                           onPressed: () {
                                             explanationMatterController.text =
