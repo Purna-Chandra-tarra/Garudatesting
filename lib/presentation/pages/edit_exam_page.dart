@@ -620,6 +620,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                                       explanationMatterController.clear();
                                       explanationHeadingController.clear();
                                       questionController.clear();
+                                      questionEquationController.clear();
                                       imageUrl = "";
                                       section = "";
                                       subject = "";
