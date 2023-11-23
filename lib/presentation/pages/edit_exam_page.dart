@@ -354,8 +354,8 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                                   decoration: const InputDecoration(
                                     hintText: "Explanation Matter",
                                   ),
-                                  minLines: 3,
-                                  maxLines: 3,
+                                  minLines: 5,
+                                  maxLines: 10,
                                   controller: explanationMatterController,
                                 ),
                                 Padding(

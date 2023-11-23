@@ -1046,15 +1046,11 @@ class _QuestionState extends ConsumerState<Question> {
                                                   title: const Text(
                                                     "Update Explanation Matter",
                                                   ),
-                                                  content: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      TextField(
-                                                        controller:
-                                                            explanationMatterController,
-                                                      ),
-                                                    ],
+                                                  content: TextField(
+                                                    controller:
+                                                        explanationMatterController,
+                                                    minLines: 5,
+                                                    maxLines: 10,
                                                   ),
                                                   actions: [
                                                     ElevatedButton(
