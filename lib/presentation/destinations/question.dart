@@ -121,49 +121,6 @@ class _QuestionState extends ConsumerState<Question> {
                   itemBuilder: (context, documentSnapshots) {
                     Map<String, dynamic> docs = documentSnapshots.data();
 
-                    // explanation matter components
-                    final List<String> explanationMatterComponents = [];
-
-                    // flag whether we are extracting a simple word or the latex expression
-                    bool extractingWord = true;
-
-                    // temp string to hold the extracted words
-                    String tempString = '';
-
-                    // iterating through the string
-                    for (int i = 0;
-                        i < (docs['explanation_matter'] ?? '').length;
-                        i++) {
-                      // grabbing the current character
-                      String currentChar = docs['explanation_matter'][i];
-
-                      if (currentChar == '`') {
-                        if (extractingWord) {
-                          extractingWord = false;
-
-                          // if tempString is not empty then we add it to the list
-                          if (tempString.isNotEmpty) {
-                            explanationMatterComponents.add(tempString);
-                          }
-
-                          tempString = '';
-                          tempString += '`';
-                        } else {
-                          extractingWord = true;
-                          tempString += '`';
-                          explanationMatterComponents.add(tempString);
-                          tempString = '';
-                        }
-                      } else {
-                        tempString += currentChar;
-                      }
-                    }
-
-                    if (tempString.isNotEmpty) {
-                      explanationMatterComponents.add(tempString);
-                      tempString = '';
-                    }
-
                     return Card(
                       child: Padding(
                         padding: const EdgeInsets.all(18.0),
@@ -249,15 +206,18 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Math.tex(
-                                            docs['question_equation'] ??
-                                                "No Equation"),
+                                        child: Wrap(
+                                          children:
+                                              _getEquationComponentsWidgets(
+                                                  docs['question_equation'] ??
+                                                      "No Equation"),
+                                        ),
                                       ),
                                       const Spacer(),
                                       IconButton(
                                           onPressed: () {
                                             questionEquationController.text =
-                                                docs['question_equation'];
+                                                docs['question_equation'] ?? '';
                                             showCupertinoDialog(
                                               context: context,
                                               builder: (context) {
@@ -318,8 +278,18 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          "Option 1. ${docs['option_one']}",
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Option 1. ',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${docs['option_one']}",
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       const Spacer(),
@@ -387,16 +357,19 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Math.tex(
+                                        child: Wrap(
+                                            children:
+                                                _getEquationComponentsWidgets(
                                           docs['option_one_equation'] ??
                                               "No Option 1 Equation",
-                                        ),
+                                        )),
                                       ),
                                       const Spacer(),
                                       IconButton(
                                           onPressed: () {
                                             questionEquationController.text =
-                                                docs['option_one_equation'];
+                                                docs['option_one_equation'] ??
+                                                    '';
                                             showCupertinoDialog(
                                               context: context,
                                               builder: (context) {
@@ -457,8 +430,18 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          "Option 2. ${docs['option_two']}",
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Option 2. ',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${docs['option_two']}",
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       const Spacer(),
@@ -526,16 +509,19 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Math.tex(
+                                        child: Wrap(
+                                            children:
+                                                _getEquationComponentsWidgets(
                                           docs['option_two_equation'] ??
                                               "No Option 2 Equation",
-                                        ),
+                                        )),
                                       ),
                                       const Spacer(),
                                       IconButton(
                                           onPressed: () {
                                             questionEquationController.text =
-                                                docs['option_two_equation'];
+                                                docs['option_two_equation'] ??
+                                                    '';
                                             showCupertinoDialog(
                                               context: context,
                                               builder: (context) {
@@ -596,8 +582,18 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          "Option 3. ${docs['option_three']}",
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Option 3. ',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${docs['option_three']}",
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       const Spacer(),
@@ -665,16 +661,18 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Math.tex(
-                                          docs['option_three_equation'] ??
-                                              "No Option 3 Equation",
+                                        child: Wrap(
+                                          children: _getEquationComponentsWidgets(
+                                              docs['option_three_equation'] ??
+                                                  "No Option 3 Equation"),
                                         ),
                                       ),
                                       const Spacer(),
                                       IconButton(
                                           onPressed: () {
                                             questionEquationController.text =
-                                                docs['option_three_equation'];
+                                                docs['option_three_equation'] ??
+                                                    '';
                                             showCupertinoDialog(
                                               context: context,
                                               builder: (context) {
@@ -735,8 +733,18 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          "Option 4. ${docs['option_four']}",
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Option 4. ',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${docs['option_four']}",
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       const Spacer(),
@@ -804,16 +812,19 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Math.tex(
-                                          docs['option_four_equation'] ??
-                                              "No Option 4 Equation",
+                                        child: Wrap(
+                                          children:
+                                              _getEquationComponentsWidgets(
+                                                  docs['option_four_equation'] ??
+                                                      "No Option 4 Equation"),
                                         ),
                                       ),
                                       const Spacer(),
                                       IconButton(
                                           onPressed: () {
                                             questionEquationController.text =
-                                                docs['option_four_equation'];
+                                                docs['option_four_equation'] ??
+                                                    '';
                                             showCupertinoDialog(
                                               context: context,
                                               builder: (context) {
@@ -874,8 +885,18 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: SelectableText(
-                                          "Youtube Link: ${docs['youtube_link']}",
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Youtube Link: ',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            SelectableText(
+                                              "${docs['youtube_link']}",
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       const Spacer(),
@@ -943,8 +964,18 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: SelectableText(
-                                          "Explanation Heading: ${docs['explanation_heading'] ?? ''}",
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Explanation Heading: ',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            SelectableText(
+                                              "${docs['explanation_heading'] ?? ''}",
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       const Spacer(),
@@ -1012,26 +1043,18 @@ class _QuestionState extends ConsumerState<Question> {
                                   ),
                                   Row(
                                     children: [
+                                      const Text(
+                                        'Explanation Matter: ',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                       Expanded(
                                         child: Wrap(
-                                          children: [
-                                            const SelectableText(
-                                              'Explanation Matter: ',
-                                            ),
-                                            ...explanationMatterComponents
-                                                .map((component) {
-                                              // if value is enclosed in ``, then we simply render it as Math tex
-                                              if (component[0] == '`' &&
-                                                  component[component.length -
-                                                          1] ==
-                                                      '`') {
-                                                return Math.tex(component
-                                                    .replaceAll('`', ''));
-                                              }
-
-                                              return Text(component);
-                                            }).toList(),
-                                          ],
+                                          children:
+                                              _getEquationComponentsWidgets(
+                                                  docs['explanation_matter'] ??
+                                                      ''),
                                         ),
                                       ),
                                       IconButton(
@@ -1096,8 +1119,18 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          "Answer: Option ${docs['answer']}",
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Answer: ',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              "Option ${docs['answer']}",
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       const Spacer(),
@@ -1165,8 +1198,18 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          "Section: ${docs['section']}",
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Section: ',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${docs['section']}",
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       const Spacer(),
@@ -1247,8 +1290,18 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          "Subject: ${docs['subject']}",
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Subject: ',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${docs['subject']}",
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       const Spacer(),
@@ -1462,44 +1515,6 @@ class _QuestionState extends ConsumerState<Question> {
                   itemBuilder: (context, documentSnapshots) {
                     Map<String, dynamic> docs = documentSnapshots.data();
 
-                    // explanation matter components
-                    final List<String> explanationMatterComponents = [];
-
-                    // flag whether we are extracting a simple word or the latex expression
-                    bool extractingWord = true;
-
-                    // temp string to hold the extracted words
-                    String tempString = '';
-
-                    // iterating through the string
-                    for (int i = 0;
-                        i < (docs['explanation_matter'] ?? '').length;
-                        i++) {
-                      // grabbing the current character
-                      String currentChar = docs['explanation_matter'][i];
-
-                      if (currentChar == '`') {
-                        if (extractingWord) {
-                          extractingWord = false;
-                          explanationMatterComponents.add(tempString);
-                          tempString = '';
-                          tempString += '`';
-                        } else {
-                          extractingWord = true;
-                          tempString += '`';
-                          explanationMatterComponents.add(tempString);
-                          tempString = '';
-                        }
-                      } else {
-                        tempString += currentChar;
-                      }
-                    }
-
-                    if (tempString.isNotEmpty) {
-                      explanationMatterComponents.add(tempString);
-                      tempString = '';
-                    }
-
                     return Card(
                       child: Padding(
                         padding: const EdgeInsets.all(18.0),
@@ -1585,15 +1600,19 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Math.tex(
+                                        child: Wrap(
+                                          children:
+                                              _getEquationComponentsWidgets(
                                             docs['question_equation'] ??
-                                                "No Equation"),
+                                                "No Equation",
+                                          ),
+                                        ),
                                       ),
                                       const Spacer(),
                                       IconButton(
                                           onPressed: () {
                                             questionEquationController.text =
-                                                docs['question_equation'];
+                                                docs['question_equation'] ?? '';
                                             showCupertinoDialog(
                                               context: context,
                                               builder: (context) {
@@ -1654,8 +1673,18 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          "Option 1. ${docs['option_one']}",
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Option 1. ',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${docs['option_one']}",
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       const Spacer(),
@@ -1723,16 +1752,19 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Math.tex(
+                                        child: Wrap(
+                                            children:
+                                                _getEquationComponentsWidgets(
                                           docs['option_one_equation'] ??
                                               "No Option 1 Equation",
-                                        ),
+                                        )),
                                       ),
                                       const Spacer(),
                                       IconButton(
                                           onPressed: () {
                                             questionEquationController.text =
-                                                docs['option_one_equation'];
+                                                docs['option_one_equation'] ??
+                                                    '';
                                             showCupertinoDialog(
                                               context: context,
                                               builder: (context) {
@@ -1793,8 +1825,18 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          "Option 2. ${docs['option_two']}",
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Option 2. ',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${docs['option_two']}",
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       const Spacer(),
@@ -1862,16 +1904,20 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Math.tex(
-                                          docs['option_two_equation'] ??
-                                              "No Option 2 Equation",
+                                        child: Wrap(
+                                          children:
+                                              _getEquationComponentsWidgets(
+                                            docs['option_two_equation'] ??
+                                                "No Option 2 Equation",
+                                          ),
                                         ),
                                       ),
                                       const Spacer(),
                                       IconButton(
                                           onPressed: () {
                                             questionEquationController.text =
-                                                docs['option_two_equation'];
+                                                docs['option_two_equation'] ??
+                                                    '';
                                             showCupertinoDialog(
                                               context: context,
                                               builder: (context) {
@@ -1932,8 +1978,18 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          "Option 3. ${docs['option_three']}",
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Option 3. ',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${docs['option_three']}",
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       const Spacer(),
@@ -2001,16 +2057,19 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Math.tex(
+                                        child: Wrap(
+                                            children:
+                                                _getEquationComponentsWidgets(
                                           docs['option_three_equation'] ??
                                               "No Option 3 Equation",
-                                        ),
+                                        )),
                                       ),
                                       const Spacer(),
                                       IconButton(
                                           onPressed: () {
                                             questionEquationController.text =
-                                                docs['option_three_equation'];
+                                                docs['option_three_equation'] ??
+                                                    '';
                                             showCupertinoDialog(
                                               context: context,
                                               builder: (context) {
@@ -2071,8 +2130,18 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          "Option 4. ${docs['option_four']}",
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Option 4. ',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${docs['option_four']}",
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       const Spacer(),
@@ -2140,16 +2209,19 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Math.tex(
+                                        child: Wrap(
+                                            children:
+                                                _getEquationComponentsWidgets(
                                           docs['option_four_equation'] ??
                                               "No Option 4 Equation",
-                                        ),
+                                        )),
                                       ),
                                       const Spacer(),
                                       IconButton(
                                           onPressed: () {
                                             questionEquationController.text =
-                                                docs['option_four_equation'];
+                                                docs['option_four_equation'] ??
+                                                    '';
                                             showCupertinoDialog(
                                               context: context,
                                               builder: (context) {
@@ -2210,8 +2282,18 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: SelectableText(
-                                          "Youtube Link: ${docs['youtube_link']}",
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Youtube Link: ',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            SelectableText(
+                                              "${docs['youtube_link']}",
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       const Spacer(),
@@ -2279,8 +2361,18 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: SelectableText(
-                                          "Explanation Heading: ${docs['explanation_heading'] ?? ''}",
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Explanation Heading: ',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            SelectableText(
+                                              "${docs['explanation_heading'] ?? ''}",
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       const Spacer(),
@@ -2348,26 +2440,18 @@ class _QuestionState extends ConsumerState<Question> {
                                   ),
                                   Row(
                                     children: [
+                                      const Text(
+                                        'Explanation Matter: ',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                       Expanded(
                                         child: Wrap(
-                                          children: [
-                                            const SelectableText(
-                                              'Explanation Matter: ',
-                                            ),
-                                            ...explanationMatterComponents
-                                                .map((component) {
-                                              // if value is enclosed in ``, then we simply render it as Math tex
-                                              if (component[0] == '`' &&
-                                                  component[component.length -
-                                                          1] ==
-                                                      '`') {
-                                                return Math.tex(component
-                                                    .replaceAll('`', ''));
-                                              }
-
-                                              return Text(component);
-                                            }).toList(),
-                                          ],
+                                          children:
+                                              _getEquationComponentsWidgets(
+                                                  docs['explanation_matter'] ??
+                                                      ''),
                                         ),
                                       ),
                                       IconButton(
@@ -2436,8 +2520,18 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          "Answer: Option ${docs['answer']}",
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Answer: ',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              "Option ${docs['answer']}",
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       const Spacer(),
@@ -2505,8 +2599,18 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          "Section: ${docs['section']}",
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Section: ',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${docs['section']}",
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       const Spacer(),
@@ -2587,8 +2691,18 @@ class _QuestionState extends ConsumerState<Question> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          "Subject: ${docs['subject']}",
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Subject: ',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${docs['subject']}",
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       const Spacer(),
@@ -2789,5 +2903,62 @@ class _QuestionState extends ConsumerState<Question> {
         ),
       ),
     );
+  }
+
+  List<Widget> _getEquationComponentsWidgets(String equation) {
+    // explanation matter components
+    final List<String> equationComponents = [];
+
+    // flag whether we are extracting a simple word or the latex expression
+    bool extractingWord = true;
+
+    // temp string to hold the extracted words
+    String tempString = '';
+
+    // iterating through the string
+    for (int i = 0; i < equation.length; i++) {
+      // grabbing the current character
+      String currentChar = equation[i];
+
+      if (currentChar == '`') {
+        if (extractingWord) {
+          extractingWord = false;
+
+          // if tempString is not empty then we add it to the list
+          if (tempString.isNotEmpty) {
+            equationComponents.add(tempString);
+          }
+
+          tempString = '';
+          tempString += '`';
+        } else {
+          extractingWord = true;
+          tempString += '`';
+          equationComponents.add(tempString);
+          tempString = '';
+        }
+      } else {
+        tempString += currentChar;
+      }
+    }
+
+    if (tempString.isNotEmpty) {
+      equationComponents.add(tempString);
+      tempString = '';
+    }
+
+    // list to hold the components widgets
+    final List<Widget> componentsWidgets = equationComponents.map((component) {
+      // if value is enclosed in ``, then we simply render it as Math tex
+      if (component[0] == '`' && component[component.length - 1] == '`') {
+        return FittedBox(
+          child: Math.tex(component.replaceAll('`', '')),
+        );
+      }
+
+      return Text(component);
+    }).toList();
+
+    return componentsWidgets;
   }
 }
