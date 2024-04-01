@@ -1,0 +1,130 @@
+{
+  "project_info": {
+    "project_number": "176249703389",
+    "project_id": "garuda-exam",
+    "storage_bucket": "garuda-exam.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:176249703389:android:6aa78c1f1e396e75ecc434",
+        "android_client_info": {
+          "package_name": "com.example.garudaexams_dashboard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "176249703389-jbqenpv0i26stica2ubj82ipjq4vb94p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8cZapTdJEqFuVw8341B1OeesW8RU_xtM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "176249703389-jbqenpv0i26stica2ubj82ipjq4vb94p.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "176249703389-4t7lbh51e1phd24bbgtentuue3qpfsvj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "in.garudaexams.garudaexamsapp.garudaexams"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:176249703389:android:18b87fbdfce3e955ecc434",
+        "android_client_info": {
+          "package_name": "in.garudaexams.garudaexams"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "176249703389-472akefr4o7m4rs4qoupp7tpnqoq755b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.garudaexams.garudaexams",
+            "certificate_hash": "db792cd7e9f7d058204aae93d9f8d08130b65318"
+          }
+        },
+        {
+          "client_id": "176249703389-85rt39ob5c8ahnj0rtm3nlctb2jaf4hl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.garudaexams.garudaexams",
+            "certificate_hash": "6d9d79b857de2e90d719d71f7febf617f3c31eda"
+          }
+        },
+        {
+          "client_id": "176249703389-fsdr3gbh0dlpa1vcspldjt0q9lrnvhfv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.garudaexams.garudaexams",
+            "certificate_hash": "6e21abe1ff9503e813defcec01111b948880da47"
+          }
+        },
+        {
+          "client_id": "176249703389-larmdvjphaesr601j4ceabrk7snomv8c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.garudaexams.garudaexams",
+            "certificate_hash": "fcc334320cc1386fc62fcec68840e8f9f038143f"
+          }
+        },
+        {
+          "client_id": "176249703389-qd3kqifc0130k6udnnoj6sofe73p2jgv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.garudaexams.garudaexams",
+            "certificate_hash": "bf25d0163fcb14b603faddb77bdba3f76077ab57"
+          }
+        },
+        {
+          "client_id": "176249703389-vsskfk7l6cpfmm11kee07od4249th1h6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.garudaexams.garudaexams",
+            "certificate_hash": "19be5182296973df084cbfcb6ba952588e5b3736"
+          }
+        },
+        {
+          "client_id": "176249703389-jbqenpv0i26stica2ubj82ipjq4vb94p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8cZapTdJEqFuVw8341B1OeesW8RU_xtM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "176249703389-jbqenpv0i26stica2ubj82ipjq4vb94p.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "176249703389-4t7lbh51e1phd24bbgtentuue3qpfsvj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "in.garudaexams.garudaexamsapp.garudaexams"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

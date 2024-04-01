@@ -21,10 +21,7 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for android - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return android;
       case TargetPlatform.iOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for ios - '
@@ -54,10 +51,18 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyCI8RDSDOrRycENOz8elRBMN8Mkh4SffA4',
-    appId: '1:176249703389:web:d19f6d449ddd75f8ecc434',
+    appId: '1:176249703389:web:a9b978337442941fecc434',
     messagingSenderId: '176249703389',
     projectId: 'garuda-exam',
     authDomain: 'garuda-exam.firebaseapp.com',
+    storageBucket: 'garuda-exam.appspot.com',
+  );
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyA8cZapTdJEqFuVw8341B1OeesW8RU_xtM',
+    appId: '1:176249703389:android:6aa78c1f1e396e75ecc434',
+    messagingSenderId: '176249703389',
+    projectId: 'garuda-exam',
     storageBucket: 'garuda-exam.appspot.com',
   );
 }

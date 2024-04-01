@@ -23,6 +23,7 @@ class MyApp extends ConsumerWidget {
     final initialize = ref.watch(firebaseinitializerProvider);
     return MaterialApp(
       title: 'Garuda Exams Dashboard',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: "DMSans",
         useMaterial3: true,
