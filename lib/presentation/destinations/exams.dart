@@ -50,7 +50,9 @@ class Exams extends ConsumerWidget {
                             title: Text(
                               "Exam Name: ${snapshot.data.docs[index]['exam_name']}",
                             ),
-                            subtitle: Row(
+                            subtitle: Wrap(
+                              spacing: 5,
+                              runSpacing: 5,
                               children: [
                                 Container(
                                   decoration: BoxDecoration(
@@ -73,9 +75,6 @@ class Exams extends ConsumerWidget {
                                           ),
                                     ),
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 5,
                                 ),
                                 FutureBuilder(
                                     future: ref
@@ -125,9 +124,6 @@ class Exams extends ConsumerWidget {
                                         return const CupertinoActivityIndicator();
                                       }
                                     }),
-                                const SizedBox(
-                                  width: 5,
-                                ),
                                 Container(
                                   decoration: BoxDecoration(
                                     color:
@@ -150,7 +146,6 @@ class Exams extends ConsumerWidget {
                                     ),
                                   ),
                                 ),
-                                const Spacer(),
                               ],
                             ),
                           ),
