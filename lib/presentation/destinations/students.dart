@@ -46,56 +46,27 @@ class Students extends ConsumerWidget {
                           title: Text(
                             "Student Name: ${snapshot.data?.docs[index]['name']}",
                           ),
-                          subtitle: GestureDetector(
-                            onTap: () async {
-                              String phoneNo =
-                                  await snapshot.data?.docs[index]['phone_no'];
-                              await ref
-                                  .watch(userDatabaseProvider)
-                                  .changeStudentStatus(phoneNo);
-                            },
-                            child: Row(
-                              children: [
-                                GestureDetector(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: snapshot.data?.docs[index]
-                                                  ['device_id'] !=
-                                              "error"
-                                          ? Colors.green
-                                          : Colors.red,
-                                      borderRadius: BorderRadius.circular(3),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(3.0),
-                                      child: Text(
-                                        snapshot.data?.docs[index]
-                                                    ['device_id'] !=
-                                                "error"
-                                            ? "ACTIVE"
-                                            : 'INACTIVE',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall
-                                            ?.copyWith(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 5),
-                                Container(
+                          subtitle: Wrap(
+                            spacing: 5,
+                            runSpacing: 5,
+                            children: [
+                              GestureDetector(
+                                child: Container(
                                   decoration: BoxDecoration(
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
+                                    color: snapshot.data?.docs[index]
+                                                ['device_id'] !=
+                                            "error"
+                                        ? Colors.green
+                                        : Colors.red,
                                     borderRadius: BorderRadius.circular(3),
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsets.all(3.0),
-                                    child: SelectableText(
-                                      snapshot.data?.docs[index]['phone_no'],
+                                    child: Text(
+                                      snapshot.data?.docs[index]['device_id'] !=
+                                              "error"
+                                          ? "ACTIVE"
+                                          : 'INACTIVE',
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodySmall
@@ -106,9 +77,27 @@ class Students extends ConsumerWidget {
                                     ),
                                   ),
                                 ),
-                                const Spacer(),
-                              ],
-                            ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  borderRadius: BorderRadius.circular(3),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(3.0),
+                                  child: SelectableText(
+                                    snapshot.data?.docs[index]['phone_no'],
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       );
