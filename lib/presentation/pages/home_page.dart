@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -65,6 +67,24 @@ class _HomePageState extends ConsumerState<HomePage> {
       );
     }
   }
+
+  // pages
+  final List<Widget> _pagesForSuperUser = [
+    const Dashboard(),
+    const Students(),
+    const Exams(),
+    const Queries(),
+    MasterPassword(),
+    const AboutUs(),
+    Container(),
+  ];
+
+  final List<Widget> _pagesForNonSuperUser = [
+    const Dashboard(),
+    const Exams(),
+    const AboutUs(),
+    Container(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -174,103 +194,82 @@ class _HomePageState extends ConsumerState<HomePage> {
                   if (snapshot.data) {
                     return Row(
                       children: [
-                        NavigationRail(
-                          onDestinationSelected: (value) =>
-                              ref.read(destinationProvider.state).state = value,
-                          extended: true,
-                          destinations: const [
-                            NavigationRailDestination(
-                              icon: Icon(Icons.home_outlined),
-                              selectedIcon: Icon(Icons.home_rounded),
-                              label: Text('Dashboard'),
-                            ),
-                            NavigationRailDestination(
-                              icon: Icon(Icons.person_outline_rounded),
-                              selectedIcon: Icon(Icons.person_rounded),
-                              label: Text('Students'),
-                            ),
-                            NavigationRailDestination(
-                              icon: Icon(Icons.notes_outlined),
-                              selectedIcon: Icon(Icons.notes_rounded),
-                              label: Text('Exams'),
-                            ),
-                            NavigationRailDestination(
-                              icon: Icon(Icons.warning_amber_rounded),
-                              selectedIcon: Icon(Icons.warning_rounded),
-                              label: Text('Queries'),
-                            ),
-                            NavigationRailDestination(
-                              icon: Icon(Icons.password_outlined),
-                              selectedIcon: Icon(Icons.password_rounded),
-                              label: Text('Master Password'),
-                            ),
-                            NavigationRailDestination(
-                              icon: Icon(Icons.info_outline_rounded),
-                              selectedIcon: Icon(Icons.info),
-                              label: Text('About Us'),
-                            ),
-                          ],
-                          selectedIndex: ref.watch(destinationProvider),
-                        ),
-                        Builder(builder: (context) {
-                          switch (ref.watch(destinationProvider)) {
-                            case 0:
-                              return const Dashboard();
-                            case 1:
-                              return const Students();
-                            case 2:
-                              return const Exams();
-                            case 3:
-                              return const Queries();
-                            case 4:
-                              return MasterPassword();
-                            case 5:
-                              return AboutUs();
-                            default:
-                              return Container();
-                          }
-                        }),
+                        if (!Platform.isAndroid)
+                          NavigationRail(
+                            onDestinationSelected: (value) => ref
+                                .read(destinationProvider.state)
+                                .state = value,
+                            extended: true,
+                            destinations: const [
+                              NavigationRailDestination(
+                                icon: Icon(Icons.home_outlined),
+                                selectedIcon: Icon(Icons.home_rounded),
+                                label: Text('Dashboard'),
+                              ),
+                              NavigationRailDestination(
+                                icon: Icon(Icons.person_outline_rounded),
+                                selectedIcon: Icon(Icons.person_rounded),
+                                label: Text('Students'),
+                              ),
+                              NavigationRailDestination(
+                                icon: Icon(Icons.notes_outlined),
+                                selectedIcon: Icon(Icons.notes_rounded),
+                                label: Text('Exams'),
+                              ),
+                              NavigationRailDestination(
+                                icon: Icon(Icons.warning_amber_rounded),
+                                selectedIcon: Icon(Icons.warning_rounded),
+                                label: Text('Queries'),
+                              ),
+                              NavigationRailDestination(
+                                icon: Icon(Icons.password_outlined),
+                                selectedIcon: Icon(Icons.password_rounded),
+                                label: Text('Master Password'),
+                              ),
+                              NavigationRailDestination(
+                                icon: Icon(Icons.info_outline_rounded),
+                                selectedIcon: Icon(Icons.info),
+                                label: Text('About Us'),
+                              ),
+                            ],
+                            selectedIndex: ref.watch(destinationProvider),
+                          ),
+                        Expanded(
+                            child: _pagesForSuperUser[
+                                ref.watch(destinationProvider)]),
                       ],
                     );
                   } else {
                     return Row(
                       children: [
-                        NavigationRail(
-                          onDestinationSelected: (value) =>
-                              ref.read(destinationProvider.state).state = value,
-                          extended: true,
-                          destinations: const [
-                            NavigationRailDestination(
-                              icon: Icon(Icons.home_outlined),
-                              selectedIcon: Icon(Icons.home_rounded),
-                              label: Text('Dashboard'),
-                            ),
-                            NavigationRailDestination(
-                              icon: Icon(Icons.notes_outlined),
-                              selectedIcon: Icon(Icons.notes_rounded),
-                              label: Text('Exams'),
-                            ),
-                            NavigationRailDestination(
-                              icon: Icon(Icons.info_outline_rounded),
-                              selectedIcon: Icon(Icons.info),
-                              label: Text('About Us'),
-                            ),
-                          ],
-                          selectedIndex: ref.watch(destinationProvider),
-                        ),
-                        Builder(
-                          builder: (context) {
-                            switch (ref.watch(destinationProvider)) {
-                              case 0:
-                                return const Dashboard();
-                              case 1:
-                                return const Exams();
-                              case 2:
-                                return AboutUs();
-                              default:
-                                return Container();
-                            }
-                          },
+                        if (!Platform.isAndroid)
+                          NavigationRail(
+                            onDestinationSelected: (value) => ref
+                                .read(destinationProvider.state)
+                                .state = value,
+                            extended: true,
+                            destinations: const [
+                              NavigationRailDestination(
+                                icon: Icon(Icons.home_outlined),
+                                selectedIcon: Icon(Icons.home_rounded),
+                                label: Text('Dashboard'),
+                              ),
+                              NavigationRailDestination(
+                                icon: Icon(Icons.notes_outlined),
+                                selectedIcon: Icon(Icons.notes_rounded),
+                                label: Text('Exams'),
+                              ),
+                              NavigationRailDestination(
+                                icon: Icon(Icons.info_outline_rounded),
+                                selectedIcon: Icon(Icons.info),
+                                label: Text('About Us'),
+                              ),
+                            ],
+                            selectedIndex: ref.watch(destinationProvider),
+                          ),
+                        Expanded(
+                          child: _pagesForNonSuperUser[
+                              ref.watch(destinationProvider)],
                         ),
                       ],
                     );
@@ -286,6 +285,92 @@ class _HomePageState extends ConsumerState<HomePage> {
                     ref.watch(authServiceProvider).user!.email.toString(),
                   ),
             ),
+      bottomNavigationBar: FutureBuilder(
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data) {
+              return NavigationBar(
+                selectedIndex: ref.watch(destinationProvider),
+                onDestinationSelected: (value) {
+                  setState(() {
+                    ref.read(destinationProvider.notifier).state = value;
+                  });
+                },
+                labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+                destinations: const [
+                  NavigationDestination(
+                    icon: Icon(Icons.home_outlined),
+                    selectedIcon: Icon(Icons.home_rounded),
+                    label: '',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.person_outline_rounded),
+                    selectedIcon: Icon(Icons.person_rounded),
+                    label: '',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.notes_outlined),
+                    selectedIcon: Icon(Icons.notes_rounded),
+                    label: '',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.warning_amber_rounded),
+                    selectedIcon: Icon(Icons.warning_rounded),
+                    label: '',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.password_outlined),
+                    selectedIcon: Icon(Icons.password_rounded),
+                    label: '',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.info_outline_rounded),
+                    selectedIcon: Icon(Icons.info),
+                    label: '',
+                  ),
+                ],
+              );
+            } else {
+              return NavigationBar(
+                selectedIndex: ref.watch(destinationProvider),
+                onDestinationSelected: (value) {
+                  print('destination selected: $value');
+
+                  setState(() {
+                    ref.read(destinationProvider.notifier).state = value;
+                  });
+                },
+                labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+                destinations: const [
+                  NavigationDestination(
+                    icon: Icon(Icons.home_outlined),
+                    selectedIcon: Icon(Icons.home_rounded),
+                    label: 'Dashboard',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.notes_outlined),
+                    selectedIcon: Icon(Icons.notes_rounded),
+                    label: 'Exams',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.info_outline_rounded),
+                    selectedIcon: Icon(Icons.info),
+                    label: 'About Us',
+                  ),
+                ],
+              );
+            }
+          } else {
+            return const Center(
+                child: CupertinoActivityIndicator(
+              radius: 50,
+            ));
+          }
+        },
+        future: ref.watch(userDatabaseProvider).isSuperUser(
+              ref.watch(authServiceProvider).user!.email.toString(),
+            ),
+      ),
     );
   }
 }
