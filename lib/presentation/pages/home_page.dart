@@ -285,92 +285,96 @@ class _HomePageState extends ConsumerState<HomePage> {
                     ref.watch(authServiceProvider).user!.email.toString(),
                   ),
             ),
-      bottomNavigationBar: FutureBuilder(
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.data) {
-              return NavigationBar(
-                selectedIndex: ref.watch(destinationProvider),
-                onDestinationSelected: (value) {
-                  setState(() {
-                    ref.read(destinationProvider.notifier).state = value;
-                  });
-                },
-                labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-                destinations: const [
-                  NavigationDestination(
-                    icon: Icon(Icons.home_outlined),
-                    selectedIcon: Icon(Icons.home_rounded),
-                    label: '',
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.person_outline_rounded),
-                    selectedIcon: Icon(Icons.person_rounded),
-                    label: '',
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.notes_outlined),
-                    selectedIcon: Icon(Icons.notes_rounded),
-                    label: '',
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.warning_amber_rounded),
-                    selectedIcon: Icon(Icons.warning_rounded),
-                    label: '',
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.password_outlined),
-                    selectedIcon: Icon(Icons.password_rounded),
-                    label: '',
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.info_outline_rounded),
-                    selectedIcon: Icon(Icons.info),
-                    label: '',
-                  ),
-                ],
-              );
-            } else {
-              return NavigationBar(
-                selectedIndex: ref.watch(destinationProvider),
-                onDestinationSelected: (value) {
-                  print('destination selected: $value');
+      bottomNavigationBar: !Platform.isAndroid
+          ? null
+          : FutureBuilder(
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data) {
+                    return NavigationBar(
+                      selectedIndex: ref.watch(destinationProvider),
+                      onDestinationSelected: (value) {
+                        setState(() {
+                          ref.read(destinationProvider.notifier).state = value;
+                        });
+                      },
+                      labelBehavior:
+                          NavigationDestinationLabelBehavior.alwaysHide,
+                      destinations: const [
+                        NavigationDestination(
+                          icon: Icon(Icons.home_outlined),
+                          selectedIcon: Icon(Icons.home_rounded),
+                          label: '',
+                        ),
+                        NavigationDestination(
+                          icon: Icon(Icons.person_outline_rounded),
+                          selectedIcon: Icon(Icons.person_rounded),
+                          label: '',
+                        ),
+                        NavigationDestination(
+                          icon: Icon(Icons.notes_outlined),
+                          selectedIcon: Icon(Icons.notes_rounded),
+                          label: '',
+                        ),
+                        NavigationDestination(
+                          icon: Icon(Icons.warning_amber_rounded),
+                          selectedIcon: Icon(Icons.warning_rounded),
+                          label: '',
+                        ),
+                        NavigationDestination(
+                          icon: Icon(Icons.password_outlined),
+                          selectedIcon: Icon(Icons.password_rounded),
+                          label: '',
+                        ),
+                        NavigationDestination(
+                          icon: Icon(Icons.info_outline_rounded),
+                          selectedIcon: Icon(Icons.info),
+                          label: '',
+                        ),
+                      ],
+                    );
+                  } else {
+                    return NavigationBar(
+                      selectedIndex: ref.watch(destinationProvider),
+                      onDestinationSelected: (value) {
+                        print('destination selected: $value');
 
-                  setState(() {
-                    ref.read(destinationProvider.notifier).state = value;
-                  });
-                },
-                labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-                destinations: const [
-                  NavigationDestination(
-                    icon: Icon(Icons.home_outlined),
-                    selectedIcon: Icon(Icons.home_rounded),
-                    label: 'Dashboard',
+                        setState(() {
+                          ref.read(destinationProvider.notifier).state = value;
+                        });
+                      },
+                      labelBehavior:
+                          NavigationDestinationLabelBehavior.alwaysHide,
+                      destinations: const [
+                        NavigationDestination(
+                          icon: Icon(Icons.home_outlined),
+                          selectedIcon: Icon(Icons.home_rounded),
+                          label: 'Dashboard',
+                        ),
+                        NavigationDestination(
+                          icon: Icon(Icons.notes_outlined),
+                          selectedIcon: Icon(Icons.notes_rounded),
+                          label: 'Exams',
+                        ),
+                        NavigationDestination(
+                          icon: Icon(Icons.info_outline_rounded),
+                          selectedIcon: Icon(Icons.info),
+                          label: 'About Us',
+                        ),
+                      ],
+                    );
+                  }
+                } else {
+                  return const Center(
+                      child: CupertinoActivityIndicator(
+                    radius: 50,
+                  ));
+                }
+              },
+              future: ref.watch(userDatabaseProvider).isSuperUser(
+                    ref.watch(authServiceProvider).user!.email.toString(),
                   ),
-                  NavigationDestination(
-                    icon: Icon(Icons.notes_outlined),
-                    selectedIcon: Icon(Icons.notes_rounded),
-                    label: 'Exams',
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.info_outline_rounded),
-                    selectedIcon: Icon(Icons.info),
-                    label: 'About Us',
-                  ),
-                ],
-              );
-            }
-          } else {
-            return const Center(
-                child: CupertinoActivityIndicator(
-              radius: 50,
-            ));
-          }
-        },
-        future: ref.watch(userDatabaseProvider).isSuperUser(
-              ref.watch(authServiceProvider).user!.email.toString(),
             ),
-      ),
     );
   }
 }

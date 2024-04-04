@@ -318,90 +318,96 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
               ));
             }
           }),
-      bottomNavigationBar: FutureBuilder(
-        future: ref.watch(userDatabaseProvider).isSuperUser(
-              ref.watch(authServiceProvider).user!.email.toString(),
+      bottomNavigationBar: !Platform.isAndroid
+          ? null
+          : FutureBuilder(
+              future: ref.watch(userDatabaseProvider).isSuperUser(
+                    ref.watch(authServiceProvider).user!.email.toString(),
+                  ),
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  if (!snapshot.data) {
+                    return NavigationBar(
+                      selectedIndex: ref.watch(destinationExamProvider),
+                      onDestinationSelected: (value) {
+                        setState(() {
+                          ref.read(destinationExamProvider.notifier).state =
+                              value;
+                        });
+                      },
+                      labelBehavior:
+                          NavigationDestinationLabelBehavior.alwaysHide,
+                      destinations: const [
+                        NavigationDestination(
+                          icon: Icon(Icons.abc_outlined),
+                          selectedIcon: Icon(Icons.abc_rounded),
+                          label: "Exam Details",
+                        ),
+                        NavigationDestination(
+                          icon: Icon(Icons.notes),
+                          selectedIcon: Icon(Icons.notes_rounded),
+                          label: "Subjects",
+                        ),
+                        NavigationDestination(
+                          icon: Icon(Icons.insert_page_break_outlined),
+                          selectedIcon: Icon(Icons.insert_page_break_rounded),
+                          label: "Sections",
+                        ),
+                        NavigationDestination(
+                          icon: Icon(Icons.question_mark_rounded),
+                          selectedIcon: Icon(Icons.question_mark_outlined),
+                          label: "Questions",
+                        ),
+                        NavigationDestination(
+                          icon: Icon(Icons.diamond_outlined),
+                          selectedIcon: Icon(Icons.diamond_rounded),
+                          label: "Subscriptions",
+                        ),
+                      ],
+                    );
+                  } else {
+                    return NavigationBar(
+                      selectedIndex: ref.watch(destinationExamProvider),
+                      onDestinationSelected: (value) {
+                        setState(() {
+                          ref.read(destinationExamProvider.notifier).state =
+                              value;
+                        });
+                      },
+                      labelBehavior:
+                          NavigationDestinationLabelBehavior.alwaysHide,
+                      destinations: const [
+                        NavigationDestination(
+                          icon: Icon(Icons.abc_outlined),
+                          selectedIcon: Icon(Icons.abc_rounded),
+                          label: "Exam Details",
+                        ),
+                        NavigationDestination(
+                          icon: Icon(Icons.notes),
+                          selectedIcon: Icon(Icons.notes_rounded),
+                          label: "Subjects",
+                        ),
+                        NavigationDestination(
+                          icon: Icon(Icons.insert_page_break_outlined),
+                          selectedIcon: Icon(Icons.insert_page_break_rounded),
+                          label: "Sections",
+                        ),
+                        NavigationDestination(
+                          icon: Icon(Icons.question_mark_rounded),
+                          selectedIcon: Icon(Icons.question_mark_outlined),
+                          label: "Questions",
+                        ),
+                      ],
+                    );
+                  }
+                } else {
+                  return const Center(
+                      child: CupertinoActivityIndicator(
+                    radius: 50,
+                  ));
+                }
+              },
             ),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData) {
-            if (!snapshot.data) {
-              return NavigationBar(
-                selectedIndex: ref.watch(destinationExamProvider),
-                onDestinationSelected: (value) {
-                  setState(() {
-                    ref.read(destinationExamProvider.notifier).state = value;
-                  });
-                },
-                labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-                destinations: const [
-                  NavigationDestination(
-                    icon: Icon(Icons.abc_outlined),
-                    selectedIcon: Icon(Icons.abc_rounded),
-                    label: "Exam Details",
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.notes),
-                    selectedIcon: Icon(Icons.notes_rounded),
-                    label: "Subjects",
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.insert_page_break_outlined),
-                    selectedIcon: Icon(Icons.insert_page_break_rounded),
-                    label: "Sections",
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.question_mark_rounded),
-                    selectedIcon: Icon(Icons.question_mark_outlined),
-                    label: "Questions",
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.diamond_outlined),
-                    selectedIcon: Icon(Icons.diamond_rounded),
-                    label: "Subscriptions",
-                  ),
-                ],
-              );
-            } else {
-              return NavigationBar(
-                selectedIndex: ref.watch(destinationExamProvider),
-                onDestinationSelected: (value) {
-                  setState(() {
-                    ref.read(destinationExamProvider.notifier).state = value;
-                  });
-                },
-                labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-                destinations: const [
-                  NavigationDestination(
-                    icon: Icon(Icons.abc_outlined),
-                    selectedIcon: Icon(Icons.abc_rounded),
-                    label: "Exam Details",
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.notes),
-                    selectedIcon: Icon(Icons.notes_rounded),
-                    label: "Subjects",
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.insert_page_break_outlined),
-                    selectedIcon: Icon(Icons.insert_page_break_rounded),
-                    label: "Sections",
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.question_mark_rounded),
-                    selectedIcon: Icon(Icons.question_mark_outlined),
-                    label: "Questions",
-                  ),
-                ],
-              );
-            }
-          } else {
-            return const Center(
-                child: CupertinoActivityIndicator(
-              radius: 50,
-            ));
-          }
-        },
-      ),
     );
   }
 
