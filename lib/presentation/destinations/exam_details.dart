@@ -87,7 +87,11 @@ class ExamDetails extends ConsumerWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text("Exam Status: "),
+                                      const Text(
+                                        "Exam Status:",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                       const SizedBox(
                                         width: 5,
                                       ),
@@ -152,7 +156,10 @@ class ExamDetails extends ConsumerWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text("Exam Type: "),
+                              const Text(
+                                "Exam Type:",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
                               const SizedBox(
                                 width: 5,
                               ),
@@ -201,7 +208,10 @@ class ExamDetails extends ConsumerWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("No of Questions: "),
+                        const Text(
+                          "No of Questions:",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         FutureBuilder(
                           future: examDatabase.getExamLength(examId),
                           builder: ((context, AsyncSnapshot<int> snapshot) {
@@ -230,7 +240,10 @@ class ExamDetails extends ConsumerWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text("Exam Difficulty: "),
+                              const Text(
+                                "Exam Difficulty:",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
                               const SizedBox(
                                 width: 5,
                               ),
@@ -282,7 +295,10 @@ class ExamDetails extends ConsumerWidget {
                           if (snapshot1.data) {
                             return Row(
                               children: [
-                                const Text("Youtube: "),
+                                const Text(
+                                  "Youtube:",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
                                 const Spacer(),
                                 Switch(
                                   value: snapshot.data!['youtube'],
