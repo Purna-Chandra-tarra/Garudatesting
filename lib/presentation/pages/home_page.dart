@@ -365,10 +365,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     );
                   }
                 } else {
-                  return const Center(
-                      child: CupertinoActivityIndicator(
-                    radius: 50,
-                  ));
+                  return const SizedBox();
                 }
               },
               future: ref.watch(userDatabaseProvider).isSuperUser(

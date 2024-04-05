@@ -227,7 +227,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
               ),
           builder: (context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
-              if (!snapshot.data) {
+              if (snapshot.data) {
                 return Row(
                   children: [
                     if (!Platform.isAndroid)
@@ -326,7 +326,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                   ),
               builder: (context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
-                  if (!snapshot.data) {
+                  if (snapshot.data) {
                     return NavigationBar(
                       selectedIndex: ref.watch(destinationExamProvider),
                       onDestinationSelected: (value) {
@@ -401,10 +401,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                     );
                   }
                 } else {
-                  return const Center(
-                      child: CupertinoActivityIndicator(
-                    radius: 50,
-                  ));
+                  return const SizedBox();
                 }
               },
             ),

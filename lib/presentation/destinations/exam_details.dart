@@ -50,12 +50,14 @@ class ExamDetails extends ConsumerWidget {
                         child: Column(
                           children: [
                             Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text("Exam Name: "),
                                 const SizedBox(
                                   width: 5,
                                 ),
-                                Text(snapshot.data!['exam_name']),
+                                Expanded(
+                                    child: Text(snapshot.data!['exam_name'])),
                               ],
                             ),
                             Row(
@@ -80,34 +82,42 @@ class ExamDetails extends ConsumerWidget {
                           if (snapshot1.data) {
                             return Row(
                               children: [
-                                const Text("Exam Status: "),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: snapshot.data!['active']
-                                        ? Colors.green[900]
-                                        : Colors.red[800],
-                                    borderRadius: BorderRadius.circular(3),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(3.0),
-                                    child: Text(
-                                      snapshot.data!['active']
-                                          ? "ACTIVE"
-                                          : 'INACTIVE',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall
-                                          ?.copyWith(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text("Exam Status: "),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: snapshot.data!['active']
+                                              ? Colors.green[900]
+                                              : Colors.red[800],
+                                          borderRadius:
+                                              BorderRadius.circular(3),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(3.0),
+                                          child: Text(
+                                            snapshot.data!['active']
+                                                ? "ACTIVE"
+                                                : 'INACTIVE',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall
+                                                ?.copyWith(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                           ),
-                                    ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                const Spacer(),
                                 TextButton(
                                   onPressed: () async {
                                     showLoaderDialog(context);
@@ -138,12 +148,18 @@ class ExamDetails extends ConsumerWidget {
                     ),
                     Row(
                       children: [
-                        const Text("Exam Type: "),
-                        const SizedBox(
-                          width: 5,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text("Exam Type: "),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Text(snapshot.data!['type']),
+                            ],
+                          ),
                         ),
-                        Text(snapshot.data!['type']),
-                        const Spacer(),
                         TextButton(
                           onPressed: () async {
                             showCupertinoDialog(
@@ -182,7 +198,8 @@ class ExamDetails extends ConsumerWidget {
                         )
                       ],
                     ),
-                    Row(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text("No of Questions: "),
                         FutureBuilder(
@@ -209,12 +226,18 @@ class ExamDetails extends ConsumerWidget {
                     ),
                     Row(
                       children: [
-                        const Text("Exam Difficulty: "),
-                        const SizedBox(
-                          width: 5,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text("Exam Difficulty: "),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Text(snapshot.data!['difficulty_level']),
+                            ],
+                          ),
                         ),
-                        Text(snapshot.data!['difficulty_level']),
-                        const Spacer(),
                         TextButton(
                           onPressed: () async {
                             showCupertinoDialog(
