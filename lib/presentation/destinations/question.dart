@@ -1369,33 +1369,13 @@ class _QuestionState extends ConsumerState<Question> {
             ),
             Row(
               children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      FilePickerResult? image =
-                          await FilePicker.platform.pickFiles();
-
-                      if (image != null) {
-                        showLoaderDialog(context);
-                        final imageUrl =
-                            await ref.watch(storageProvider).uploadImages(
-                                  documentSnapshots.id,
-                                  image,
-                                  ref,
-                                );
-                        await examDatabase.updateQuestion(
-                          widget.examId,
-                          documentSnapshots.id,
-                          {
-                            "image_url": imageUrl,
-                          },
-                        );
-                        Navigator.pop(context);
-                      }
-                    },
-                    child: const Text("Change Explanation Image"),
-                  ),
-                ),
+                PlatformService.isMobile()
+                    ? Expanded(
+                        child: _buildChangeExplanationImageButton(
+                            context, documentSnapshots, examDatabase),
+                      )
+                    : _buildChangeExplanationImageButton(
+                        context, documentSnapshots, examDatabase),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: docs['image_url'] == null || docs['image_url'] == ""
@@ -1411,35 +1391,13 @@ class _QuestionState extends ConsumerState<Question> {
             ),
             Row(
               children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      FilePickerResult? image =
-                          await FilePicker.platform.pickFiles();
-
-                      // if image is not empty, we uplod it
-                      if (image != null) {
-                        showLoaderDialog(context);
-                        final imageUrl = await ref
-                            .watch(storageProvider)
-                            .uploadQuestionImages(
-                              documentSnapshots.id,
-                              image,
-                              ref,
-                            );
-                        await examDatabase.updateQuestion(
-                          widget.examId,
-                          documentSnapshots.id,
-                          {
-                            "question_image_url": imageUrl,
-                          },
-                        );
-                        Navigator.pop(context);
-                      }
-                    },
-                    child: const Text("Change Question Image"),
-                  ),
-                ),
+                PlatformService.isMobile()
+                    ? Expanded(
+                        child: _buildChangeQuestionImageButton(
+                            context, documentSnapshots, examDatabase),
+                      )
+                    : _buildChangeExplanationImageButton(
+                        context, documentSnapshots, examDatabase),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: docs['question_image_url'] == null ||
@@ -1454,6 +1412,66 @@ class _QuestionState extends ConsumerState<Question> {
           ],
         ),
       ),
+    );
+  }
+
+  ElevatedButton _buildChangeQuestionImageButton(
+      BuildContext context,
+      QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshots,
+      ExamDatabase examDatabase) {
+    return ElevatedButton(
+      onPressed: () async {
+        FilePickerResult? image = await FilePicker.platform.pickFiles();
+
+        // if image is not empty, we uplod it
+        if (image != null) {
+          showLoaderDialog(context);
+          final imageUrl =
+              await ref.watch(storageProvider).uploadQuestionImages(
+                    documentSnapshots.id,
+                    image,
+                    ref,
+                  );
+          await examDatabase.updateQuestion(
+            widget.examId,
+            documentSnapshots.id,
+            {
+              "question_image_url": imageUrl,
+            },
+          );
+          Navigator.pop(context);
+        }
+      },
+      child: const Text("Change Question Image"),
+    );
+  }
+
+  ElevatedButton _buildChangeExplanationImageButton(
+      BuildContext context,
+      QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshots,
+      ExamDatabase examDatabase) {
+    return ElevatedButton(
+      onPressed: () async {
+        FilePickerResult? image = await FilePicker.platform.pickFiles();
+
+        if (image != null) {
+          showLoaderDialog(context);
+          final imageUrl = await ref.watch(storageProvider).uploadImages(
+                documentSnapshots.id,
+                image,
+                ref,
+              );
+          await examDatabase.updateQuestion(
+            widget.examId,
+            documentSnapshots.id,
+            {
+              "image_url": imageUrl,
+            },
+          );
+          Navigator.pop(context);
+        }
+      },
+      child: const Text("Change Explanation Image"),
     );
   }
 
