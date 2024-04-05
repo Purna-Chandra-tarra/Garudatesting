@@ -16,6 +16,7 @@ import 'package:garudaexams_dashboard/presentation/destinations/subject.dart';
 import 'package:garudaexams_dashboard/presentation/destinations/subscription.dart';
 import 'package:garudaexams_dashboard/presentation/widgets/loader_dialog.dart';
 import 'package:garudaexams_dashboard/providers/providers.dart';
+import 'package:garudaexams_dashboard/services/platform_service.dart';
 
 import '../../domain/databases/exam_database.dart';
 
@@ -230,7 +231,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
               if (snapshot.data) {
                 return Row(
                   children: [
-                    if (!Platform.isAndroid)
+                    if (!PlatformService.isMobile())
                       NavigationRail(
                         onDestinationSelected: (value) {
                           ref.read(destinationExamProvider.state).state = value;
@@ -274,7 +275,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
               } else {
                 return Row(
                   children: [
-                    if (!Platform.isAndroid)
+                    if (!PlatformService.isMobile())
                       NavigationRail(
                         onDestinationSelected: (value) {
                           ref.read(destinationExamProvider.state).state = value;
@@ -318,7 +319,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
               ));
             }
           }),
-      bottomNavigationBar: !Platform.isAndroid
+      bottomNavigationBar: !PlatformService.isMobile()
           ? null
           : FutureBuilder(
               future: ref.watch(userDatabaseProvider).isSuperUser(

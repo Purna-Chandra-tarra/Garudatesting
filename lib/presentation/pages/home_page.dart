@@ -15,6 +15,7 @@ import 'package:garudaexams_dashboard/presentation/destinations/students.dart';
 import 'package:garudaexams_dashboard/presentation/pages/loading_page.dart';
 import 'package:garudaexams_dashboard/presentation/pages/sign_in_page.dart';
 import 'package:garudaexams_dashboard/providers/providers.dart';
+import 'package:garudaexams_dashboard/services/platform_service.dart';
 
 import 'create_exam_page.dart';
 
@@ -194,7 +195,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   if (snapshot.data) {
                     return Row(
                       children: [
-                        if (!Platform.isAndroid)
+                        if (!PlatformService.isMobile())
                           NavigationRail(
                             onDestinationSelected: (value) => ref
                                 .read(destinationProvider.state)
@@ -242,7 +243,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   } else {
                     return Row(
                       children: [
-                        if (!Platform.isAndroid)
+                        if (!PlatformService.isMobile())
                           NavigationRail(
                             onDestinationSelected: (value) => ref
                                 .read(destinationProvider.state)
@@ -285,7 +286,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     ref.watch(authServiceProvider).user!.email.toString(),
                   ),
             ),
-      bottomNavigationBar: !Platform.isAndroid
+      bottomNavigationBar: !PlatformService.isMobile()
           ? null
           : FutureBuilder(
               builder: (context, AsyncSnapshot snapshot) {

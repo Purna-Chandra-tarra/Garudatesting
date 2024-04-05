@@ -11,6 +11,7 @@ import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:garudaexams_dashboard/domain/databases/exam_database.dart';
 import 'package:garudaexams_dashboard/presentation/widgets/loader_dialog.dart';
+import 'package:garudaexams_dashboard/services/platform_service.dart';
 
 import '../../providers/providers.dart';
 
@@ -60,15 +61,18 @@ class _QuestionState extends ConsumerState<Question> {
 
   @override
   Widget build(BuildContext context) {
+    // the platform we are running
+    final isMobile = PlatformService.isMobile();
+
     ExamDatabase examDatabase = ref.watch(examDatabaseProvider);
 
     return Padding(
-      padding: EdgeInsets.all(!Platform.isAndroid ? 0 : 20),
+      padding: EdgeInsets.all(!isMobile ? 0 : 20),
       child: Column(
         children: [
           _buildPlatformDependentHeader(context),
-          if (!Platform.isAndroid) const SizedBox(height: 20),
-          if (Platform.isAndroid && !showingSearch)
+          if (!isMobile) const SizedBox(height: 20),
+          if (isMobile && !showingSearch)
             Align(
               alignment: Alignment.centerRight,
               child: IconButton(
@@ -80,7 +84,7 @@ class _QuestionState extends ConsumerState<Question> {
                 },
               ),
             ),
-          if (Platform.isAndroid && showingSearch)
+          if (isMobile && showingSearch)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -146,7 +150,7 @@ class _QuestionState extends ConsumerState<Question> {
   }
 
   Widget _buildPlatformDependentHeader(BuildContext context) {
-    return !Platform.isAndroid
+    return !PlatformService.isMobile()
         ? Row(
             children: [
               Text(
@@ -199,7 +203,7 @@ class _QuestionState extends ConsumerState<Question> {
       itemBuilder: (context, documentSnapshots) {
         Map<String, dynamic> docs = documentSnapshots.data();
 
-        return !Platform.isAndroid
+        return !PlatformService.isMobile()
             ? _buildQuestionCard(documentSnapshots, context, examDatabase, docs)
             : Theme(
                 data: ThemeData().copyWith(dividerColor: Colors.transparent),
