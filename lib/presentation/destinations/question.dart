@@ -199,1230 +199,1257 @@ class _QuestionState extends ConsumerState<Question> {
       itemBuilder: (context, documentSnapshots) {
         Map<String, dynamic> docs = documentSnapshots.data();
 
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+        return !Platform.isAndroid
+            ? _buildQuestionCard(documentSnapshots, context, examDatabase, docs)
+            : Theme(
+                data: ThemeData().copyWith(dividerColor: Colors.transparent),
+                child: ExpansionTile(
+                  title: Row(
+                    children: [
+                      const Icon(
+                        Icons.circle,
+                        size: 10,
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: Text(
+                            '(${documentSnapshots.id}) ${docs['question']}'),
+                      ),
+                    ],
+                  ),
                   children: [
-                    Text("Id: ${documentSnapshots.id}"),
-                    const Spacer(),
-                    IconButton(
-                      onPressed: () async {
-                        showLoaderDialog(context);
-                        await examDatabase.deleteQuestion(
-                          widget.examId,
+                    _buildQuestionCard(
+                        documentSnapshots, context, examDatabase, docs),
+                  ],
+                ),
+              );
+      },
+    );
+  }
+
+  Card _buildQuestionCard(
+      QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshots,
+      BuildContext context,
+      ExamDatabase examDatabase,
+      Map<String, dynamic> docs) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(18.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text("Id: ${documentSnapshots.id}"),
+                const Spacer(),
+                IconButton(
+                  onPressed: () async {
+                    showLoaderDialog(context);
+                    await examDatabase.deleteQuestion(
+                      widget.examId,
+                      documentSnapshots.id,
+                    );
+                    await ref.watch(storageProvider).deleteImage(
                           documentSnapshots.id,
                         );
-                        await ref.watch(storageProvider).deleteImage(
-                              documentSnapshots.id,
-                            );
-                        await ref.watch(storageProvider).deleteQuestionImage(
-                              documentSnapshots.id,
-                            );
-                        Navigator.pop(context);
-                      },
-                      icon: Icon(
-                        Icons.delete,
-                        color: Theme.of(context).colorScheme.error,
-                      ),
-                    )
-                  ],
+                    await ref.watch(storageProvider).deleteQuestionImage(
+                          documentSnapshots.id,
+                        );
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(
+                    Icons.delete,
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                )
+              ],
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    docs['question'],
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        docs['question'],
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    IconButton(
-                        onPressed: () {
-                          questionController.text = docs['question'];
-                          showCupertinoDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text(
-                                  "Update Question",
+                IconButton(
+                    onPressed: () {
+                      questionController.text = docs['question'];
+                      showCupertinoDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text(
+                              "Update Question",
+                            ),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextField(
+                                  controller: questionController,
                                 ),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    TextField(
-                                      controller: questionController,
-                                    ),
-                                  ],
+                              ],
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                child: const Text(
+                                  "Cancel",
                                 ),
-                                actions: [
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Cancel",
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Update",
-                                    ),
-                                    onPressed: () async {
-                                      showLoaderDialog(context);
-                                      await examDatabase.updateQuestion(
-                                        widget.examId,
-                                        documentSnapshots.id,
-                                        {"question": questionController.text},
-                                      );
-                                      questionController.clear();
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              ElevatedButton(
+                                child: const Text(
+                                  "Update",
+                                ),
+                                onPressed: () async {
+                                  showLoaderDialog(context);
+                                  await examDatabase.updateQuestion(
+                                    widget.examId,
+                                    documentSnapshots.id,
+                                    {"question": questionController.text},
+                                  );
+                                  questionController.clear();
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
                           );
                         },
-                        icon: const Icon(Icons.edit))
-                  ],
+                      );
+                    },
+                    icon: const Icon(Icons.edit))
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Wrap(
+                    children: _getEquationComponentsWidgets(
+                        docs['question_equation'] ?? "No Equation"),
+                  ),
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Wrap(
+                const Spacer(),
+                IconButton(
+                    onPressed: () {
+                      questionEquationController.text =
+                          docs['question_equation'] ?? '';
+                      showCupertinoDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text(
+                              "Update Question Equation",
+                            ),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextField(
+                                  controller: questionEquationController,
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                child: const Text(
+                                  "Cancel",
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              ElevatedButton(
+                                child: const Text(
+                                  "Update",
+                                ),
+                                onPressed: () async {
+                                  showLoaderDialog(context);
+                                  await examDatabase.updateQuestion(
+                                    widget.examId,
+                                    documentSnapshots.id,
+                                    {
+                                      "question_equation":
+                                          questionEquationController.text
+                                    },
+                                  );
+                                  questionEquationController.clear();
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(Icons.edit))
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Option 1. ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        "${docs['option_one']}",
+                      ),
+                    ],
+                  ),
+                ),
+                const Spacer(),
+                IconButton(
+                    onPressed: () {
+                      optionController.text = docs['option_one'];
+                      showCupertinoDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text(
+                              "Update Option 1",
+                            ),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextField(
+                                  controller: optionController,
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                child: const Text(
+                                  "Cancel",
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              ElevatedButton(
+                                child: const Text(
+                                  "Update",
+                                ),
+                                onPressed: () async {
+                                  showLoaderDialog(context);
+                                  await examDatabase.updateQuestion(
+                                    widget.examId,
+                                    documentSnapshots.id,
+                                    {"option_one": optionController.text},
+                                  );
+                                  optionController.clear();
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(Icons.edit))
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Wrap(
+                      children: _getEquationComponentsWidgets(
+                    docs['option_one_equation'] ?? "No Option 1 Equation",
+                  )),
+                ),
+                const Spacer(),
+                IconButton(
+                    onPressed: () {
+                      questionEquationController.text =
+                          docs['option_one_equation'] ?? '';
+                      showCupertinoDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text(
+                              "Update Option 1 Equation",
+                            ),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextField(
+                                  controller: questionEquationController,
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                child: const Text(
+                                  "Cancel",
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              ElevatedButton(
+                                child: const Text(
+                                  "Update",
+                                ),
+                                onPressed: () async {
+                                  showLoaderDialog(context);
+                                  await examDatabase.updateQuestion(
+                                    widget.examId,
+                                    documentSnapshots.id,
+                                    {
+                                      "option_one_equation":
+                                          questionEquationController.text
+                                    },
+                                  );
+                                  questionEquationController.clear();
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(Icons.edit))
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Option 2. ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        "${docs['option_two']}",
+                      ),
+                    ],
+                  ),
+                ),
+                const Spacer(),
+                IconButton(
+                    onPressed: () {
+                      optionController.text = docs['option_two'];
+                      showCupertinoDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text(
+                              "Update Option 2",
+                            ),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextField(
+                                  controller: optionController,
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                child: const Text(
+                                  "Cancel",
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              ElevatedButton(
+                                child: const Text(
+                                  "Update",
+                                ),
+                                onPressed: () async {
+                                  showLoaderDialog(context);
+                                  await examDatabase.updateQuestion(
+                                    widget.examId,
+                                    documentSnapshots.id,
+                                    {"option_two": optionController.text},
+                                  );
+                                  optionController.clear();
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(Icons.edit))
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Wrap(
+                      children: _getEquationComponentsWidgets(
+                    docs['option_two_equation'] ?? "No Option 2 Equation",
+                  )),
+                ),
+                const Spacer(),
+                IconButton(
+                    onPressed: () {
+                      questionEquationController.text =
+                          docs['option_two_equation'] ?? '';
+                      showCupertinoDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text(
+                              "Update Option 2 Equation",
+                            ),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextField(
+                                  controller: questionEquationController,
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                child: const Text(
+                                  "Cancel",
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              ElevatedButton(
+                                child: const Text(
+                                  "Update",
+                                ),
+                                onPressed: () async {
+                                  showLoaderDialog(context);
+                                  await examDatabase.updateQuestion(
+                                    widget.examId,
+                                    documentSnapshots.id,
+                                    {
+                                      "option_two_equation":
+                                          questionEquationController.text
+                                    },
+                                  );
+                                  questionEquationController.clear();
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(Icons.edit))
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Option 3. ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        "${docs['option_three']}",
+                      ),
+                    ],
+                  ),
+                ),
+                const Spacer(),
+                IconButton(
+                    onPressed: () {
+                      optionController.text = docs['option_three'];
+                      showCupertinoDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text(
+                              "Update Option 3",
+                            ),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextField(
+                                  controller: optionController,
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                child: const Text(
+                                  "Cancel",
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              ElevatedButton(
+                                child: const Text(
+                                  "Update",
+                                ),
+                                onPressed: () async {
+                                  showLoaderDialog(context);
+                                  await examDatabase.updateQuestion(
+                                    widget.examId,
+                                    documentSnapshots.id,
+                                    {"option_three": optionController.text},
+                                  );
+                                  optionController.clear();
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(Icons.edit))
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Wrap(
+                    children: _getEquationComponentsWidgets(
+                        docs['option_three_equation'] ??
+                            "No Option 3 Equation"),
+                  ),
+                ),
+                IconButton(
+                    onPressed: () {
+                      questionEquationController.text =
+                          docs['option_three_equation'] ?? '';
+                      showCupertinoDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text(
+                              "Update Option 3 Equation",
+                            ),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextField(
+                                  controller: questionEquationController,
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                child: const Text(
+                                  "Cancel",
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              ElevatedButton(
+                                child: const Text(
+                                  "Update",
+                                ),
+                                onPressed: () async {
+                                  showLoaderDialog(context);
+                                  await examDatabase.updateQuestion(
+                                    widget.examId,
+                                    documentSnapshots.id,
+                                    {
+                                      "option_three_equation":
+                                          questionEquationController.text
+                                    },
+                                  );
+                                  questionEquationController.clear();
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(Icons.edit))
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Option 4. ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        "${docs['option_four']}",
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                    onPressed: () {
+                      optionController.text = docs['option_four'];
+                      showCupertinoDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text(
+                              "Update Option 4",
+                            ),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextField(
+                                  controller: optionController,
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                child: const Text(
+                                  "Cancel",
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              ElevatedButton(
+                                child: const Text(
+                                  "Update",
+                                ),
+                                onPressed: () async {
+                                  showLoaderDialog(context);
+                                  await examDatabase.updateQuestion(
+                                    widget.examId,
+                                    documentSnapshots.id,
+                                    {"option_four": optionController.text},
+                                  );
+                                  optionController.clear();
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(Icons.edit))
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Wrap(
+                    children: _getEquationComponentsWidgets(
+                        docs['option_four_equation'] ?? "No Option 4 Equation"),
+                  ),
+                ),
+                const Spacer(),
+                IconButton(
+                    onPressed: () {
+                      questionEquationController.text =
+                          docs['option_four_equation'] ?? '';
+                      showCupertinoDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text(
+                              "Update Option 4 Equation",
+                            ),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextField(
+                                  controller: questionEquationController,
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                child: const Text(
+                                  "Cancel",
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              ElevatedButton(
+                                child: const Text(
+                                  "Update",
+                                ),
+                                onPressed: () async {
+                                  showLoaderDialog(context);
+                                  await examDatabase.updateQuestion(
+                                    widget.examId,
+                                    documentSnapshots.id,
+                                    {
+                                      "option_four_equation":
+                                          questionEquationController.text
+                                    },
+                                  );
+                                  questionEquationController.clear();
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(Icons.edit))
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Youtube Link: ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SelectableText(
+                        "${docs['youtube_link']}",
+                      ),
+                    ],
+                  ),
+                ),
+                const Spacer(),
+                IconButton(
+                    onPressed: () {
+                      optionController.text = docs['youtube_link'];
+                      showCupertinoDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text(
+                              "Update Youtube Link",
+                            ),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextField(
+                                  controller: optionController,
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                child: const Text(
+                                  "Cancel",
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              ElevatedButton(
+                                child: const Text(
+                                  "Update",
+                                ),
+                                onPressed: () async {
+                                  showLoaderDialog(context);
+                                  await examDatabase.updateQuestion(
+                                    widget.examId,
+                                    documentSnapshots.id,
+                                    {"youtube_link": optionController.text},
+                                  );
+                                  optionController.clear();
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(Icons.edit))
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Explanation Heading: ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SelectableText(
+                        "${docs['explanation_heading'] ?? ''}",
+                      ),
+                    ],
+                  ),
+                ),
+                const Spacer(),
+                IconButton(
+                    onPressed: () {
+                      explanationHeadingController.text =
+                          docs['explanation_heading'] ?? '';
+                      showCupertinoDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text(
+                              "Update Explanation Heading",
+                            ),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextField(
+                                  controller: explanationHeadingController,
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                child: const Text(
+                                  "Cancel",
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              ElevatedButton(
+                                child: const Text(
+                                  "Update",
+                                ),
+                                onPressed: () async {
+                                  showLoaderDialog(context);
+                                  await examDatabase.updateQuestion(
+                                    widget.examId,
+                                    documentSnapshots.id,
+                                    {
+                                      "explanation_heading":
+                                          explanationHeadingController.text
+                                    },
+                                  );
+                                  explanationHeadingController.clear();
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(Icons.edit))
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Explanation Matter: ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Wrap(
                         children: _getEquationComponentsWidgets(
-                            docs['question_equation'] ?? "No Equation"),
+                            docs['explanation_matter'] ?? ''),
                       ),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                        onPressed: () {
-                          questionEquationController.text =
-                              docs['question_equation'] ?? '';
-                          showCupertinoDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text(
-                                  "Update Question Equation",
-                                ),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    TextField(
-                                      controller: questionEquationController,
-                                    ),
-                                  ],
-                                ),
-                                actions: [
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Cancel",
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Update",
-                                    ),
-                                    onPressed: () async {
-                                      showLoaderDialog(context);
-                                      await examDatabase.updateQuestion(
-                                        widget.examId,
-                                        documentSnapshots.id,
-                                        {
-                                          "question_equation":
-                                              questionEquationController.text
-                                        },
-                                      );
-                                      questionEquationController.clear();
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        icon: const Icon(Icons.edit))
-                  ],
+                    ],
+                  ),
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Option 1. ',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
+                IconButton(
+                    onPressed: () {
+                      explanationMatterController.text =
+                          docs['explanation_matter'] ?? '';
+                      showCupertinoDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text(
+                              "Update Explanation Matter",
                             ),
-                          ),
-                          Text(
-                            "${docs['option_one']}",
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                        onPressed: () {
-                          optionController.text = docs['option_one'];
-                          showCupertinoDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text(
-                                  "Update Option 1",
-                                ),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    TextField(
-                                      controller: optionController,
-                                    ),
-                                  ],
-                                ),
-                                actions: [
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Cancel",
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Update",
-                                    ),
-                                    onPressed: () async {
-                                      showLoaderDialog(context);
-                                      await examDatabase.updateQuestion(
-                                        widget.examId,
-                                        documentSnapshots.id,
-                                        {"option_one": optionController.text},
-                                      );
-                                      optionController.clear();
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        icon: const Icon(Icons.edit))
-                  ],
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Wrap(
-                          children: _getEquationComponentsWidgets(
-                        docs['option_one_equation'] ?? "No Option 1 Equation",
-                      )),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                        onPressed: () {
-                          questionEquationController.text =
-                              docs['option_one_equation'] ?? '';
-                          showCupertinoDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text(
-                                  "Update Option 1 Equation",
-                                ),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    TextField(
-                                      controller: questionEquationController,
-                                    ),
-                                  ],
-                                ),
-                                actions: [
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Cancel",
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Update",
-                                    ),
-                                    onPressed: () async {
-                                      showLoaderDialog(context);
-                                      await examDatabase.updateQuestion(
-                                        widget.examId,
-                                        documentSnapshots.id,
-                                        {
-                                          "option_one_equation":
-                                              questionEquationController.text
-                                        },
-                                      );
-                                      questionEquationController.clear();
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        icon: const Icon(Icons.edit))
-                  ],
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Option 2. ',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
+                            content: TextField(
+                              controller: explanationMatterController,
+                              minLines: 5,
+                              maxLines: 10,
                             ),
-                          ),
-                          Text(
-                            "${docs['option_two']}",
-                          ),
-                        ],
+                            actions: [
+                              ElevatedButton(
+                                child: const Text(
+                                  "Cancel",
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              ElevatedButton(
+                                child: const Text(
+                                  "Update",
+                                ),
+                                onPressed: () async {
+                                  showLoaderDialog(context);
+                                  await examDatabase.updateQuestion(
+                                    widget.examId,
+                                    documentSnapshots.id,
+                                    {
+                                      "explanation_matter":
+                                          explanationMatterController.text,
+                                    },
+                                  );
+                                  explanationMatterController.clear();
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(Icons.edit))
+              ],
+            ),
+            const Divider(),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Answer: ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                        onPressed: () {
-                          optionController.text = docs['option_two'];
-                          showCupertinoDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text(
-                                  "Update Option 2",
-                                ),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    TextField(
-                                      controller: optionController,
-                                    ),
-                                  ],
-                                ),
-                                actions: [
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Cancel",
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Update",
-                                    ),
-                                    onPressed: () async {
-                                      showLoaderDialog(context);
-                                      await examDatabase.updateQuestion(
-                                        widget.examId,
-                                        documentSnapshots.id,
-                                        {"option_two": optionController.text},
-                                      );
-                                      optionController.clear();
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        icon: const Icon(Icons.edit))
-                  ],
+                      Text(
+                        "Option ${docs['answer']}",
+                      ),
+                    ],
+                  ),
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Wrap(
-                          children: _getEquationComponentsWidgets(
-                        docs['option_two_equation'] ?? "No Option 2 Equation",
-                      )),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                        onPressed: () {
-                          questionEquationController.text =
-                              docs['option_two_equation'] ?? '';
-                          showCupertinoDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text(
-                                  "Update Option 2 Equation",
-                                ),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    TextField(
-                                      controller: questionEquationController,
-                                    ),
-                                  ],
-                                ),
-                                actions: [
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Cancel",
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Update",
-                                    ),
-                                    onPressed: () async {
-                                      showLoaderDialog(context);
-                                      await examDatabase.updateQuestion(
-                                        widget.examId,
-                                        documentSnapshots.id,
-                                        {
-                                          "option_two_equation":
-                                              questionEquationController.text
-                                        },
-                                      );
-                                      questionEquationController.clear();
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        icon: const Icon(Icons.edit))
-                  ],
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Option 3. ',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
+                const Spacer(),
+                IconButton(
+                    onPressed: () {
+                      optionController.text = docs['answer'].toString();
+                      showCupertinoDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text(
+                              "Update Answer(1,2,3,4)",
                             ),
-                          ),
-                          Text(
-                            "${docs['option_three']}",
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                        onPressed: () {
-                          optionController.text = docs['option_three'];
-                          showCupertinoDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text(
-                                  "Update Option 3",
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextField(
+                                  controller: optionController,
                                 ),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    TextField(
-                                      controller: optionController,
-                                    ),
-                                  ],
-                                ),
-                                actions: [
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Cancel",
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Update",
-                                    ),
-                                    onPressed: () async {
-                                      showLoaderDialog(context);
-                                      await examDatabase.updateQuestion(
-                                        widget.examId,
-                                        documentSnapshots.id,
-                                        {"option_three": optionController.text},
-                                      );
-                                      optionController.clear();
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        icon: const Icon(Icons.edit))
-                  ],
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Wrap(
-                        children: _getEquationComponentsWidgets(
-                            docs['option_three_equation'] ??
-                                "No Option 3 Equation"),
-                      ),
-                    ),
-                    IconButton(
-                        onPressed: () {
-                          questionEquationController.text =
-                              docs['option_three_equation'] ?? '';
-                          showCupertinoDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text(
-                                  "Update Option 3 Equation",
-                                ),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    TextField(
-                                      controller: questionEquationController,
-                                    ),
-                                  ],
-                                ),
-                                actions: [
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Cancel",
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Update",
-                                    ),
-                                    onPressed: () async {
-                                      showLoaderDialog(context);
-                                      await examDatabase.updateQuestion(
-                                        widget.examId,
-                                        documentSnapshots.id,
-                                        {
-                                          "option_three_equation":
-                                              questionEquationController.text
-                                        },
-                                      );
-                                      questionEquationController.clear();
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        icon: const Icon(Icons.edit))
-                  ],
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Option 4. ',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
+                              ],
                             ),
-                          ),
-                          Text(
-                            "${docs['option_four']}",
-                          ),
-                        ],
-                      ),
-                    ),
-                    IconButton(
-                        onPressed: () {
-                          optionController.text = docs['option_four'];
-                          showCupertinoDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text(
-                                  "Update Option 4",
+                            actions: [
+                              ElevatedButton(
+                                child: const Text(
+                                  "Cancel",
                                 ),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    TextField(
-                                      controller: optionController,
-                                    ),
-                                  ],
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              ElevatedButton(
+                                child: const Text(
+                                  "Update",
                                 ),
-                                actions: [
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Cancel",
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
+                                onPressed: () async {
+                                  showLoaderDialog(context);
+                                  await examDatabase.updateQuestion(
+                                    widget.examId,
+                                    documentSnapshots.id,
+                                    {
+                                      "answer":
+                                          int.parse(optionController.text),
                                     },
-                                  ),
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Update",
-                                    ),
-                                    onPressed: () async {
-                                      showLoaderDialog(context);
-                                      await examDatabase.updateQuestion(
-                                        widget.examId,
-                                        documentSnapshots.id,
-                                        {"option_four": optionController.text},
-                                      );
-                                      optionController.clear();
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
+                                  );
+                                  optionController.clear();
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
                           );
                         },
-                        icon: const Icon(Icons.edit))
-                  ],
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Wrap(
-                        children: _getEquationComponentsWidgets(
-                            docs['option_four_equation'] ??
-                                "No Option 4 Equation"),
+                      );
+                    },
+                    icon: const Icon(Icons.edit))
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Section: ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                        onPressed: () {
-                          questionEquationController.text =
-                              docs['option_four_equation'] ?? '';
-                          showCupertinoDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text(
-                                  "Update Option 4 Equation",
-                                ),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    TextField(
-                                      controller: questionEquationController,
-                                    ),
-                                  ],
-                                ),
-                                actions: [
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Cancel",
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Update",
-                                    ),
-                                    onPressed: () async {
-                                      showLoaderDialog(context);
-                                      await examDatabase.updateQuestion(
-                                        widget.examId,
-                                        documentSnapshots.id,
-                                        {
-                                          "option_four_equation":
-                                              questionEquationController.text
-                                        },
-                                      );
-                                      questionEquationController.clear();
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        icon: const Icon(Icons.edit))
-                  ],
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Youtube Link: ',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SelectableText(
-                            "${docs['youtube_link']}",
-                          ),
-                        ],
+                      Text(
+                        "${docs['section']}",
                       ),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                        onPressed: () {
-                          optionController.text = docs['youtube_link'];
-                          showCupertinoDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text(
-                                  "Update Youtube Link",
-                                ),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    TextField(
-                                      controller: optionController,
-                                    ),
-                                  ],
-                                ),
-                                actions: [
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Cancel",
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Update",
-                                    ),
-                                    onPressed: () async {
-                                      showLoaderDialog(context);
-                                      await examDatabase.updateQuestion(
-                                        widget.examId,
-                                        documentSnapshots.id,
-                                        {"youtube_link": optionController.text},
-                                      );
-                                      optionController.clear();
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        icon: const Icon(Icons.edit))
-                  ],
+                    ],
+                  ),
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Explanation Heading: ',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SelectableText(
-                            "${docs['explanation_heading'] ?? ''}",
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                        onPressed: () {
-                          explanationHeadingController.text =
-                              docs['explanation_heading'] ?? '';
-                          showCupertinoDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text(
-                                  "Update Explanation Heading",
-                                ),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    TextField(
-                                      controller: explanationHeadingController,
-                                    ),
-                                  ],
-                                ),
-                                actions: [
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Cancel",
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Update",
-                                    ),
-                                    onPressed: () async {
-                                      showLoaderDialog(context);
-                                      await examDatabase.updateQuestion(
-                                        widget.examId,
-                                        documentSnapshots.id,
-                                        {
-                                          "explanation_heading":
-                                              explanationHeadingController.text
-                                        },
-                                      );
-                                      explanationHeadingController.clear();
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        icon: const Icon(Icons.edit))
-                  ],
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Explanation Matter: ',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Wrap(
-                            children: _getEquationComponentsWidgets(
-                                docs['explanation_matter'] ?? ''),
-                          ),
-                        ],
-                      ),
-                    ),
-                    IconButton(
-                        onPressed: () {
-                          explanationMatterController.text =
-                              docs['explanation_matter'] ?? '';
-                          showCupertinoDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text(
-                                  "Update Explanation Matter",
-                                ),
-                                content: TextField(
-                                  controller: explanationMatterController,
-                                  minLines: 5,
-                                  maxLines: 10,
-                                ),
-                                actions: [
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Cancel",
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Update",
-                                    ),
-                                    onPressed: () async {
-                                      showLoaderDialog(context);
-                                      await examDatabase.updateQuestion(
-                                        widget.examId,
-                                        documentSnapshots.id,
-                                        {
-                                          "explanation_matter":
-                                              explanationMatterController.text,
-                                        },
-                                      );
-                                      explanationMatterController.clear();
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        icon: const Icon(Icons.edit))
-                  ],
-                ),
-                const Divider(),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Answer: ',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            "Option ${docs['answer']}",
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                        onPressed: () {
-                          optionController.text = docs['answer'].toString();
-                          showCupertinoDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text(
-                                  "Update Answer(1,2,3,4)",
-                                ),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    TextField(
-                                      controller: optionController,
-                                    ),
-                                  ],
-                                ),
-                                actions: [
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Cancel",
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  ElevatedButton(
-                                    child: const Text(
-                                      "Update",
-                                    ),
-                                    onPressed: () async {
-                                      showLoaderDialog(context);
-                                      await examDatabase.updateQuestion(
-                                        widget.examId,
-                                        documentSnapshots.id,
-                                        {
-                                          "answer":
-                                              int.parse(optionController.text),
-                                        },
-                                      );
-                                      optionController.clear();
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        icon: const Icon(Icons.edit))
-                  ],
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Section: ',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            "${docs['section']}",
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      onPressed: () async {
-                        showLoaderDialog(context);
-                        List<String> sections =
-                            await examDatabase.getSectionList(widget.examId);
-                        Navigator.pop(context);
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text("Select Sections"),
-                                content: SingleChildScrollView(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      SizedBox(
-                                        height: 500,
-                                        width: 500,
-                                        child: ListView.builder(
-                                            itemCount: sections.length,
-                                            shrinkWrap: true,
-                                            itemBuilder: (context, index1) {
-                                              return Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: ElevatedButton(
-                                                  child: Text(
-                                                    sections[index1],
-                                                  ),
-                                                  onPressed: () async {
-                                                    showLoaderDialog(context);
-                                                    await examDatabase
-                                                        .updateQuestion(
-                                                      widget.examId,
-                                                      documentSnapshots.id,
-                                                      {
-                                                        "section":
-                                                            sections[index1],
-                                                      },
-                                                    );
-                                                    Navigator.pop(context);
-                                                    Navigator.pop(context);
+                const Spacer(),
+                IconButton(
+                  onPressed: () async {
+                    showLoaderDialog(context);
+                    List<String> sections =
+                        await examDatabase.getSectionList(widget.examId);
+                    Navigator.pop(context);
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text("Select Sections"),
+                            content: SingleChildScrollView(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SizedBox(
+                                    height: 500,
+                                    width: 500,
+                                    child: ListView.builder(
+                                        itemCount: sections.length,
+                                        shrinkWrap: true,
+                                        itemBuilder: (context, index1) {
+                                          return Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: ElevatedButton(
+                                              child: Text(
+                                                sections[index1],
+                                              ),
+                                              onPressed: () async {
+                                                showLoaderDialog(context);
+                                                await examDatabase
+                                                    .updateQuestion(
+                                                  widget.examId,
+                                                  documentSnapshots.id,
+                                                  {
+                                                    "section": sections[index1],
                                                   },
-                                                ),
-                                              );
-                                            }),
-                                      ),
-                                    ],
+                                                );
+                                                Navigator.pop(context);
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                          );
+                                        }),
                                   ),
-                                ),
-                              );
-                            });
-                      },
-                      icon: const Icon(Icons.edit),
-                    )
-                  ],
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Subject: ',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
+                                ],
+                              ),
                             ),
-                          ),
-                          Text(
-                            "${docs['subject']}",
-                          ),
-                        ],
+                          );
+                        });
+                  },
+                  icon: const Icon(Icons.edit),
+                )
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Subject: ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      onPressed: () async {
-                        showLoaderDialog(context);
-                        List<String> subjects =
-                            await examDatabase.getSubjectList(widget.examId);
-                        Navigator.pop(context);
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text("Select Subject"),
-                                content: SingleChildScrollView(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      SizedBox(
-                                        height: 500,
-                                        width: 500,
-                                        child: ListView.builder(
-                                            itemCount: subjects.length,
-                                            shrinkWrap: true,
-                                            itemBuilder: (context, index1) {
-                                              return Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: ElevatedButton(
-                                                  child: Text(
-                                                    subjects[index1],
-                                                  ),
-                                                  onPressed: () async {
-                                                    showLoaderDialog(context);
-                                                    await examDatabase
-                                                        .updateQuestion(
-                                                      widget.examId,
-                                                      documentSnapshots.id,
-                                                      {
-                                                        "subject":
-                                                            subjects[index1],
-                                                      },
-                                                    );
-                                                    Navigator.pop(context);
-                                                    Navigator.pop(context);
+                      Text(
+                        "${docs['subject']}",
+                      ),
+                    ],
+                  ),
+                ),
+                const Spacer(),
+                IconButton(
+                  onPressed: () async {
+                    showLoaderDialog(context);
+                    List<String> subjects =
+                        await examDatabase.getSubjectList(widget.examId);
+                    Navigator.pop(context);
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text("Select Subject"),
+                            content: SingleChildScrollView(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SizedBox(
+                                    height: 500,
+                                    width: 500,
+                                    child: ListView.builder(
+                                        itemCount: subjects.length,
+                                        shrinkWrap: true,
+                                        itemBuilder: (context, index1) {
+                                          return Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: ElevatedButton(
+                                              child: Text(
+                                                subjects[index1],
+                                              ),
+                                              onPressed: () async {
+                                                showLoaderDialog(context);
+                                                await examDatabase
+                                                    .updateQuestion(
+                                                  widget.examId,
+                                                  documentSnapshots.id,
+                                                  {
+                                                    "subject": subjects[index1],
                                                   },
-                                                ),
-                                              );
-                                            }),
-                                      ),
-                                    ],
+                                                );
+                                                Navigator.pop(context);
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                          );
+                                        }),
                                   ),
-                                ),
-                              );
-                            });
-                      },
-                      icon: const Icon(Icons.edit),
-                    )
-                  ],
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          FilePickerResult? image =
-                              await FilePicker.platform.pickFiles();
+                                ],
+                              ),
+                            ),
+                          );
+                        });
+                  },
+                  icon: const Icon(Icons.edit),
+                )
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      FilePickerResult? image =
+                          await FilePicker.platform.pickFiles();
 
-                          if (image != null) {
-                            showLoaderDialog(context);
-                            final imageUrl =
-                                await ref.watch(storageProvider).uploadImages(
-                                      documentSnapshots.id,
-                                      image,
-                                      ref,
-                                    );
-                            await examDatabase.updateQuestion(
-                              widget.examId,
-                              documentSnapshots.id,
-                              {
-                                "image_url": imageUrl,
-                              },
-                            );
-                            Navigator.pop(context);
-                          }
-                        },
-                        child: const Text("Change Explanation Image"),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child:
-                          docs['image_url'] == null || docs['image_url'] == ""
-                              ? const Icon(
-                                  Icons.image_not_supported,
-                                )
-                              : const Icon(Icons.image),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          FilePickerResult? image =
-                              await FilePicker.platform.pickFiles();
-
-                          // if image is not empty, we uplod it
-                          if (image != null) {
-                            showLoaderDialog(context);
-                            final imageUrl = await ref
-                                .watch(storageProvider)
-                                .uploadQuestionImages(
+                      if (image != null) {
+                        showLoaderDialog(context);
+                        final imageUrl =
+                            await ref.watch(storageProvider).uploadImages(
                                   documentSnapshots.id,
                                   image,
                                   ref,
                                 );
-                            await examDatabase.updateQuestion(
-                              widget.examId,
-                              documentSnapshots.id,
-                              {
-                                "question_image_url": imageUrl,
-                              },
-                            );
-                            Navigator.pop(context);
-                          }
-                        },
-                        child: const Text("Change Question Image"),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: docs['question_image_url'] == null ||
-                              docs['question_image_url'] == ""
-                          ? const Icon(
-                              Icons.image_not_supported,
-                            )
-                          : const Icon(Icons.image),
-                    ),
-                  ],
+                        await examDatabase.updateQuestion(
+                          widget.examId,
+                          documentSnapshots.id,
+                          {
+                            "image_url": imageUrl,
+                          },
+                        );
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: const Text("Change Explanation Image"),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: docs['image_url'] == null || docs['image_url'] == ""
+                      ? const Icon(
+                          Icons.image_not_supported,
+                        )
+                      : const Icon(Icons.image),
                 ),
               ],
             ),
-          ),
-        );
-      },
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      FilePickerResult? image =
+                          await FilePicker.platform.pickFiles();
+
+                      // if image is not empty, we uplod it
+                      if (image != null) {
+                        showLoaderDialog(context);
+                        final imageUrl = await ref
+                            .watch(storageProvider)
+                            .uploadQuestionImages(
+                              documentSnapshots.id,
+                              image,
+                              ref,
+                            );
+                        await examDatabase.updateQuestion(
+                          widget.examId,
+                          documentSnapshots.id,
+                          {
+                            "question_image_url": imageUrl,
+                          },
+                        );
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: const Text("Change Question Image"),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: docs['question_image_url'] == null ||
+                          docs['question_image_url'] == ""
+                      ? const Icon(
+                          Icons.image_not_supported,
+                        )
+                      : const Icon(Icons.image),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 
