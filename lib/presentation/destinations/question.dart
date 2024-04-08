@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
@@ -41,6 +40,8 @@ class _QuestionState extends ConsumerState<Question> {
       TextEditingController();
 
   final TextEditingController searchController = TextEditingController();
+
+  final TextEditingController questionLevelController = TextEditingController();
 
   bool searchType = false;
 
@@ -321,6 +322,84 @@ class _QuestionState extends ConsumerState<Question> {
                                   Navigator.pop(context);
                                   Navigator.pop(context);
                                 },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(Icons.edit))
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Quesiton Level.',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        "${docs['level'] ?? 1}",
+                      ),
+                    ],
+                  ),
+                ),
+                const Spacer(),
+                IconButton(
+                    onPressed: () {
+                      optionController.text = docs['level'] ?? '1';
+                      showCupertinoDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text(
+                              "Update Question Level",
+                            ),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextField(
+                                  controller: questionLevelController,
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                child: const Text(
+                                  "Cancel",
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              ElevatedButton(
+                                onPressed: () async {
+                                  // if level is empty, do nothing
+                                  if (questionLevelController.text.isEmpty) {
+                                    return;
+                                  }
+
+                                  showLoaderDialog(context);
+                                  await examDatabase.updateQuestion(
+                                    widget.examId,
+                                    documentSnapshots.id,
+                                    {
+                                      "level": int.parse(
+                                          questionLevelController.text)
+                                    },
+                                  );
+                                  optionController.clear();
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                                child: const Text(
+                                  "Update",
+                                ),
                               ),
                             ],
                           );

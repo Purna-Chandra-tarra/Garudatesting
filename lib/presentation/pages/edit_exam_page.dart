@@ -75,6 +75,8 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
   final TextEditingController questionEquationController =
       TextEditingController();
 
+  final TextEditingController questionLevelController = TextEditingController();
+
   final TextEditingController option1EquationController =
       TextEditingController();
 
@@ -513,6 +515,14 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                     ),
                     TextField(
                       decoration: const InputDecoration(
+                        hintText: "Question Level",
+                      ),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      controller: questionLevelController,
+                    ),
+                    TextField(
+                      decoration: const InputDecoration(
                         hintText: "Option 1",
                       ),
                       controller: option1Controller,
@@ -798,6 +808,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                             "option_three": option3Controller.text,
                             "option_four": option4Controller.text,
                             "question": questionController.text,
+                            "level": int.parse(questionLevelController.text),
                             "option_one_equation":
                                 option1EquationController.text,
                             "option_two_equation":
@@ -835,6 +846,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                           explanationHeadingController.clear();
                           questionController.clear();
                           questionEquationController.clear();
+                          questionLevelController.clear();
                           imageUrl = "";
                           section = "";
                           subject = "";
