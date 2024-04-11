@@ -12,167 +12,155 @@ class Exams extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ExamDatabase examDatabase = ref.watch(examDatabaseProvider);
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.all(28.0),
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width - 320,
-          child: ListView(
-            children: [
-              Text(
-                'Exams',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: StreamBuilder(
-                  builder: (context, AsyncSnapshot snapshot) {
-                    if (!snapshot.hasData) {
-                      return const Center(child: CupertinoActivityIndicator());
-                    } else {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => EditExamPage(
-                                    examId: snapshot.data.docs[index]['exam_id']
-                                        .toString(),
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Card(
-                              child: ListTile(
-                                title: Text(
-                                  "Exam Name: ${snapshot.data.docs[index]['exam_name']}",
-                                ),
-                                subtitle: Row(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                        borderRadius: BorderRadius.circular(3),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(3.0),
-                                        child: Text(
-                                          snapshot.data.docs[index]['type'],
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall
-                                              ?.copyWith(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onPrimary,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    FutureBuilder(
-                                        future: ref
-                                            .watch(userDatabaseProvider)
-                                            .isSuperUser(
-                                              ref
-                                                  .watch(authServiceProvider)
-                                                  .user!
-                                                  .email
-                                                  .toString(),
-                                            ),
-                                        builder: (context, AsyncSnapshot data) {
-                                          if (data.hasData) {
-                                            if (data.data) {
-                                              return Container(
-                                                decoration: BoxDecoration(
-                                                  color: snapshot.data
-                                                          .docs[index]['active']
-                                                      ? Colors.green[900]
-                                                      : Colors.red[800],
-                                                  borderRadius:
-                                                      BorderRadius.circular(3),
-                                                ),
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(3.0),
-                                                  child: Text(
-                                                    snapshot.data.docs[index]
-                                                            ['active']
-                                                        ? "ACTIVE"
-                                                        : 'INACTIVE',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodySmall
-                                                        ?.copyWith(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                  ),
-                                                ),
-                                              );
-                                            } else {
-                                              return const SizedBox();
-                                            }
-                                          } else {
-                                            return const CupertinoActivityIndicator();
-                                          }
-                                        }),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                        borderRadius: BorderRadius.circular(3),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(3.0),
-                                        child: Text(
-                                          "Exam ID: ${snapshot.data.docs[index]['exam_id']}",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall
-                                              ?.copyWith(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onPrimary,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                        ),
-                                      ),
-                                    ),
-                                    const Spacer(),
-                                  ],
-                                ),
+    return Padding(
+      padding: const EdgeInsets.all(28.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Exams',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          StreamBuilder(
+            builder: (context, AsyncSnapshot snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(child: CupertinoActivityIndicator());
+              } else {
+                return Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.only(top: 20),
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditExamPage(
+                                examId: snapshot.data.docs[index]['exam_id']
+                                    .toString(),
                               ),
                             ),
                           );
                         },
-                        itemCount: snapshot.data.docs.length,
+                        child: Card(
+                          child: ListTile(
+                            title: Text(
+                              "Exam Name: ${snapshot.data.docs[index]['exam_name']}",
+                            ),
+                            subtitle: Wrap(
+                              spacing: 5,
+                              runSpacing: 5,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    borderRadius: BorderRadius.circular(3),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: Text(
+                                      snapshot.data.docs[index]['type'],
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+                                  ),
+                                ),
+                                FutureBuilder(
+                                    future: ref
+                                        .watch(userDatabaseProvider)
+                                        .isSuperUser(
+                                          ref
+                                              .watch(authServiceProvider)
+                                              .user!
+                                              .email
+                                              .toString(),
+                                        ),
+                                    builder: (context, AsyncSnapshot data) {
+                                      if (data.hasData) {
+                                        if (data.data) {
+                                          return Container(
+                                            decoration: BoxDecoration(
+                                              color: snapshot.data.docs[index]
+                                                      ['active']
+                                                  ? Colors.green[900]
+                                                  : Colors.red[800],
+                                              borderRadius:
+                                                  BorderRadius.circular(3),
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(3.0),
+                                              child: Text(
+                                                snapshot.data.docs[index]
+                                                        ['active']
+                                                    ? "ACTIVE"
+                                                    : 'INACTIVE',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall
+                                                    ?.copyWith(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                              ),
+                                            ),
+                                          );
+                                        } else {
+                                          return const SizedBox();
+                                        }
+                                      } else {
+                                        return const CupertinoActivityIndicator();
+                                      }
+                                    }),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    borderRadius: BorderRadius.circular(3),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: Text(
+                                      "Exam ID: ${snapshot.data.docs[index]['exam_id']}",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       );
-                    }
-                  },
-                  stream: examDatabase.getExamList(),
-                ),
-              ),
-              const SizedBox(height: 16),
-            ],
+                    },
+                    itemCount: snapshot.data.docs.length,
+                  ),
+                );
+              }
+            },
+            stream: examDatabase.getExamList(),
           ),
-        ),
+          const SizedBox(height: 16),
+        ],
       ),
     );
   }

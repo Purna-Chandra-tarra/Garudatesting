@@ -28,7 +28,7 @@ class Dashboard extends ConsumerWidget {
             children: [
               Text(
                 'Hello Admin',
-                style: Theme.of(context).textTheme.headline5?.copyWith(
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),

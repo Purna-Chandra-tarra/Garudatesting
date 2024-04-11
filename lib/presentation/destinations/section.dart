@@ -1,8 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:garudaexams_dashboard/presentation/widgets/loader_dialog.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../domain/databases/exam_database.dart';
 import '../../providers/providers.dart';
@@ -17,23 +19,19 @@ class Section extends ConsumerWidget {
     ExamDatabase examDatabase = ref.watch(examDatabaseProvider);
     return Padding(
       padding: const EdgeInsets.all(28.0),
-      child: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width - 320,
-        child: ListView(
-          children: [
-            Text(
-              'Section',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: StreamBuilder(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Section',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          StreamBuilder(
                   stream: examDatabase.getSection(examId),
                   builder: (context, AsyncSnapshot snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -119,20 +117,20 @@ class Section extends ConsumerWidget {
                                               .email
                                               .toString(),
                                         ),
-                                  ),
-                                ],
                               ),
-                            ),
-                          );
-                        }),
+                            ],
+                          ),
+                        ),
                       );
-                    } else {
-                      return const SizedBox(); // Return an empty container if snapshot has no data
-                    }
-                  },
-                ))
-          ],
-        ),
+                    }),
+                  );
+              
+              } else {
+                return const CupertinoActivityIndicator();
+              }
+            },
+          )
+        ],
       ),
     );
   }
