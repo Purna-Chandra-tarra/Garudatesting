@@ -52,6 +52,14 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
 
   late String imageUrl = "";
 
+  late String optionimageUrl = "";
+
+  late String option2imageUrl = "";
+
+  late String option3imageUrl = "";
+
+  late String option4imageUrl = "";
+
   late String questionImageUrl = "";
 
   final TextEditingController questionController = TextEditingController();
@@ -533,6 +541,37 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                       ),
                       controller: option1EquationController,
                     ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        try {
+                          image = await FilePicker.platform.pickFiles();
+
+                          // if image is not null, we upload it
+                          if (image != null) {
+                            showLoaderDialog(context);
+
+                            // Append a suffix to the ID for option 2
+                            String optionImageId = id.toString() + "_option1";
+
+                            // Upload the image with the modified ID
+                            optionimageUrl = await ref
+                                .watch(storageProvider)
+                                .uploadOptionImages(
+                                  optionImageId,
+                                  image,
+                                  ref,
+                                );
+                            Navigator.pop(context);
+                          }
+                        } catch (e) {
+                          print(e);
+                        }
+                      },
+                      child: const Text("Add option1 Image"),
+                    ),
                     TextField(
                       decoration: const InputDecoration(
                         hintText: "Option 2",
@@ -544,6 +583,37 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                         hintText: "Option 2 equation",
                       ),
                       controller: option2EquationController,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        try {
+                          image = await FilePicker.platform.pickFiles();
+
+                          // if image is not null, we upload it
+                          if (image != null) {
+                            showLoaderDialog(context);
+
+                            // Append a suffix to the ID for option 2
+                            String option2ImageId = id.toString() + "_option2";
+
+                            // Upload the image with the modified ID
+                            option2imageUrl = await ref
+                                .watch(storageProvider)
+                                .uploadOptionImages(
+                                  option2ImageId,
+                                  image,
+                                  ref,
+                                );
+                            Navigator.pop(context);
+                          }
+                        } catch (e) {
+                          print(e);
+                        }
+                      },
+                      child: const Text("Add option2 Image"),
                     ),
                     TextField(
                       decoration: const InputDecoration(
@@ -557,6 +627,37 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                       ),
                       controller: option3EquationController,
                     ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        try {
+                          image = await FilePicker.platform.pickFiles();
+
+                          // if image is not null, we upload it
+                          if (image != null) {
+                            showLoaderDialog(context);
+
+                            // Append a suffix to the ID for option 2
+                            String option3ImageId = id.toString() + "_option3";
+
+                            // Upload the image with the modified ID
+                            option3imageUrl = await ref
+                                .watch(storageProvider)
+                                .uploadOptionImages(
+                                  option3ImageId,
+                                  image,
+                                  ref,
+                                );
+                            Navigator.pop(context);
+                          }
+                        } catch (e) {
+                          print(e);
+                        }
+                      },
+                      child: const Text("Add option3 Image"),
+                    ),
                     TextField(
                       decoration: const InputDecoration(
                         hintText: "Option 4",
@@ -568,6 +669,37 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                         hintText: "Option 4 Equation",
                       ),
                       controller: option4EquationController,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        try {
+                          image = await FilePicker.platform.pickFiles();
+
+                          // if image is not null, we upload it
+                          if (image != null) {
+                            showLoaderDialog(context);
+
+                            // Append a suffix to the ID for option 2
+                            String option4ImageId = id.toString() + "_option4";
+
+                            // Upload the image with the modified ID
+                            option4imageUrl = await ref
+                                .watch(storageProvider)
+                                .uploadOptionImages(
+                                  option4ImageId,
+                                  image,
+                                  ref,
+                                );
+                            Navigator.pop(context);
+                          }
+                        } catch (e) {
+                          print(e);
+                        }
+                      },
+                      child: const Text("Add option3 Image"),
                     ),
                     TextFormField(
                       decoration: const InputDecoration(
@@ -897,9 +1029,13 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                               .addQuestion(widget.examId, id.toString(), {
                             "answer": int.parse(answerController.text),
                             "option_one": option1Controller.text,
+                            "option_image_url": optionimageUrl,
                             "option_two": option2Controller.text,
+                            "option2_image_url": option2imageUrl,
                             "option_three": option3Controller.text,
+                            "option3_image_url": option3imageUrl,
                             "option_four": option4Controller.text,
+                            "option4_image_url": option4imageUrl,
                             "question": questionController.text,
                             "level": int.parse(questionLevelController.text),
                             "option_one_equation":
@@ -940,6 +1076,10 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                           questionController.clear();
                           questionEquationController.clear();
                           questionLevelController.clear();
+                          optionimageUrl = "";
+                          option2imageUrl = "";
+                          option3imageUrl = "";
+                          option4imageUrl = "";
                           imageUrl = "";
                           section = "";
                           subject = "";

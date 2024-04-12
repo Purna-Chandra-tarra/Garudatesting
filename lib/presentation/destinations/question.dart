@@ -262,6 +262,19 @@ class _QuestionState extends ConsumerState<Question> {
                     await ref.watch(storageProvider).deleteQuestionImage(
                           documentSnapshots.id,
                         );
+                    final optionIds = [
+                      "${documentSnapshots.id}_option1",
+                      "${documentSnapshots.id}_option2",
+                      "${documentSnapshots.id}_option3",
+                      "${documentSnapshots.id}_option4",
+                    ];
+
+                    for (final optionId in optionIds) {
+                      await ref
+                          .watch(storageProvider)
+                          .deleteoptionImage(optionId);
+                    }
+
                     Navigator.pop(context);
                   },
                   icon: Icon(
@@ -609,6 +622,49 @@ class _QuestionState extends ConsumerState<Question> {
             ),
             Row(
               children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    FilePickerResult? image =
+                        await FilePicker.platform.pickFiles();
+
+                    // if image is not empty, we uplod it
+                    if (image != null) {
+                      showLoaderDialog(context);
+
+                      // Append a suffix to the document ID for option 2
+                      String optionImageId = documentSnapshots.id + "_option1";
+
+                      final optionimageUrl =
+                          await ref.watch(storageProvider).uploadOptionImages(
+                                optionImageId,
+                                image,
+                                ref,
+                              );
+                      await examDatabase.updateQuestion(
+                        widget.examId,
+                        documentSnapshots.id,
+                        {
+                          "option_image_url": optionimageUrl,
+                        },
+                      );
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: const Text("Change option1 Image"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: docs['option_image_url'] == null ||
+                          docs['option_image_url'] == ""
+                      ? const Icon(
+                          Icons.image_not_supported,
+                        )
+                      : const Icon(Icons.image),
+                ),
+              ],
+            ),
+            Row(
+              children: [
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -739,6 +795,49 @@ class _QuestionState extends ConsumerState<Question> {
                       );
                     },
                     icon: const Icon(Icons.edit))
+              ],
+            ),
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    FilePickerResult? image =
+                        await FilePicker.platform.pickFiles();
+
+                    // if image is not empty, we uplod it
+                    if (image != null) {
+                      showLoaderDialog(context);
+
+                      // Append a suffix to the document ID for option 2
+                      String option2ImageId = documentSnapshots.id + "_option2";
+
+                      final option2imageUrl =
+                          await ref.watch(storageProvider).uploadOptionImages(
+                                option2ImageId,
+                                image,
+                                ref,
+                              );
+                      await examDatabase.updateQuestion(
+                        widget.examId,
+                        documentSnapshots.id,
+                        {
+                          "option2_image_url": option2imageUrl,
+                        },
+                      );
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: const Text("Change option2 Image"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: docs['option2_image_url'] == null ||
+                          docs['option2_image_url'] == ""
+                      ? const Icon(
+                          Icons.image_not_supported,
+                        )
+                      : const Icon(Icons.image),
+                ),
               ],
             ),
             Row(
@@ -877,6 +976,49 @@ class _QuestionState extends ConsumerState<Question> {
             ),
             Row(
               children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    FilePickerResult? image =
+                        await FilePicker.platform.pickFiles();
+
+                    // if image is not empty, we uplod it
+                    if (image != null) {
+                      showLoaderDialog(context);
+
+                      // Append a suffix to the document ID for option 2
+                      String option3ImageId = documentSnapshots.id + "_option3";
+
+                      final option3imageUrl =
+                          await ref.watch(storageProvider).uploadOptionImages(
+                                option3ImageId,
+                                image,
+                                ref,
+                              );
+                      await examDatabase.updateQuestion(
+                        widget.examId,
+                        documentSnapshots.id,
+                        {
+                          "option3_image_url": option3imageUrl,
+                        },
+                      );
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: const Text("Change option3 Image"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: docs['option3_image_url'] == null ||
+                          docs['option3_image_url'] == ""
+                      ? const Icon(
+                          Icons.image_not_supported,
+                        )
+                      : const Icon(Icons.image),
+                ),
+              ],
+            ),
+            Row(
+              children: [
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1006,6 +1148,49 @@ class _QuestionState extends ConsumerState<Question> {
                       );
                     },
                     icon: const Icon(Icons.edit))
+              ],
+            ),
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    FilePickerResult? image =
+                        await FilePicker.platform.pickFiles();
+
+                    // if image is not empty, we uplod it
+                    if (image != null) {
+                      showLoaderDialog(context);
+
+                      // Append a suffix to the document ID for option 2
+                      String option4ImageId = documentSnapshots.id + "_option4";
+
+                      final option4imageUrl =
+                          await ref.watch(storageProvider).uploadOptionImages(
+                                option4ImageId,
+                                image,
+                                ref,
+                              );
+                      await examDatabase.updateQuestion(
+                        widget.examId,
+                        documentSnapshots.id,
+                        {
+                          "option4_image_url": option4imageUrl,
+                        },
+                      );
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: const Text("Change option4 Image"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: docs['option4_image_url'] == null ||
+                          docs['option4_image_url'] == ""
+                      ? const Icon(
+                          Icons.image_not_supported,
+                        )
+                      : const Icon(Icons.image),
+                ),
               ],
             ),
             Row(
