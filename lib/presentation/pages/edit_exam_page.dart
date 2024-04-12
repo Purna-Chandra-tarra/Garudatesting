@@ -614,68 +614,97 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                           showLoaderDialog(context);
                           List<String> sections =
                               await examDatabase.getSectionList(widget.examId);
+                          sections.sort((a, b) => a.toLowerCase().compareTo(b
+                              .toLowerCase())); // Sort the sections alphabetically
                           Navigator.pop(context);
                           section = await showDialog(
-                              context: context,
-                              builder: (context) {
+                            context: context,
+                            builder: (context) {
+                              String searchQuery =
+                                  ''; // Initialize search query
+                              return StatefulBuilder(
+                                  builder: (context, setState) {
                                 return AlertDialog(
                                   title: const Text("Select Section"),
                                   content: SingleChildScrollView(
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
+                                        TextField(
+                                          decoration: InputDecoration(
+                                            labelText: 'Search Section',
+                                            prefixIcon: Icon(Icons.search),
+                                          ),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              searchQuery = value.toLowerCase();
+                                            });
+                                          },
+                                        ),
                                         SizedBox(
                                           height: 500,
                                           width: 500,
                                           child: ListView.builder(
                                               itemCount: sections.length,
                                               shrinkWrap: true,
+                                              // ignore: body_might_complete_normally_nullable
                                               itemBuilder: (context, index) {
-                                                return Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: ElevatedButton(
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Text(
+                                                final sectionName =
+                                                    sections[index]
+                                                        .toLowerCase();
+                                                if (sectionName
+                                                    .contains(searchQuery)) {
+                                                  return Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: ElevatedButton(
+                                                      // child:
+                                                      //     Text(sections[index]),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                              '${index + 1}. ${sections[index]}'),
+                                                          const SizedBox(
+                                                            width: 10,
+                                                          ),
+                                                          FutureBuilder(
+                                                            builder: (context,
+                                                                snapshot) {
+                                                              if (snapshot
+                                                                  .hasData) {
+                                                                return Text(snapshot
+                                                                    .data
+                                                                    .toString());
+                                                              } else {
+                                                                return const CupertinoActivityIndicator();
+                                                              }
+                                                            },
+                                                            future: ref
+                                                                .watch(
+                                                                    examDatabaseProvider)
+                                                                .getSectionLength(
+                                                                  widget.examId,
+                                                                  sections[
+                                                                      index],
+                                                                ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      onPressed: () async {
+                                                        Navigator.pop(
+                                                          context,
                                                           sections[index],
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                        FutureBuilder(
-                                                          builder: (context,
-                                                              snapshot) {
-                                                            if (snapshot
-                                                                .hasData) {
-                                                              return Text(snapshot
-                                                                  .data
-                                                                  .toString());
-                                                            } else {
-                                                              return const CupertinoActivityIndicator();
-                                                            }
-                                                          },
-                                                          future: ref
-                                                              .watch(
-                                                                  examDatabaseProvider)
-                                                              .getSectionLength(
-                                                                widget.examId,
-                                                                sections[index],
-                                                              ),
-                                                        ),
-                                                      ],
+                                                        );
+                                                      },
                                                     ),
-                                                    onPressed: () async {
-                                                      Navigator.pop(
-                                                        context,
-                                                        sections[index],
-                                                      );
-                                                    },
-                                                  ),
-                                                );
+                                                  );
+                                                } else {
+                                                  return Container(); // Empty container if section doesn't match search query
+                                                }
                                               }),
                                         ),
                                       ],
@@ -683,6 +712,8 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                                   ),
                                 );
                               });
+                            },
+                          );
                         },
                         child: const Text("Choose Section"),
                       ),
@@ -694,43 +725,105 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                           showLoaderDialog(context);
                           List<String> sections =
                               await examDatabase.getSubjectList(widget.examId);
+                          sections.sort((a, b) => a.toLowerCase().compareTo(b
+                              .toLowerCase())); // Sort the subjects alphabetically
                           Navigator.pop(context);
                           subject = await showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text("Select Subject"),
-                                  content: SingleChildScrollView(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        SizedBox(
-                                          height: 500,
-                                          width: 500,
-                                          child: ListView.builder(
+                            context: context,
+                            builder: (context) {
+                              String searchQuery =
+                                  ''; // Initialize search query
+                              return StatefulBuilder(
+                                builder: (context, setState) {
+                                  return AlertDialog(
+                                    title: const Text("Select Subject"),
+                                    content: SingleChildScrollView(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          TextField(
+                                            decoration: InputDecoration(
+                                              labelText: 'Search Subject',
+                                              prefixIcon: Icon(Icons.search),
+                                            ),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                searchQuery =
+                                                    value.toLowerCase();
+                                              });
+                                            },
+                                          ),
+                                          SizedBox(
+                                            height: 500,
+                                            width: 500,
+                                            child: ListView.builder(
                                               itemCount: sections.length,
                                               shrinkWrap: true,
                                               itemBuilder: (context, index) {
-                                                return Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: ElevatedButton(
-                                                    child: Text(
-                                                      sections[index],
+                                                final subjectName =
+                                                    sections[index]
+                                                        .toLowerCase();
+                                                if (subjectName
+                                                    .contains(searchQuery)) {
+                                                  return Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: ElevatedButton(
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                              '${index + 1}. ${sections[index]}'),
+                                                          const SizedBox(
+                                                            width: 10,
+                                                          ),
+                                                          FutureBuilder(
+                                                            builder: (context,
+                                                                snapshot) {
+                                                              if (snapshot
+                                                                  .hasData) {
+                                                                return Text(snapshot
+                                                                    .data
+                                                                    .toString());
+                                                              } else {
+                                                                return const CupertinoActivityIndicator();
+                                                              }
+                                                            },
+                                                            future: ref
+                                                                .watch(
+                                                                    examDatabaseProvider)
+                                                                .getSubjectLength(
+                                                                  widget.examId,
+                                                                  sections[
+                                                                      index],
+                                                                ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      onPressed: () async {
+                                                        Navigator.pop(context,
+                                                            sections[index]);
+                                                      },
                                                     ),
-                                                    onPressed: () async {
-                                                      Navigator.pop(context,
-                                                          sections[index]);
-                                                    },
-                                                  ),
-                                                );
-                                              }),
-                                        ),
-                                      ],
+                                                  );
+                                                } else {
+                                                  // Return an empty container if subject doesn't match search query
+                                                  return Container();
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                );
-                              });
+                                  );
+                                },
+                              );
+                            },
+                          );
                         },
                         child: const Text("Choose Subject"),
                       ),

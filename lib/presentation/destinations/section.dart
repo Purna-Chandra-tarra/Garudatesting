@@ -34,6 +34,12 @@ class Section extends ConsumerWidget {
             stream: examDatabase.getSection(examId),
             builder: (context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
+                List data = snapshot.data.docs;
+                data.sort((a, b) {
+                  return a['section']
+                      .toLowerCase()
+                      .compareTo(b['section'].toLowerCase());
+                });
                 return Expanded(
                   child: ListView.builder(
                     shrinkWrap: true,
@@ -45,8 +51,8 @@ class Section extends ConsumerWidget {
                           child: Row(
                             children: [
                               Expanded(
-                                child:
-                                    Text(snapshot.data.docs[index]['section']),
+                                child: Text(
+                                    '${index + 1}. ${data[index]['section']}'),
                               ),
                               const Spacer(),
                               FutureBuilder(
@@ -59,8 +65,8 @@ class Section extends ConsumerWidget {
                                 },
                                 future: ref
                                     .watch(examDatabaseProvider)
-                                    .getSectionLength(examId,
-                                        snapshot.data.docs[index]['section']),
+                                    .getSectionLength(
+                                        examId, data[index]['section']),
                               ),
                               FutureBuilder(
                                 builder: (context, AsyncSnapshot snapshot) {
@@ -71,7 +77,7 @@ class Section extends ConsumerWidget {
                                           showLoaderDialog(context);
                                           await examDatabase.deleteExamSection(
                                             examId,
-                                            snapshot.data.docs[index].id,
+                                            data[index].id,
                                           );
                                           Navigator.pop(context);
                                         },
