@@ -559,7 +559,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                             // Upload the image with the modified ID
                             optionimageUrl = await ref
                                 .watch(storageProvider)
-                                .uploadOptionImages(
+                                .uploadOptionImage(
                                   optionImageId,
                                   image,
                                   ref,
@@ -602,7 +602,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                             // Upload the image with the modified ID
                             option2imageUrl = await ref
                                 .watch(storageProvider)
-                                .uploadOptionImages(
+                                .uploadOptionImage(
                                   option2ImageId,
                                   image,
                                   ref,
@@ -645,7 +645,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                             // Upload the image with the modified ID
                             option3imageUrl = await ref
                                 .watch(storageProvider)
-                                .uploadOptionImages(
+                                .uploadOptionImage(
                                   option3ImageId,
                                   image,
                                   ref,
@@ -688,7 +688,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                             // Upload the image with the modified ID
                             option4imageUrl = await ref
                                 .watch(storageProvider)
-                                .uploadOptionImages(
+                                .uploadOptionImage(
                                   option4ImageId,
                                   image,
                                   ref,
@@ -699,7 +699,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                           print(e);
                         }
                       },
-                      child: const Text("Add option3 Image"),
+                      child: const Text("Add option4 Image"),
                     ),
                     TextFormField(
                       decoration: const InputDecoration(

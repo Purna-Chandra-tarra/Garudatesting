@@ -23,18 +23,18 @@ class Storage {
     return url;
   }
 
-  Future<String> uploadOptionImages(
+  Future<String> uploadOptionImage(
     String imageName,
     FilePickerResult? imageFile,
     WidgetRef ref,
   ) async {
     Uint8List fileBytes = imageFile!.files.first.bytes ?? Uint8List(0);
-    final optionImagesRef = storageRef.child("option/$imageName");
-    await optionImagesRef.putData(
+    final optionImageRef = storageRef.child("option/$imageName");
+    await optionImageRef.putData(
       fileBytes,
       SettableMetadata(contentType: 'image'),
     );
-    var url = await optionImagesRef.getDownloadURL();
+    var url = await optionImageRef.getDownloadURL();
     return url;
   }
 

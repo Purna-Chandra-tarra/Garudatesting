@@ -33,83 +33,97 @@ class Section extends ConsumerWidget {
           StreamBuilder(
             stream: examDatabase.getSection(examId),
             builder: (context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CupertinoActivityIndicator();
+              } else if (snapshot.hasData && snapshot.data.docs.isEmpty) {
+                // If there are no documents in the snapshot, return a message or an empty container
+                return const Center(
+                  child: Text('No sections available.'),
+                );
+              } else if (snapshot.hasData) {
                 List data = snapshot.data.docs;
                 data.sort((a, b) {
                   return a['section']
                       .toLowerCase()
                       .compareTo(b['section'].toLowerCase());
                 });
-                return Expanded(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: snapshot.data.docs.length,
-                    itemBuilder: ((context, index) {
-                      return Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(18.0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                    '${index + 1}. ${data[index]['section']}'),
-                              ),
-                              const Spacer(),
-                              FutureBuilder(
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    return Text(snapshot.data.toString());
-                                  } else {
-                                    return const CupertinoActivityIndicator();
-                                  }
-                                },
-                                future: ref
-                                    .watch(examDatabaseProvider)
-                                    .getSectionLength(
-                                        examId, data[index]['section']),
-                              ),
-                              FutureBuilder(
-                                builder: (context, AsyncSnapshot snapshot) {
-                                  if (snapshot.hasData) {
-                                    if (snapshot.data) {
-                                      return IconButton(
-                                        onPressed: () async {
-                                          showLoaderDialog(context);
-                                          await examDatabase.deleteExamSection(
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: snapshot.data.docs.length,
+                  itemBuilder: ((context, index) {
+                    return Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                  '${index + 1}. ${data[index]['section']}'),
+                            ),
+                            const Spacer(),
+                            FutureBuilder(
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return Text(snapshot.data.toString());
+                                } else {
+                                  return const CupertinoActivityIndicator();
+                                }
+                              },
+                              future: ref
+                                  .watch(examDatabaseProvider)
+                                  .getSectionLength(
+                                      examId, data[index]['section']),
+                            ),
+                            FutureBuilder(
+                              builder: (context, AsyncSnapshot snapshot) {
+                                if (snapshot.hasData) {
+                                  if (snapshot.data) {
+                                    return IconButton(
+                                      onPressed: () {
+                                        showLoaderDialog(context);
+                                        try {
+                                          examDatabase.deleteExamSection(
                                             examId,
                                             data[index].id,
                                           );
                                           Navigator.pop(context);
-                                        },
-                                        icon: Icon(
-                                          Icons.delete,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .error,
-                                        ),
-                                      );
-                                    } else {
-                                      return const SizedBox();
-                                    }
+                                        } catch (e) {
+                                          print('Error: $e');
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                            content: Text(
+                                                'Failed to delete section: $e'),
+                                            backgroundColor: Colors.red,
+                                          ));
+                                        }
+                                      },
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color:
+                                            Theme.of(context).colorScheme.error,
+                                      ),
+                                    );
                                   } else {
-                                    return const CupertinoActivityIndicator();
+                                    return const SizedBox();
                                   }
-                                },
-                                future:
-                                    ref.watch(userDatabaseProvider).isSuperUser(
-                                          ref
-                                              .watch(authServiceProvider)
-                                              .user!
-                                              .email
-                                              .toString(),
-                                        ),
-                              ),
-                            ],
-                          ),
+                                } else {
+                                  return Text('Error: ${snapshot.error}');
+                                }
+                              },
+                              future:
+                                  ref.watch(userDatabaseProvider).isSuperUser(
+                                        ref
+                                            .watch(authServiceProvider)
+                                            .user!
+                                            .email
+                                            .toString(),
+                                      ),
+                            ),
+                          ],
                         ),
-                      );
-                    }),
-                  ),
+                      ),
+                    );
+                  }),
                 );
               } else {
                 return const CupertinoActivityIndicator();

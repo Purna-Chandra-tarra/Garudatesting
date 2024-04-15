@@ -622,36 +622,8 @@ class _QuestionState extends ConsumerState<Question> {
             ),
             Row(
               children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    FilePickerResult? image =
-                        await FilePicker.platform.pickFiles();
-
-                    // if image is not empty, we uplod it
-                    if (image != null) {
-                      showLoaderDialog(context);
-
-                      // Append a suffix to the document ID for option 2
-                      String optionImageId = documentSnapshots.id + "_option1";
-
-                      final optionimageUrl =
-                          await ref.watch(storageProvider).uploadOptionImages(
-                                optionImageId,
-                                image,
-                                ref,
-                              );
-                      await examDatabase.updateQuestion(
-                        widget.examId,
-                        documentSnapshots.id,
-                        {
-                          "option_image_url": optionimageUrl,
-                        },
-                      );
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: const Text("Change option1 Image"),
-                ),
+                buildChangeOptionImageButton(
+                    context, documentSnapshots, examDatabase, 1),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: docs['option_image_url'] == null ||
@@ -799,36 +771,8 @@ class _QuestionState extends ConsumerState<Question> {
             ),
             Row(
               children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    FilePickerResult? image =
-                        await FilePicker.platform.pickFiles();
-
-                    // if image is not empty, we uplod it
-                    if (image != null) {
-                      showLoaderDialog(context);
-
-                      // Append a suffix to the document ID for option 2
-                      String option2ImageId = documentSnapshots.id + "_option2";
-
-                      final option2imageUrl =
-                          await ref.watch(storageProvider).uploadOptionImages(
-                                option2ImageId,
-                                image,
-                                ref,
-                              );
-                      await examDatabase.updateQuestion(
-                        widget.examId,
-                        documentSnapshots.id,
-                        {
-                          "option2_image_url": option2imageUrl,
-                        },
-                      );
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: const Text("Change option2 Image"),
-                ),
+                buildChangeOptionImageButton(
+                    context, documentSnapshots, examDatabase, 2),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: docs['option2_image_url'] == null ||
@@ -976,36 +920,8 @@ class _QuestionState extends ConsumerState<Question> {
             ),
             Row(
               children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    FilePickerResult? image =
-                        await FilePicker.platform.pickFiles();
-
-                    // if image is not empty, we uplod it
-                    if (image != null) {
-                      showLoaderDialog(context);
-
-                      // Append a suffix to the document ID for option 2
-                      String option3ImageId = documentSnapshots.id + "_option3";
-
-                      final option3imageUrl =
-                          await ref.watch(storageProvider).uploadOptionImages(
-                                option3ImageId,
-                                image,
-                                ref,
-                              );
-                      await examDatabase.updateQuestion(
-                        widget.examId,
-                        documentSnapshots.id,
-                        {
-                          "option3_image_url": option3imageUrl,
-                        },
-                      );
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: const Text("Change option3 Image"),
-                ),
+                buildChangeOptionImageButton(
+                    context, documentSnapshots, examDatabase, 3),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: docs['option3_image_url'] == null ||
@@ -1152,36 +1068,8 @@ class _QuestionState extends ConsumerState<Question> {
             ),
             Row(
               children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    FilePickerResult? image =
-                        await FilePicker.platform.pickFiles();
-
-                    // if image is not empty, we uplod it
-                    if (image != null) {
-                      showLoaderDialog(context);
-
-                      // Append a suffix to the document ID for option 2
-                      String option4ImageId = documentSnapshots.id + "_option4";
-
-                      final option4imageUrl =
-                          await ref.watch(storageProvider).uploadOptionImages(
-                                option4ImageId,
-                                image,
-                                ref,
-                              );
-                      await examDatabase.updateQuestion(
-                        widget.examId,
-                        documentSnapshots.id,
-                        {
-                          "option4_image_url": option4imageUrl,
-                        },
-                      );
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: const Text("Change option4 Image"),
-                ),
+                buildChangeOptionImageButton(
+                    context, documentSnapshots, examDatabase, 4),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: docs['option4_image_url'] == null ||
@@ -1727,6 +1615,39 @@ class _QuestionState extends ConsumerState<Question> {
           ],
         ),
       ),
+    );
+  }
+
+  ElevatedButton buildChangeOptionImageButton(
+    BuildContext context,
+    QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshots,
+    ExamDatabase examDatabase,
+    int optionNumber,
+  ) {
+    return ElevatedButton(
+      onPressed: () async {
+        FilePickerResult? image = await FilePicker.platform.pickFiles();
+
+        if (image != null) {
+          showLoaderDialog(context);
+          String optionImageId = documentSnapshots.id + "_option$optionNumber";
+          final optionImageUrl =
+              await ref.watch(storageProvider).uploadOptionImage(
+                    optionImageId,
+                    image,
+                    ref,
+                  );
+          await examDatabase.updateQuestion(
+            widget.examId,
+            documentSnapshots.id,
+            {
+              "option${optionNumber}_image_url": optionImageUrl,
+            },
+          );
+          Navigator.pop(context);
+        }
+      },
+      child: Text("Change Option $optionNumber Image"),
     );
   }
 
