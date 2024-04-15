@@ -808,7 +808,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                             "option_three": option3Controller.text,
                             "option_four": option4Controller.text,
                             "question": questionController.text,
-                            "level": int.parse(questionLevelController.text),
+                            "level": questionLevelController.text.isNotEmpty ? int.parse(questionLevelController.text) : 1,
                             "option_one_equation":
                                 option1EquationController.text,
                             "option_two_equation":
