@@ -34,52 +34,6 @@ class Section extends ConsumerWidget {
           StreamBuilder(
             stream: examDatabase.getSection(examId),
             builder: (context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
-                List data = snapshot.data.docs;
-                data.sort((a, b) {
-                  return a['section']
-                      .toLowerCase()
-                      .compareTo(b['section'].toLowerCase());
-                });
-                return Expanded(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: snapshot.data.docs.length,
-                    itemBuilder: ((context, index) {
-                      return Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(18.0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                    '${index + 1}. ${data[index]['section']}'),
-                              ),
-                              const Spacer(),
-                              FutureBuilder(
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    return Text(snapshot.data.toString());
-                                  } else {
-                                    return const CupertinoActivityIndicator();
-                                  }
-                                },
-                                future: ref
-                                    .watch(examDatabaseProvider)
-                                    .getSectionLength(
-                                        examId, data[index]['section']),
-                              ),
-                              FutureBuilder(
-                                builder: (context, AsyncSnapshot snapshot) {
-                                  if (snapshot.hasData) {
-                                    if (snapshot.data) {
-                                      return IconButton(
-                                        onPressed: () async {
-                                          showLoaderDialog(context);
-                                          try {
-                                          examDatabase.deleteExamSection(
-                                            examId,
-                                            data[index].id,
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CupertinoActivityIndicator();
               } else if (snapshot.hasData && snapshot.data.docs.isEmpty) {
@@ -89,6 +43,12 @@ class Section extends ConsumerWidget {
                 );
               } else if (snapshot.hasData) {
                 final QuerySnapshot querySnapshot = snapshot.data;
+                 List data = snapshot.data.docs;
+                data.sort((a, b) {
+                  return a['section']
+                      .toLowerCase()
+                      .compareTo(b['section'].toLowerCase());
+                });
                 return ListView.builder(
                   shrinkWrap: true,
                   itemCount: snapshot.data.docs.length,
