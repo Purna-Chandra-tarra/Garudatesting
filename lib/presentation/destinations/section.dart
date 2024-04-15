@@ -32,99 +32,94 @@ class Section extends ConsumerWidget {
             height: 20,
           ),
           StreamBuilder(
-                  stream: examDatabase.getSection(examId),
-                  builder: (context, AsyncSnapshot snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CupertinoActivityIndicator();
-                    } else if (snapshot.hasData && snapshot.data.docs.isEmpty) {
-                      // If there are no documents in the snapshot, return a message or an empty container
-                      return const Center(
-                        child: Text('No sections available.'),
-                      );
-                    } else if (snapshot.hasData) {
-                      final QuerySnapshot querySnapshot = snapshot.data;
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: querySnapshot.docs.length,
-                        itemBuilder: ((context, index) {
-                          final DocumentSnapshot docSnapshot =
-                              querySnapshot.docs[index];
-                          return Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(18.0),
-                              child: Row(
-                                children: [
-                                  Text(docSnapshot['section']),
-                                  const Spacer(),
-                                  FutureBuilder(
-                                    builder: (context, snapshot) {
-                                      if (snapshot.hasData) {
-                                        return Text(snapshot.data.toString());
-                                      } else {
-                                        return const CupertinoActivityIndicator();
-                                      }
-                                    },
-                                    future: ref
-                                        .watch(examDatabaseProvider)
-                                        .getSectionLength(
-                                            examId, docSnapshot['section']),
-                                  ),
-                                  FutureBuilder(
-                                    builder: (context, AsyncSnapshot snapshot) {
-                                      if (snapshot.hasData) {
-                                        if (snapshot.data) {
-                                          return IconButton(
-                                            onPressed: () {
-                                              showLoaderDialog(context);
-                                              try {
-                                                examDatabase.deleteExamSection(
-                                                  examId,
-                                                  docSnapshot.id,
-                                                );
-                                                Navigator.pop(context);
-                                                ref.refresh(
-                                                          examDatabaseProvider);
-                                              } catch (e) {
-                                                print('Error: $e');
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(SnackBar(
-                                                  content: Text(
-                                                      'Failed to delete section: $e'),
-                                                  backgroundColor: Colors.red,
-                                                ));
-                                              }
-                                            },
-                                            icon: Icon(
-                                              Icons.delete,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .error,
-                                            ),
+            stream: examDatabase.getSection(examId),
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CupertinoActivityIndicator();
+              } else if (snapshot.hasData && snapshot.data.docs.isEmpty) {
+                // If there are no documents in the snapshot, return a message or an empty container
+                return const Center(
+                  child: Text('No sections available.'),
+                );
+              } else if (snapshot.hasData) {
+                final QuerySnapshot querySnapshot = snapshot.data;
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: querySnapshot.docs.length,
+                  itemBuilder: ((context, index) {
+                    final DocumentSnapshot docSnapshot =
+                        querySnapshot.docs[index];
+                    return Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Row(
+                          children: [
+                            Text(docSnapshot['section']),
+                            const Spacer(),
+                            FutureBuilder(
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return Text(snapshot.data.toString());
+                                } else {
+                                  return const CupertinoActivityIndicator();
+                                }
+                              },
+                              future: ref
+                                  .watch(examDatabaseProvider)
+                                  .getSectionLength(
+                                      examId, docSnapshot['section']),
+                            ),
+                            FutureBuilder(
+                              builder: (context, AsyncSnapshot snapshot) {
+                                if (snapshot.hasData) {
+                                  if (snapshot.data) {
+                                    return IconButton(
+                                      onPressed: () {
+                                        showLoaderDialog(context);
+                                        try {
+                                          examDatabase.deleteExamSection(
+                                            examId,
+                                            docSnapshot.id,
                                           );
-                                        } else {
-                                          return const SizedBox();
+                                          Navigator.pop(context);
+                                        } catch (e) {
+                                          print('Error: $e');
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                            content: Text(
+                                                'Failed to delete section: $e'),
+                                            backgroundColor: Colors.red,
+                                          ));
                                         }
-                                      } else {
-                                        return Text('Error: ${snapshot.error}');
-                                      }
-                                    },
-                                    future: ref
-                                        .watch(userDatabaseProvider)
-                                        .isSuperUser(
-                                          ref
-                                              .watch(authServiceProvider)
-                                              .user!
-                                              .email
-                                              .toString(),
-                                        ),
-                              ),
-                            ],
-                          ),
+                                      },
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color:
+                                            Theme.of(context).colorScheme.error,
+                                      ),
+                                    );
+                                  } else {
+                                    return const SizedBox();
+                                  }
+                                } else {
+                                  return Text('Error: ${snapshot.error}');
+                                }
+                              },
+                              future:
+                                  ref.watch(userDatabaseProvider).isSuperUser(
+                                        ref
+                                            .watch(authServiceProvider)
+                                            .user!
+                                            .email
+                                            .toString(),
+                                      ),
+                            ),
+                          ],
                         ),
-                      );
-                    }),
-                  );
-              
+                      ),
+                    );
+                  }),
+                );
               } else {
                 return const CupertinoActivityIndicator();
               }

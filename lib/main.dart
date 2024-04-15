@@ -4,14 +4,12 @@ import 'package:garudaexams_dashboard/presentation/pages/error_page.dart';
 import 'package:garudaexams_dashboard/presentation/pages/loading_page.dart';
 import 'package:garudaexams_dashboard/providers/providers.dart';
 
-
 import 'auth/auth_checker.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     const ProviderScope(
-      
       child: MyApp(),
     ),
   );
