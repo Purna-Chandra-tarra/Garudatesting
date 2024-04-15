@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,19 +41,25 @@ class Section extends ConsumerWidget {
                   child: Text('No sections available.'),
                 );
               } else if (snapshot.hasData) {
-                final QuerySnapshot querySnapshot = snapshot.data;
+                List data = snapshot.data.docs;
+                data.sort((a, b) {
+                  return a['section']
+                      .toLowerCase()
+                      .compareTo(b['section'].toLowerCase());
+                });
                 return ListView.builder(
                   shrinkWrap: true,
-                  itemCount: querySnapshot.docs.length,
+                  itemCount: snapshot.data.docs.length,
                   itemBuilder: ((context, index) {
-                    final DocumentSnapshot docSnapshot =
-                        querySnapshot.docs[index];
                     return Card(
                       child: Padding(
                         padding: const EdgeInsets.all(18.0),
                         child: Row(
                           children: [
-                            Text(docSnapshot['section']),
+                            Expanded(
+                              child: Text(
+                                  '${index + 1}. ${data[index]['section']}'),
+                            ),
                             const Spacer(),
                             FutureBuilder(
                               builder: (context, snapshot) {
@@ -67,7 +72,7 @@ class Section extends ConsumerWidget {
                               future: ref
                                   .watch(examDatabaseProvider)
                                   .getSectionLength(
-                                      examId, docSnapshot['section']),
+                                      examId, data[index]['section']),
                             ),
                             FutureBuilder(
                               builder: (context, AsyncSnapshot snapshot) {
@@ -79,7 +84,7 @@ class Section extends ConsumerWidget {
                                         try {
                                           examDatabase.deleteExamSection(
                                             examId,
-                                            docSnapshot.id,
+                                            data[index].id,
                                           );
                                           Navigator.pop(context);
                                         } catch (e) {

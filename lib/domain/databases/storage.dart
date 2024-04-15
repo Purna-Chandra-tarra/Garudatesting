@@ -23,6 +23,35 @@ class Storage {
     return url;
   }
 
+  Future<String> uploadOptionImage(
+    String imageName,
+    FilePickerResult? imageFile,
+    WidgetRef ref,
+  ) async {
+    Uint8List fileBytes = imageFile!.files.first.bytes ?? Uint8List(0);
+    final optionImageRef = storageRef.child("option/$imageName");
+    await optionImageRef.putData(
+      fileBytes,
+      SettableMetadata(contentType: 'image'),
+    );
+    var url = await optionImageRef.getDownloadURL();
+    return url;
+  }
+
+  Future deleteoptionImage(String imageName) async {
+    final optionImagesRef = storageRef.child("option/$imageName");
+
+    // trying to get the download url of the question image
+    // if the download url doesn't exist then we will get an error indicating that the image doesn't exist
+    try {
+      await optionImagesRef.getDownloadURL();
+    } catch (e) {
+      return; // if the image does not exist, we just return
+    }
+
+    await optionImagesRef.delete();
+  }
+
   Future<String> uploadQuestionImages(
     String imageName,
     FilePickerResult? imageFile,
