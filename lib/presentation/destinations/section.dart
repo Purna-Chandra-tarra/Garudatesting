@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -75,41 +76,98 @@ class Section extends ConsumerWidget {
                                       return IconButton(
                                         onPressed: () async {
                                           showLoaderDialog(context);
-                                          await examDatabase.deleteExamSection(
+                                          try {
+                                          examDatabase.deleteExamSection(
+                                            examId,
+                                            data[index].id,
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CupertinoActivityIndicator();
+              } else if (snapshot.hasData && snapshot.data.docs.isEmpty) {
+                // If there are no documents in the snapshot, return a message or an empty container
+                return const Center(
+                  child: Text('No sections available.'),
+                );
+              } else if (snapshot.hasData) {
+                final QuerySnapshot querySnapshot = snapshot.data;
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: snapshot.data.docs.length,
+                  itemBuilder: ((context, index) {
+                    final DocumentSnapshot docSnapshot =
+                        querySnapshot.docs[index];
+                    return Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                                child: Text(
+                                    '${index + 1}. ${data[index]['section']}'),
+                              ),
+                            const Spacer(),
+                            FutureBuilder(
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return Text(snapshot.data.toString());
+                                } else {
+                                  return const CupertinoActivityIndicator();
+                                }
+                              },
+                              future: ref
+                                  .watch(examDatabaseProvider)
+                                  .getSectionLength(
+                                      examId, data[index]['section']),
+                            ),
+                            FutureBuilder(
+                              builder: (context, AsyncSnapshot snapshot) {
+                                if (snapshot.hasData) {
+                                  if (snapshot.data) {
+                                    return IconButton(
+                                      onPressed: () {
+                                        showLoaderDialog(context);
+                                        try {
+                                          examDatabase.deleteExamSection(
                                             examId,
                                             data[index].id,
                                           );
                                           Navigator.pop(context);
-                                        },
-                                        icon: Icon(
-                                          Icons.delete,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .error,
-                                        ),
-                                      );
-                                    } else {
-                                      return const SizedBox();
-                                    }
+                                        } catch (e) {
+                                          print('Error: $e');
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                            content: Text(
+                                                'Failed to delete section: $e'),
+                                            backgroundColor: Colors.red,
+                                          ));
+                                        }
+                                      },
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color:
+                                            Theme.of(context).colorScheme.error,
+                                      ),
+                                    );
                                   } else {
-                                    return const CupertinoActivityIndicator();
+                                    return const SizedBox();
                                   }
-                                },
-                                future:
-                                    ref.watch(userDatabaseProvider).isSuperUser(
-                                          ref
-                                              .watch(authServiceProvider)
-                                              .user!
-                                              .email
-                                              .toString(),
-                                        ),
-                              ),
-                            ],
-                          ),
+                                } else {
+                                  return Text('Error: ${snapshot.error}');
+                                }
+                              },
+                              future:
+                                  ref.watch(userDatabaseProvider).isSuperUser(
+                                        ref
+                                            .watch(authServiceProvider)
+                                            .user!
+                                            .email
+                                            .toString(),
+                                      ),
+                            ),
+                          ],
                         ),
-                      );
-                    }),
-                  ),
+                      ),
+                    );
+                  }),
                 );
               } else {
                 return const CupertinoActivityIndicator();
