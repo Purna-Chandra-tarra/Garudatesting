@@ -620,20 +620,16 @@ class _QuestionState extends ConsumerState<Question> {
                     icon: const Icon(Icons.edit))
               ],
             ),
-            Row(
-              children: [
-                buildChangeOptionImageButton(
-                    context, documentSnapshots, examDatabase, 1),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: docs['option_image_url'] == null ||
-                          docs['option_image_url'] == ""
-                      ? const Icon(
-                          Icons.image_not_supported,
-                        )
-                      : const Icon(Icons.image),
-                ),
-              ],
+            buildChangeOptionImageButton(
+              context,
+              documentSnapshots,
+              examDatabase,
+              1,
+              docs['option_image_url'] == null || docs['option_image_url'] == ""
+                  ? const Icon(
+                      Icons.image_not_supported,
+                    )
+                  : const Icon(Icons.image),
             ),
             Row(
               children: [
@@ -772,10 +768,11 @@ class _QuestionState extends ConsumerState<Question> {
             Row(
               children: [
                 buildChangeOptionImageButton(
-                    context, documentSnapshots, examDatabase, 2),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: docs['option2_image_url'] == null ||
+                  context,
+                  documentSnapshots,
+                  examDatabase,
+                  2,
+                  docs['option2_image_url'] == null ||
                           docs['option2_image_url'] == ""
                       ? const Icon(
                           Icons.image_not_supported,
@@ -921,10 +918,11 @@ class _QuestionState extends ConsumerState<Question> {
             Row(
               children: [
                 buildChangeOptionImageButton(
-                    context, documentSnapshots, examDatabase, 3),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: docs['option3_image_url'] == null ||
+                  context,
+                  documentSnapshots,
+                  examDatabase,
+                  3,
+                  docs['option3_image_url'] == null ||
                           docs['option3_image_url'] == ""
                       ? const Icon(
                           Icons.image_not_supported,
@@ -1069,10 +1067,11 @@ class _QuestionState extends ConsumerState<Question> {
             Row(
               children: [
                 buildChangeOptionImageButton(
-                    context, documentSnapshots, examDatabase, 4),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: docs['option4_image_url'] == null ||
+                  context,
+                  documentSnapshots,
+                  examDatabase,
+                  4,
+                  docs['option4_image_url'] == null ||
                           docs['option4_image_url'] == ""
                       ? const Icon(
                           Icons.image_not_supported,
@@ -1623,6 +1622,7 @@ class _QuestionState extends ConsumerState<Question> {
     QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshots,
     ExamDatabase examDatabase,
     int optionNumber,
+    Widget child,
   ) {
     return ElevatedButton(
       onPressed: () async {
@@ -1647,7 +1647,15 @@ class _QuestionState extends ConsumerState<Question> {
           Navigator.pop(context);
         }
       },
-      child: Text("Change Option $optionNumber Image"),
+      child: Row(
+        children: [
+          Text("Change Option $optionNumber Image"),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: child,
+          ),
+        ],
+      ),
     );
   }
 
