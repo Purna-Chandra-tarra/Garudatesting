@@ -52,6 +52,14 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
 
   late String imageUrl = "";
 
+  late String optionimageUrl = "";
+
+  late String option2imageUrl = "";
+
+  late String option3imageUrl = "";
+
+  late String option4imageUrl = "";
+
   late String questionImageUrl = "";
 
   final TextEditingController questionController = TextEditingController();
@@ -533,6 +541,37 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                       ),
                       controller: option1EquationController,
                     ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        try {
+                          image = await FilePicker.platform.pickFiles();
+
+                          // if image is not null, we upload it
+                          if (image != null) {
+                            showLoaderDialog(context);
+
+                            // Append a suffix to the ID for option 2
+                            String optionImageId = id.toString() + "_option1";
+
+                            // Upload the image with the modified ID
+                            optionimageUrl = await ref
+                                .watch(storageProvider)
+                                .uploadOptionImage(
+                                  optionImageId,
+                                  image,
+                                  ref,
+                                );
+                            Navigator.pop(context);
+                          }
+                        } catch (e) {
+                          print(e);
+                        }
+                      },
+                      child: const Text("Add option1 Image"),
+                    ),
                     TextField(
                       decoration: const InputDecoration(
                         hintText: "Option 2",
@@ -544,6 +583,37 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                         hintText: "Option 2 equation",
                       ),
                       controller: option2EquationController,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        try {
+                          image = await FilePicker.platform.pickFiles();
+
+                          // if image is not null, we upload it
+                          if (image != null) {
+                            showLoaderDialog(context);
+
+                            // Append a suffix to the ID for option 2
+                            String option2ImageId = id.toString() + "_option2";
+
+                            // Upload the image with the modified ID
+                            option2imageUrl = await ref
+                                .watch(storageProvider)
+                                .uploadOptionImage(
+                                  option2ImageId,
+                                  image,
+                                  ref,
+                                );
+                            Navigator.pop(context);
+                          }
+                        } catch (e) {
+                          print(e);
+                        }
+                      },
+                      child: const Text("Add option2 Image"),
                     ),
                     TextField(
                       decoration: const InputDecoration(
@@ -557,6 +627,37 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                       ),
                       controller: option3EquationController,
                     ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        try {
+                          image = await FilePicker.platform.pickFiles();
+
+                          // if image is not null, we upload it
+                          if (image != null) {
+                            showLoaderDialog(context);
+
+                            // Append a suffix to the ID for option 2
+                            String option3ImageId = id.toString() + "_option3";
+
+                            // Upload the image with the modified ID
+                            option3imageUrl = await ref
+                                .watch(storageProvider)
+                                .uploadOptionImage(
+                                  option3ImageId,
+                                  image,
+                                  ref,
+                                );
+                            Navigator.pop(context);
+                          }
+                        } catch (e) {
+                          print(e);
+                        }
+                      },
+                      child: const Text("Add option3 Image"),
+                    ),
                     TextField(
                       decoration: const InputDecoration(
                         hintText: "Option 4",
@@ -568,6 +669,37 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                         hintText: "Option 4 Equation",
                       ),
                       controller: option4EquationController,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        try {
+                          image = await FilePicker.platform.pickFiles();
+
+                          // if image is not null, we upload it
+                          if (image != null) {
+                            showLoaderDialog(context);
+
+                            // Append a suffix to the ID for option 2
+                            String option4ImageId = id.toString() + "_option4";
+
+                            // Upload the image with the modified ID
+                            option4imageUrl = await ref
+                                .watch(storageProvider)
+                                .uploadOptionImage(
+                                  option4ImageId,
+                                  image,
+                                  ref,
+                                );
+                            Navigator.pop(context);
+                          }
+                        } catch (e) {
+                          print(e);
+                        }
+                      },
+                      child: const Text("Add option4 Image"),
                     ),
                     TextFormField(
                       decoration: const InputDecoration(
@@ -614,68 +746,97 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                           showLoaderDialog(context);
                           List<String> sections =
                               await examDatabase.getSectionList(widget.examId);
+                          sections.sort((a, b) => a.toLowerCase().compareTo(b
+                              .toLowerCase())); // Sort the sections alphabetically
                           Navigator.pop(context);
                           section = await showDialog(
-                              context: context,
-                              builder: (context) {
+                            context: context,
+                            builder: (context) {
+                              String searchQuery =
+                                  ''; // Initialize search query
+                              return StatefulBuilder(
+                                  builder: (context, setState) {
                                 return AlertDialog(
                                   title: const Text("Select Section"),
                                   content: SingleChildScrollView(
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
+                                        TextField(
+                                          decoration: const InputDecoration(
+                                            labelText: 'Search Section',
+                                            prefixIcon: Icon(Icons.search),
+                                          ),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              searchQuery = value.toLowerCase();
+                                            });
+                                          },
+                                        ),
                                         SizedBox(
                                           height: 500,
                                           width: 500,
                                           child: ListView.builder(
                                               itemCount: sections.length,
                                               shrinkWrap: true,
+                                              // ignore: body_might_complete_normally_nullable
                                               itemBuilder: (context, index) {
-                                                return Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: ElevatedButton(
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Text(
+                                                final sectionName =
+                                                    sections[index]
+                                                        .toLowerCase();
+                                                if (sectionName
+                                                    .contains(searchQuery)) {
+                                                  return Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: ElevatedButton(
+                                                      // child:
+                                                      //     Text(sections[index]),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                              '${index + 1}. ${sections[index]}'),
+                                                          const SizedBox(
+                                                            width: 10,
+                                                          ),
+                                                          FutureBuilder(
+                                                            builder: (context,
+                                                                snapshot) {
+                                                              if (snapshot
+                                                                  .hasData) {
+                                                                return Text(snapshot
+                                                                    .data
+                                                                    .toString());
+                                                              } else {
+                                                                return const CupertinoActivityIndicator();
+                                                              }
+                                                            },
+                                                            future: ref
+                                                                .watch(
+                                                                    examDatabaseProvider)
+                                                                .getSectionLength(
+                                                                  widget.examId,
+                                                                  sections[
+                                                                      index],
+                                                                ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      onPressed: () async {
+                                                        Navigator.pop(
+                                                          context,
                                                           sections[index],
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                        FutureBuilder(
-                                                          builder: (context,
-                                                              snapshot) {
-                                                            if (snapshot
-                                                                .hasData) {
-                                                              return Text(snapshot
-                                                                  .data
-                                                                  .toString());
-                                                            } else {
-                                                              return const CupertinoActivityIndicator();
-                                                            }
-                                                          },
-                                                          future: ref
-                                                              .watch(
-                                                                  examDatabaseProvider)
-                                                              .getSectionLength(
-                                                                widget.examId,
-                                                                sections[index],
-                                                              ),
-                                                        ),
-                                                      ],
+                                                        );
+                                                      },
                                                     ),
-                                                    onPressed: () async {
-                                                      Navigator.pop(
-                                                        context,
-                                                        sections[index],
-                                                      );
-                                                    },
-                                                  ),
-                                                );
+                                                  );
+                                                } else {
+                                                  return Container(); // Empty container if section doesn't match search query
+                                                }
                                               }),
                                         ),
                                       ],
@@ -683,6 +844,8 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                                   ),
                                 );
                               });
+                            },
+                          );
                         },
                         child: const Text("Choose Section"),
                       ),
@@ -694,43 +857,105 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                           showLoaderDialog(context);
                           List<String> sections =
                               await examDatabase.getSubjectList(widget.examId);
+                          sections.sort((a, b) => a.toLowerCase().compareTo(b
+                              .toLowerCase())); // Sort the subjects alphabetically
                           Navigator.pop(context);
                           subject = await showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text("Select Subject"),
-                                  content: SingleChildScrollView(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        SizedBox(
-                                          height: 500,
-                                          width: 500,
-                                          child: ListView.builder(
+                            context: context,
+                            builder: (context) {
+                              String searchQuery =
+                                  ''; // Initialize search query
+                              return StatefulBuilder(
+                                builder: (context, setState) {
+                                  return AlertDialog(
+                                    title: const Text("Select Subject"),
+                                    content: SingleChildScrollView(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          TextField(
+                                            decoration: const InputDecoration(
+                                              labelText: 'Search Subject',
+                                              prefixIcon: Icon(Icons.search),
+                                            ),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                searchQuery =
+                                                    value.toLowerCase();
+                                              });
+                                            },
+                                          ),
+                                          SizedBox(
+                                            height: 500,
+                                            width: 500,
+                                            child: ListView.builder(
                                               itemCount: sections.length,
                                               shrinkWrap: true,
                                               itemBuilder: (context, index) {
-                                                return Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: ElevatedButton(
-                                                    child: Text(
-                                                      sections[index],
+                                                final subjectName =
+                                                    sections[index]
+                                                        .toLowerCase();
+                                                if (subjectName
+                                                    .contains(searchQuery)) {
+                                                  return Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: ElevatedButton(
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                              '${index + 1}. ${sections[index]}'),
+                                                          const SizedBox(
+                                                            width: 10,
+                                                          ),
+                                                          FutureBuilder(
+                                                            builder: (context,
+                                                                snapshot) {
+                                                              if (snapshot
+                                                                  .hasData) {
+                                                                return Text(snapshot
+                                                                    .data
+                                                                    .toString());
+                                                              } else {
+                                                                return const CupertinoActivityIndicator();
+                                                              }
+                                                            },
+                                                            future: ref
+                                                                .watch(
+                                                                    examDatabaseProvider)
+                                                                .getSubjectLength(
+                                                                  widget.examId,
+                                                                  sections[
+                                                                      index],
+                                                                ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      onPressed: () async {
+                                                        Navigator.pop(context,
+                                                            sections[index]);
+                                                      },
                                                     ),
-                                                    onPressed: () async {
-                                                      Navigator.pop(context,
-                                                          sections[index]);
-                                                    },
-                                                  ),
-                                                );
-                                              }),
-                                        ),
-                                      ],
+                                                  );
+                                                } else {
+                                                  // Return an empty container if subject doesn't match search query
+                                                  return Container();
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                );
-                              });
+                                  );
+                                },
+                              );
+                            },
+                          );
                         },
                         child: const Text("Choose Subject"),
                       ),
@@ -804,11 +1029,15 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                               .addQuestion(widget.examId, id.toString(), {
                             "answer": int.parse(answerController.text),
                             "option_one": option1Controller.text,
+                            "option_image_url": optionimageUrl,
                             "option_two": option2Controller.text,
+                            "option2_image_url": option2imageUrl,
                             "option_three": option3Controller.text,
+                            "option3_image_url": option3imageUrl,
                             "option_four": option4Controller.text,
+                            "option4_image_url": option4imageUrl,
                             "question": questionController.text,
-                            "level": int.parse(questionLevelController.text),
+                            "level": questionLevelController.text.isNotEmpty ? int.parse(questionLevelController.text) : 1,
                             "option_one_equation":
                                 option1EquationController.text,
                             "option_two_equation":
@@ -847,6 +1076,10 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                           questionController.clear();
                           questionEquationController.clear();
                           questionLevelController.clear();
+                          optionimageUrl = "";
+                          option2imageUrl = "";
+                          option3imageUrl = "";
+                          option4imageUrl = "";
                           imageUrl = "";
                           section = "";
                           subject = "";

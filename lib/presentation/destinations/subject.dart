@@ -34,10 +34,16 @@ class Subject extends ConsumerWidget {
             stream: examDatabase.getSubject(examId),
             builder: (context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
+                List data = snapshot.data.docs;
+                data.sort((a, b) {
+                  return a['name']
+                      .toLowerCase()
+                      .compareTo(b['name'].toLowerCase());
+                });
                 return Expanded(
                   child: ListView.builder(
                     shrinkWrap: true,
-                    itemCount: snapshot.data.docs.length,
+                    itemCount: data.length, // Use the sorted list's length
                     itemBuilder: ((context, index) {
                       return Card(
                         child: Padding(
@@ -45,7 +51,8 @@ class Subject extends ConsumerWidget {
                           child: Row(
                             children: [
                               Expanded(
-                                child: Text(snapshot.data.docs[index]['name']),
+                                child: Text(
+                                    '${index + 1}. ${data[index]['name']}'), // Use sorted list's data
                               ),
                               const Spacer(),
                               FutureBuilder(
@@ -58,8 +65,8 @@ class Subject extends ConsumerWidget {
                                 },
                                 future: ref
                                     .watch(examDatabaseProvider)
-                                    .getSubjectLength(examId,
-                                        snapshot.data.docs[index]['name']),
+                                    .getSubjectLength(
+                                        examId, data[index]['name']),
                               ),
                               FutureBuilder(
                                 builder: (context, AsyncSnapshot snapshot) {
@@ -70,7 +77,8 @@ class Subject extends ConsumerWidget {
                                           showLoaderDialog(context);
                                           await examDatabase.deleteExamSubject(
                                             examId,
-                                            snapshot.data.docs[index].id,
+                                            data[index]
+                                                .id, // Use sorted list's ID
                                           );
                                           Navigator.pop(context);
                                         },

@@ -262,6 +262,19 @@ class _QuestionState extends ConsumerState<Question> {
                     await ref.watch(storageProvider).deleteQuestionImage(
                           documentSnapshots.id,
                         );
+                    final optionIds = [
+                      "${documentSnapshots.id}_option1",
+                      "${documentSnapshots.id}_option2",
+                      "${documentSnapshots.id}_option3",
+                      "${documentSnapshots.id}_option4",
+                    ];
+
+                    for (final optionId in optionIds) {
+                      await ref
+                          .watch(storageProvider)
+                          .deleteoptionImage(optionId);
+                    }
+
                     Navigator.pop(context);
                   },
                   icon: Icon(
@@ -607,6 +620,17 @@ class _QuestionState extends ConsumerState<Question> {
                     icon: const Icon(Icons.edit))
               ],
             ),
+            buildChangeOptionImageButton(
+              context,
+              documentSnapshots,
+              examDatabase,
+              1,
+              docs['option_image_url'] == null || docs['option_image_url'] == ""
+                  ? const Icon(
+                      Icons.image_not_supported,
+                    )
+                  : const Icon(Icons.image),
+            ),
             Row(
               children: [
                 Expanded(
@@ -739,6 +763,22 @@ class _QuestionState extends ConsumerState<Question> {
                       );
                     },
                     icon: const Icon(Icons.edit))
+              ],
+            ),
+            Row(
+              children: [
+                buildChangeOptionImageButton(
+                  context,
+                  documentSnapshots,
+                  examDatabase,
+                  2,
+                  docs['option2_image_url'] == null ||
+                          docs['option2_image_url'] == ""
+                      ? const Icon(
+                          Icons.image_not_supported,
+                        )
+                      : const Icon(Icons.image),
+                ),
               ],
             ),
             Row(
@@ -877,6 +917,22 @@ class _QuestionState extends ConsumerState<Question> {
             ),
             Row(
               children: [
+                buildChangeOptionImageButton(
+                  context,
+                  documentSnapshots,
+                  examDatabase,
+                  3,
+                  docs['option3_image_url'] == null ||
+                          docs['option3_image_url'] == ""
+                      ? const Icon(
+                          Icons.image_not_supported,
+                        )
+                      : const Icon(Icons.image),
+                ),
+              ],
+            ),
+            Row(
+              children: [
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1006,6 +1062,22 @@ class _QuestionState extends ConsumerState<Question> {
                       );
                     },
                     icon: const Icon(Icons.edit))
+              ],
+            ),
+            Row(
+              children: [
+                buildChangeOptionImageButton(
+                  context,
+                  documentSnapshots,
+                  examDatabase,
+                  4,
+                  docs['option4_image_url'] == null ||
+                          docs['option4_image_url'] == ""
+                      ? const Icon(
+                          Icons.image_not_supported,
+                        )
+                      : const Icon(Icons.image),
+                ),
               ],
             ),
             Row(
@@ -1321,50 +1393,75 @@ class _QuestionState extends ConsumerState<Question> {
                     showLoaderDialog(context);
                     List<String> sections =
                         await examDatabase.getSectionList(widget.examId);
+                    sections.sort((a, b) => a.toLowerCase().compareTo(
+                        b.toLowerCase())); // Sort the subjects alphabetically
                     Navigator.pop(context);
                     showDialog(
                         context: context,
                         builder: (context) {
-                          return AlertDialog(
-                            title: const Text("Select Sections"),
-                            content: SingleChildScrollView(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(
-                                    height: 500,
-                                    width: 500,
-                                    child: ListView.builder(
-                                        itemCount: sections.length,
-                                        shrinkWrap: true,
-                                        itemBuilder: (context, index1) {
-                                          return Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: ElevatedButton(
-                                              child: Text(
-                                                sections[index1],
-                                              ),
-                                              onPressed: () async {
-                                                showLoaderDialog(context);
-                                                await examDatabase
-                                                    .updateQuestion(
-                                                  widget.examId,
-                                                  documentSnapshots.id,
-                                                  {
-                                                    "section": sections[index1],
+                          String searchQuery = ''; // Initialize search query
+                          return StatefulBuilder(builder: (context, setState) {
+                            return AlertDialog(
+                              title: const Text("Select Sections"),
+                              content: SingleChildScrollView(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    TextField(
+                                      decoration: InputDecoration(
+                                        labelText: 'Search Section',
+                                        prefixIcon: Icon(Icons.search),
+                                      ),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          searchQuery = value.toLowerCase();
+                                        });
+                                      },
+                                    ),
+                                    SizedBox(
+                                      height: 500,
+                                      width: 500,
+                                      child: ListView.builder(
+                                          itemCount: sections.length,
+                                          shrinkWrap: true,
+                                          // ignore: body_might_complete_normally_nullable
+                                          itemBuilder: (context, index1) {
+                                            final sectionName =
+                                                sections[index1].toLowerCase();
+                                            if (sectionName
+                                                .contains(searchQuery)) {
+                                              return Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: ElevatedButton(
+                                                  child: Text(
+                                                      '${index1 + 1}. ${sections[index1]}'),
+                                                  onPressed: () async {
+                                                    showLoaderDialog(context);
+                                                    await examDatabase
+                                                        .updateQuestion(
+                                                      widget.examId,
+                                                      documentSnapshots.id,
+                                                      {
+                                                        "section":
+                                                            sections[index1],
+                                                      },
+                                                    );
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
                                                   },
-                                                );
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                              },
-                                            ),
-                                          );
-                                        }),
-                                  ),
-                                ],
+                                                ),
+                                              );
+                                            } else {
+                                              return Container(); // Empty container if section doesn't match search query
+                                            }
+                                          }),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          });
                         });
                   },
                   icon: const Icon(Icons.edit),
@@ -1395,50 +1492,77 @@ class _QuestionState extends ConsumerState<Question> {
                     showLoaderDialog(context);
                     List<String> subjects =
                         await examDatabase.getSubjectList(widget.examId);
+                    subjects.sort((a, b) => a.toLowerCase().compareTo(
+                        b.toLowerCase())); // Sort the subjects alphabetically
                     Navigator.pop(context);
                     showDialog(
                         context: context,
                         builder: (context) {
-                          return AlertDialog(
-                            title: const Text("Select Subject"),
-                            content: SingleChildScrollView(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(
-                                    height: 500,
-                                    width: 500,
-                                    child: ListView.builder(
-                                        itemCount: subjects.length,
-                                        shrinkWrap: true,
-                                        itemBuilder: (context, index1) {
-                                          return Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: ElevatedButton(
-                                              child: Text(
-                                                subjects[index1],
-                                              ),
-                                              onPressed: () async {
-                                                showLoaderDialog(context);
-                                                await examDatabase
-                                                    .updateQuestion(
-                                                  widget.examId,
-                                                  documentSnapshots.id,
-                                                  {
-                                                    "subject": subjects[index1],
+                          String searchQuery = ''; // Initialize search query
+                          return StatefulBuilder(builder: (context, setState) {
+                            return AlertDialog(
+                              title: const Text("Select Subject"),
+                              content: SingleChildScrollView(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    TextField(
+                                      decoration: InputDecoration(
+                                        labelText: 'Search Subject',
+                                        prefixIcon: Icon(Icons.search),
+                                      ),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          searchQuery = value.toLowerCase();
+                                        });
+                                      },
+                                    ),
+                                    SizedBox(
+                                      height: 500,
+                                      width: 500,
+                                      child: ListView.builder(
+                                          itemCount: subjects.length,
+                                          shrinkWrap: true,
+                                          // ignore: body_might_complete_normally_nullable
+                                          itemBuilder: (context, index1) {
+                                            final subjectName =
+                                                subjects[index1].toLowerCase();
+                                            if (subjectName
+                                                .contains(searchQuery)) {
+                                              return Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: ElevatedButton(
+                                                  child: Text(
+                                                    '${index1 + 1}. ${subjects[index1]}',
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                  onPressed: () async {
+                                                    showLoaderDialog(context);
+                                                    await examDatabase
+                                                        .updateQuestion(
+                                                      widget.examId,
+                                                      documentSnapshots.id,
+                                                      {
+                                                        "subject":
+                                                            subjects[index1],
+                                                      },
+                                                    );
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
                                                   },
-                                                );
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                              },
-                                            ),
-                                          );
-                                        }),
-                                  ),
-                                ],
+                                                ),
+                                              );
+                                            } else {
+                                              return Container(); // Empty container if section doesn't match search query
+                                            }
+                                          }),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          });
                         });
                   },
                   icon: const Icon(Icons.edit),
@@ -1489,6 +1613,48 @@ class _QuestionState extends ConsumerState<Question> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  ElevatedButton buildChangeOptionImageButton(
+    BuildContext context,
+    QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshots,
+    ExamDatabase examDatabase,
+    int optionNumber,
+    Widget child,
+  ) {
+    return ElevatedButton(
+      onPressed: () async {
+        FilePickerResult? image = await FilePicker.platform.pickFiles();
+
+        if (image != null) {
+          showLoaderDialog(context);
+          String optionImageId = documentSnapshots.id + "_option$optionNumber";
+          final optionImageUrl =
+              await ref.watch(storageProvider).uploadOptionImage(
+                    optionImageId,
+                    image,
+                    ref,
+                  );
+          await examDatabase.updateQuestion(
+            widget.examId,
+            documentSnapshots.id,
+            {
+              "option${optionNumber}_image_url": optionImageUrl,
+            },
+          );
+          Navigator.pop(context);
+        }
+      },
+      child: Row(
+        children: [
+          Text("Change Option $optionNumber Image"),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: child,
+          ),
+        ],
       ),
     );
   }
