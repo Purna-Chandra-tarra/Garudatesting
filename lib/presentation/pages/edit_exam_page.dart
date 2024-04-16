@@ -584,7 +584,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                       ),
                       controller: option2EquationController,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     ElevatedButton(
@@ -627,7 +627,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                       ),
                       controller: option3EquationController,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     ElevatedButton(
@@ -670,7 +670,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                       ),
                       controller: option4EquationController,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     ElevatedButton(
@@ -763,7 +763,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         TextField(
-                                          decoration: InputDecoration(
+                                          decoration: const InputDecoration(
                                             labelText: 'Search Section',
                                             prefixIcon: Icon(Icons.search),
                                           ),
@@ -874,7 +874,7 @@ class _EditExamPageState extends ConsumerState<EditExamPage> {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           TextField(
-                                            decoration: InputDecoration(
+                                            decoration: const InputDecoration(
                                               labelText: 'Search Subject',
                                               prefixIcon: Icon(Icons.search),
                                             ),
